@@ -1,6 +1,6 @@
-# 💬 Al-Ghozali Messenger (Supabase + Vercel)
+# 💬 WassApp (Supabase + Vercel)
 
-Aplikasi pesan instan (messenger) khusus guru **YPI Al-Ghozali** yang telah diintegrasikan dengan database PostgreSQL & Realtime **Supabase**, serta siap di-deploy secara instan ke **Vercel**.
+Aplikasi pesan instan (messenger) modern yang telah diintegrasikan dengan database PostgreSQL & Realtime **Supabase**, serta siap di-deploy secara instan ke **Vercel**.
 
 ---
 

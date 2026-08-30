@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Al-Ghozali Messenger</title>
+  <title>WassApp</title>
 
   <style>
     /* ==========================================================================
-       AL-GHOZALI MESSENGER - STYLES
+       WASSAPP - STYLES
        ========================================================================== */
 
     * {
@@ -1650,8 +1650,8 @@
 <div id="loginScreen">
   <div class="login-card">
     <div class="brand-logo">💬</div>
-    <h1>Al-Ghozali Messenger</h1>
-    <p>Messenger khusus guru YPI Al-Ghozali</p>
+    <h1>WassApp</h1>
+    <p>Messenger Web & Mobile</p>
     
     <!-- Kotak Pesan Error Visual -->
     <div id="authErrorAlert" class="auth-error-alert"></div>
@@ -1666,8 +1666,8 @@
     
     <!-- Register Form -->
     <div id="formRegisterView" style="display:none;">
-      <input type="text" id="regName" class="auth-input" placeholder="Nama Lengkap Guru">
-      <input type="text" id="regSubject" class="auth-input" placeholder="Mata Pelajaran (Contoh: Matematika)">
+      <input type="text" id="regName" class="auth-input" placeholder="Nama Lengkap">
+      <input type="tel" id="regSubject" class="auth-input" placeholder="Nomor HP / WhatsApp (Contoh: 081234567890)">
       <input type="email" id="regEmail" class="auth-input" placeholder="Alamat Email" autocomplete="email">
       <input type="password" id="regPassword" class="auth-input" placeholder="Password" autocomplete="new-password">
       <button type="button" class="btn btn-primary" onclick="submitRegister()">DAFTAR AKUN</button>
@@ -1684,8 +1684,8 @@
       <div class="profile-mini" onclick="openProfile()" title="Edit Profil">
         <div class="avatar" id="myAvatar">👤</div>
         <div class="profile-info">
-          <strong id="myName">Guru</strong>
-          <span id="mySubject">Mata pelajaran</span>
+          <strong id="myName">Pengguna</strong>
+          <span id="mySubject">Nomor HP</span>
         </div>
       </div>
       <div class="header-actions">
@@ -1736,7 +1736,7 @@
     <div class="messages" id="messages">
       <div class="empty-chat">
         <div class="big">💬</div>
-        <h3>Al-Ghozali Messenger</h3>
+        <h3>WassApp</h3>
         <p style="margin-top:8px">Pilih guru atau grup di sebelah kiri untuk memulai percakapan.</p>
       </div>
     </div>
@@ -2029,12 +2029,12 @@
     </div>
     <p style="font-size:13.5px; color:#667781; margin-bottom:14px;">Daftarkan guru baru langsung ke database agar dapat saling berkirim pesan.</p>
     <div class="form-group">
-      <label>Nama Lengkap Guru</label>
-      <input id="addContactName" type="text" placeholder="Contoh: Bpk. H. Ahmad Fauzi">
+      <label>Nama Lengkap</label>
+      <input id="addContactName" type="text" placeholder="Contoh: Ahmad Fauzi">
     </div>
     <div class="form-group">
-      <label>Mata Pelajaran</label>
-      <input id="addContactSubject" type="text" placeholder="Contoh: Bahasa Arab, PAI">
+      <label>Nomor HP / WhatsApp</label>
+      <input id="addContactSubject" type="tel" placeholder="Contoh: 081234567890">
     </div>
     <div class="form-group">
       <label>Alamat Email</label>
@@ -2060,7 +2060,7 @@
     </div>
     <div class="form-group">
       <label>Nama Grup</label>
-      <input id="groupNameInput" type="text" placeholder="Contoh: Dewan Guru Al-Ghozali">
+      <input id="groupNameInput" type="text" placeholder="Contoh: Grup Diskusi & Tim">
     </div>
     <div class="form-group">
       <label>Deskripsi Grup (Opsional)</label>
@@ -2092,12 +2092,12 @@
       <input type="file" id="profileImageInput" accept="image/*" style="display:none" onchange="previewProfile(this)">
     </label>
     <div class="form-group">
-      <label>Nama Guru</label>
+      <label>Nama Pengguna</label>
       <input id="profileName" type="text" readonly>
     </div>
     <div class="form-group">
-      <label>Mata Pelajaran</label>
-      <input id="profileSubject" type="text" placeholder="Contoh: Sosiologi, Matematika">
+      <label>Nomor HP / WhatsApp</label>
+      <input id="profileSubject" type="tel" placeholder="Contoh: 081234567890">
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" onclick="closeProfile()">Batal</button>
@@ -2169,8 +2169,8 @@
      ======================================================================== -->
 <script>
 // Supabase Credentials
-const SUPABASE_URL = "https://akroqfjspbqauwafcyuf.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrcm9xZmpzcGJxYXV3YWZjeXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMzE2NDUsImV4cCI6MjEwMzYwNzY0NX0.a7fTDWwQ5cAMmOAwybAkf7f0vD_DppwRu78R_-M3RkY";
+const SUPABASE_URL = "https://yvvrdadchgvlpdpdlyyg.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnJkYWRjaGd2bHBkcGRseXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwNjc5ODcsImV4cCI6MjEwMzY0Mzk4N30.pvYhyfecxbr7N1-OvDod4AbayO9EwtqP0-1_TzMuvrQ";
 
 // Global App State
 let currentUser = null;
@@ -2788,7 +2788,7 @@ function renderMessages() {
   const container = document.getElementById("messages");
   if (!selectedTarget) {
     container.innerHTML =
-      '<div class="empty-chat"><div class="big">💬</div><h3>Al-Ghozali Messenger</h3><p style="margin-top:8px">Pilih guru atau grup untuk memulai percakapan.</p></div>';
+      '<div class="empty-chat"><div class="big">💬</div><h3>WassApp</h3><p style="margin-top:8px">Pilih kontak atau grup untuk memulai percakapan.</p></div>';
     return;
   }
 
@@ -3260,7 +3260,7 @@ function requestNotifPermission() {
 function showInAppNotif(senderName, messagePreview, senderAvatar, contactId) {
   // Browser notification (jika permission granted dan tab tidak fokus)
   if (!document.hasFocus() && "Notification" in window && Notification.permission === "granted") {
-    const n = new Notification("\uD83D\uDCAC " + senderName + " \u2014 Al-Ghozali Messenger", {
+    const n = new Notification("\uD83D\uDCAC " + senderName + " \u2014 WassApp", {
       body: messagePreview || "Pesan baru",
       icon: senderAvatar || "",
       badge: senderAvatar || "",
