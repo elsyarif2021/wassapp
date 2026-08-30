@@ -2586,33 +2586,58 @@
   </main>
 </div>
 
-<!-- Modal Tambah Kontak Guru -->
+<!-- Modal Tambah Kontak Guru (Unified: Cari & Daftar Baru) -->
 <div class="modal" id="addContactModal">
   <div class="modal-card">
     <div class="modal-header">
-      <h2>Tambah Kontak Guru</h2>
+      <h2>➕ Tambah Kontak</h2>
       <button type="button" class="close" onclick="closeAddContactModal()">×</button>
     </div>
-    <p style="font-size:13.5px; color:#667781; margin-bottom:14px;">Daftarkan guru baru langsung ke database agar dapat saling berkirim pesan.</p>
-    <div class="form-group">
-      <label>Nama Lengkap</label>
-      <input id="addContactName" type="text" placeholder="Contoh: Ahmad Fauzi">
+    
+    <!-- Tab Switcher -->
+    <div class="sidebar-tabs" style="margin-bottom: 16px; padding: 0;">
+      <button type="button" class="tab-btn active" id="tabContactSearch" onclick="switchAddContactTab('search')">🔍 Cari Kontak</button>
+      <button type="button" class="tab-btn" id="tabContactNew" onclick="switchAddContactTab('new')">➕ Daftarkan Baru</button>
     </div>
-    <div class="form-group">
-      <label>Nomor HP / WhatsApp</label>
-      <input id="addContactSubject" type="tel" placeholder="Contoh: 081234567890">
+
+    <!-- Tab 1: Cari Kontak -->
+    <div id="addContactSearchView">
+      <p style="font-size:13px; color:#667781; margin-bottom:12px;">Cari pengguna atau guru yang sudah terdaftar berdasarkan email atau nama:</p>
+      <div class="form-group">
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input id="addContactSearch" type="text" placeholder="Masukkan email atau nama..."
+            style="flex:1;"
+            onkeydown="if(event.key==='Enter'){searchContactByEmail();}">
+          <button type="button" class="btn btn-save" style="white-space:nowrap;min-width:80px;" onclick="searchContactByEmail()">🔍 Cari</button>
+        </div>
+      </div>
+      <div id="contactSearchResult" style="margin-top:10px; min-height:40px;"></div>
     </div>
-    <div class="form-group">
-      <label>Alamat Email</label>
-      <input id="addContactEmail" type="email" placeholder="Contoh: ahmad@alghozali.sch.id">
+
+    <!-- Tab 2: Daftarkan Kontak Baru -->
+    <div id="addContactNewView" style="display:none;">
+      <p style="font-size:13px; color:#667781; margin-bottom:12px;">Daftarkan akun guru/pengguna baru ke database agar langsung dapat berkomunikasi:</p>
+      <div class="form-group">
+        <label>Nama Lengkap *</label>
+        <input id="addContactName" type="text" placeholder="Contoh: Ahmad Fauzi">
+      </div>
+      <div class="form-group">
+        <label>Nomor HP / WhatsApp</label>
+        <input id="addContactSubject" type="tel" placeholder="Contoh: 081234567890">
+      </div>
+      <div class="form-group">
+        <label>Alamat Email *</label>
+        <input id="addContactEmail" type="email" placeholder="Contoh: ahmad@alghozali.sch.id">
+      </div>
+      <div class="form-group">
+        <label>Password Akun *</label>
+        <input id="addContactPass" type="password" placeholder="Password akun guru (min. 6 karakter)">
+      </div>
+      <button type="button" id="btnAddContactSubmit" class="btn btn-save" style="width:100%; margin-top:8px;" onclick="saveNewContact()">💾 Simpan & Mulai Chat</button>
     </div>
-    <div class="form-group">
-      <label>Password Akun Guru</label>
-      <input id="addContactPass" type="password" placeholder="Password untuk login guru">
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" onclick="closeAddContactModal()">Batal</button>
-      <button type="button" class="btn btn-save" onclick="saveNewContact()">Tambah Kontak</button>
+
+    <div class="modal-footer" style="margin-top:16px;">
+      <button type="button" class="btn btn-secondary" onclick="closeAddContactModal()">Tutup</button>
     </div>
   </div>
 </div>
@@ -3229,6 +3254,8 @@ function startApplication() {
   updateMyProfile();
   loadAllData();
   startPolling();
+  requestNotifPermission();
+  startIncomingCallPoll();
   toast("Selamat datang, " + currentUser.nama);
 }
 
@@ -3254,18 +3281,18 @@ async function loadAllData(silent = false) {
 async function loadTeachers() {
   try {
     const data = await supabaseRest("users?select=id,nama,mata_pelajaran,avatar,status,last_seen&order=nama.asc");
-    teachers = Array.isArray(data)
-      ? data.map(function(t) {
-          return {
-            type: "user",
-            id: t.id,
-            nama: t.nama,
-            mataPelajaran: t.mata_pelajaran,
-            avatar: t.avatar,
-            status: t.status
-          };
-        })
-      : [];
+    if (Array.isArray(data)) {
+      teachers = data.map(function(t) {
+        return {
+          type: "user",
+          id: t.id,
+          nama: t.nama,
+          mataPelajaran: t.mata_pelajaran,
+          avatar: t.avatar,
+          status: t.status
+        };
+      });
+    }
   } catch (err) {
     console.error("Load teachers error:", err);
   }
@@ -3274,18 +3301,18 @@ async function loadTeachers() {
 async function loadGroups() {
   try {
     const data = await supabaseRest("groups?select=id,name,description,avatar,created_by&order=created_at.desc");
-    groups = Array.isArray(data)
-      ? data.map(function(g) {
-          return {
-            type: "group",
-            id: g.id,
-            name: g.name,
-            description: g.description || "Grup Chat Guru",
-            avatar: g.avatar,
-            status: "Grup Chat"
-          };
-        })
-      : [];
+    if (Array.isArray(data)) {
+      groups = data.map(function(g) {
+        return {
+          type: "group",
+          id: g.id,
+          name: g.name,
+          description: g.description || "Grup Chat Guru",
+          avatar: g.avatar,
+          status: "Grup Chat"
+        };
+      });
+    }
   } catch (err) {
     console.error("Load groups error:", err);
   }
@@ -3304,7 +3331,7 @@ function renderSidebarList() {
   const query = (document.getElementById("searchInput").value || "").trim().toLowerCase();
 
   let list = [];
-  const otherTeachers = teachers.filter(function(t) { return !currentUser || t.id !== currentUser.id; });
+  const otherTeachers = teachers.filter(function(t) { return !currentUser || String(t.id) !== String(currentUser.id); });
 
   if (activeSidebarTab === "all") {
     list = [...groups, ...otherTeachers];
@@ -3328,6 +3355,7 @@ function renderSidebarList() {
         '<div style="font-size:42px; margin-bottom:12px;">💬</div>' +
         '<strong style="display:block; font-size:15px; color:#111b21; margin-bottom:6px;">Belum Ada Obrolan</strong>' +
         '<p style="font-size:13px; line-height:1.5; margin-bottom:16px;">Gunakan tombol ➕ untuk menambah guru atau 👥 untuk membuat grup.</p>' +
+        '<button type="button" class="btn btn-save" style="font-size:12.5px; padding:7px 16px; margin:0 auto;" onclick="openAddContactModal()">➕ Tambah Kontak Sekarang</button>' +
       '</div>';
     return;
   }
@@ -3341,13 +3369,17 @@ function renderSidebarList() {
       el.classList.add("active");
     }
     el.onclick = function() { selectTarget(item); };
+    el.dataset.contactId = String(item.id);
 
     const avatar = document.createElement("div");
     avatar.className = "avatar " + (isGroup ? "group-avatar" : "");
+    avatar.style.position = "relative";
+    const badgeHtml = getUnreadBadgeHtml(item.id);
+
     if (item.avatar) {
-      avatar.innerHTML = '<img src="' + escapeAttribute(item.avatar) + '" alt="avatar">';
+      avatar.innerHTML = '<img src="' + escapeAttribute(item.avatar) + '" alt="avatar">' + badgeHtml;
     } else {
-      avatar.textContent = isGroup ? "👥" : getInitial(item.nama);
+      avatar.innerHTML = (isGroup ? "👥" : getInitial(item.nama)) + badgeHtml;
     }
 
     const title = isGroup ? item.name : item.nama;
@@ -3399,9 +3431,18 @@ window.selectTarget = function(item) {
     chatAvatar.textContent = isGroup ? "👥" : getInitial(item.nama);
   }
 
+  // Update Call Buttons visibility
+  updateCallButton();
+
+  // Clear unread count for this contact
+  if (item && item.id) {
+    updateContactBadge(item.id, false);
+  }
+
   renderSidebarList();
   document.getElementById("app").classList.add("mobile-chat-open");
   refreshMessages();
+  requestNotifPermission();
 };
 
 window.closeMobileChat = function() {
@@ -3437,6 +3478,203 @@ window.openCreateGroupModal = function() {
 
 window.closeCreateGroupModal = function() {
   document.getElementById("createGroupModal").classList.remove("show");
+};
+
+// ============================================================================
+// TAMBAH KONTAK (DUAL-MODE: SEARCH BY EMAIL/NAME & REGISTER NEW CONTACT)
+// ============================================================================
+window.switchAddContactTab = function(tab) {
+  const searchTab = document.getElementById("tabContactSearch");
+  const newTab = document.getElementById("tabContactNew");
+  const searchView = document.getElementById("addContactSearchView");
+  const newView = document.getElementById("addContactNewView");
+
+  if (tab === "search") {
+    if (searchTab) searchTab.classList.add("active");
+    if (newTab) newTab.classList.remove("active");
+    if (searchView) searchView.style.display = "block";
+    if (newView) newView.style.display = "none";
+  } else {
+    if (newTab) newTab.classList.add("active");
+    if (searchTab) searchTab.classList.remove("active");
+    if (newView) newView.style.display = "block";
+    if (searchView) searchView.style.display = "none";
+  }
+};
+
+window.openAddContactModal = function() {
+  const el = document.getElementById("addContactModal");
+  if (el) {
+    el.classList.add("show");
+    switchAddContactTab("search");
+    const searchInp = document.getElementById("addContactSearch");
+    if (searchInp) {
+      searchInp.value = "";
+      setTimeout(function() { searchInp.focus(); }, 100);
+    }
+    const resultEl = document.getElementById("contactSearchResult");
+    if (resultEl) resultEl.innerHTML = "";
+
+    // Clear register fields
+    const nameInp = document.getElementById("addContactName");
+    const subjInp = document.getElementById("addContactSubject");
+    const emailInp = document.getElementById("addContactEmail");
+    const passInp = document.getElementById("addContactPass");
+    if (nameInp) nameInp.value = "";
+    if (subjInp) subjInp.value = "";
+    if (emailInp) emailInp.value = "";
+    if (passInp) passInp.value = "";
+  }
+};
+
+window.closeAddContactModal = function() {
+  const el = document.getElementById("addContactModal");
+  if (el) el.classList.remove("show");
+};
+
+window.searchContactByEmail = async function() {
+  const query = (document.getElementById("addContactSearch").value || "").trim().toLowerCase();
+  const resultEl = document.getElementById("contactSearchResult");
+
+  if (!query || query.length < 2) {
+    resultEl.innerHTML = '<p style="color:#ea4335; font-size:13px; margin-top:8px;">Masukkan minimal 2 karakter untuk mencari.</p>';
+    return;
+  }
+
+  resultEl.innerHTML = '<p style="color:#667781; font-size:13px; margin-top:8px;">🔍 Mencari di database...</p>';
+
+  try {
+    let data = [];
+    const isEmail = query.includes("@");
+
+    if (isEmail) {
+      data = await supabaseRest("users?email=eq." + encodeURIComponent(query) + "&select=id,nama,mata_pelajaran,email,avatar,status");
+    } else {
+      data = await supabaseRest("users?select=id,nama,mata_pelajaran,email,avatar,status");
+      data = (data || []).filter(function(u) {
+        return (u.nama || "").toLowerCase().includes(query) || (u.email || "").toLowerCase().includes(query);
+      });
+    }
+
+    // Filter out self
+    data = (data || []).filter(function(u) { return !currentUser || String(u.id) !== String(currentUser.id); });
+
+    if (!data || !data.length) {
+      resultEl.innerHTML =
+        '<div style="text-align:center; padding:18px 10px;">' +
+          '<div style="font-size:32px; margin-bottom:6px;">🙁</div>' +
+          '<p style="color:#667781; font-size:13px; margin-bottom:8px;">Pengguna "' + escapeHtml(query) + '" belum terdaftar.</p>' +
+          '<button type="button" class="btn btn-secondary" style="font-size:12px; padding:6px 12px;" onclick="switchAddContactTab(\'new\'); document.getElementById(\'addContactEmail\').value=\'' + escapeAttribute(isEmail ? query : '') + '\';">' +
+            '➕ Daftarkan Akun Baru' +
+          '</button>' +
+        '</div>';
+      return;
+    }
+
+    // Render results
+    let html = '<div style="display:flex; flex-direction:column; gap:8px; margin-top:8px;">';
+    data.slice(0, 5).forEach(function(u) {
+      const alreadyContact = teachers.some(function(t) { return String(t.id) === String(u.id); });
+      html +=
+        '<div style="display:flex; align-items:center; gap:10px; padding:10px; background:#f0f2f5; border-radius:10px;">' +
+          '<div style="width:40px; height:40px; border-radius:50%; background:var(--green,#128c7e); display:flex; align-items:center; justify-content:center; font-size:16px; color:white; overflow:hidden; flex-shrink:0;">' +
+            (u.avatar ? '<img src="' + escapeAttribute(u.avatar) + '" style="width:100%;height:100%;object-fit:cover;">' : getInitial(u.nama)) +
+          '</div>' +
+          '<div style="flex:1; min-width:0;">' +
+            '<div style="font-weight:600; font-size:13.5px; color:#111b21; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">' + escapeHtml(u.nama) + '</div>' +
+            '<div style="font-size:11.5px; color:#667781;">' + escapeHtml(u.mata_pelajaran || "Belum diatur") + '</div>' +
+            '<div style="font-size:11px; color:#999;">' + escapeHtml(u.email) + '</div>' +
+          '</div>' +
+          '<button type="button" class="btn ' + (alreadyContact ? 'btn-secondary' : 'btn-save') + '" style="min-width:80px; font-size:12px; padding:6px 10px;" ' +
+            'onclick="startChatWith(\'' + u.id + '\',\'' + escapeAttribute(u.nama) + '\',\'' + escapeAttribute(u.mata_pelajaran || "") + '\',\'' + escapeAttribute(u.avatar || "") + '\',\'' + escapeAttribute(u.status || "") + '\')">' +
+            (alreadyContact ? '💬 Buka Chat' : '➕ Tambah & Chat') +
+          '</button>' +
+        '</div>';
+    });
+    html += '</div>';
+    resultEl.innerHTML = html;
+  } catch (err) {
+    console.error("Search contact error:", err);
+    resultEl.innerHTML = '<p style="color:#ea4335; font-size:13px; margin-top:8px;">❌ Gagal mencari: ' + escapeHtml(err.message) + '</p>';
+  }
+};
+
+// Daftarkan akun kontak baru langsung ke tabel users
+window.saveNewContact = async function() {
+  const name = (document.getElementById("addContactName").value || "").trim();
+  const phone = (document.getElementById("addContactSubject").value || "").trim();
+  const email = (document.getElementById("addContactEmail").value || "").trim().toLowerCase();
+  const pass = (document.getElementById("addContactPass").value || "");
+
+  if (!name) {
+    alert("Nama lengkap kontak wajib diisi.");
+    return;
+  }
+  if (!email || !isValidEmail(email)) {
+    alert("Alamat email wajib diisi dengan format yang benar.");
+    return;
+  }
+  if (!pass || pass.length < 6) {
+    alert("Password akun minimal 6 karakter.");
+    return;
+  }
+
+  showLoading();
+  try {
+    // Cek apakah email sudah terdaftar
+    const existing = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&select=id,nama,mata_pelajaran,avatar,status");
+    if (existing && existing.length > 0) {
+      hideLoading();
+      alert("Email ini sudah terdaftar atas nama " + existing[0].nama + ". Menghubungkan langsung ke kontak...");
+      startChatWith(existing[0].id, existing[0].nama, existing[0].mata_pelajaran, existing[0].avatar, existing[0].status);
+      return;
+    }
+
+    // Hash password
+    const hashedPass = await hashPassword(pass);
+
+    const newUser = await supabaseRest("users", {
+      method: "POST",
+      body: JSON.stringify({
+        nama: name,
+        mata_pelajaran: phone || "Belum diatur",
+        email: email,
+        password: hashedPass,
+        status: "Offline",
+        last_seen: new Date().toISOString()
+      })
+    });
+
+    const data = Array.isArray(newUser) ? newUser[0] : newUser;
+    hideLoading();
+
+    toast("Kontak " + name + " berhasil ditambahkan!");
+    await loadAllData();
+    startChatWith(data.id, data.nama, data.mata_pelajaran, data.avatar, data.status);
+  } catch (err) {
+    hideLoading();
+    console.error("Save new contact error:", err);
+    alert("Gagal menambahkan kontak: " + (err.message || "Periksa koneksi internet"));
+  }
+};
+
+// Mulai chat dengan kontak yang ditemukan / dibuat
+window.startChatWith = function(userId, userName, userSubject, userAvatar, userStatus) {
+  let target = teachers.find(function(t) { return String(t.id) === String(userId); });
+  if (!target) {
+    target = {
+      type: "user",
+      id: userId,
+      nama: userName,
+      mataPelajaran: userSubject || "Belum diatur",
+      avatar: userAvatar || "",
+      status: userStatus || "Offline"
+    };
+    teachers.push(target);
+  }
+  renderSidebarList();
+  closeAddContactModal();
+  selectTarget(target);
 };
 
 window.saveNewGroup = async function() {
@@ -3696,7 +3934,14 @@ window.deleteMessage = async function(msgId) {
 
 // KIRIM ATAU SIMPAN EDIT PESAN
 window.sendMessage = async function() {
-  if (!currentUser || !selectedTarget) return;
+  if (!currentUser) {
+    toast("Silakan masuk terlebih dahulu.");
+    return;
+  }
+  if (!selectedTarget) {
+    toast("Pilih kontak atau grup terlebih dahulu untuk mengirim pesan.");
+    return;
+  }
 
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
@@ -3801,7 +4046,15 @@ window.startVoiceRecording = async function() {
   }
 
   try {
-    voiceRecordingStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voiceRecordingStream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        autoGainControl: true,
+        channelCount: 1,
+        sampleRate: 48000
+      }
+    });
     voiceAudioChunks = [];
     voiceRecordingSeconds = 0;
 
@@ -4417,23 +4670,19 @@ function updateCallButton() {
   if (videoBtn) videoBtn.style.display = isDirect ? "flex" : "none";
 }
 
-const _origSelectTarget = window.selectTarget;
-window.selectTarget = function(item) {
-  if (typeof _origSelectTarget === "function") _origSelectTarget(item);
-  updateCallButton();
-  if (item && item.id) {
-    updateContactBadge(item.id, false);
-  }
-  requestNotifPermission();
-};
-
 // MULAI PANGGILAN SUARA (VOICE CALL)
 window.startVoiceCall = async function() {
+  if (!currentUser) { toast("Silakan masuk terlebih dahulu."); return; }
+  if (!selectedTarget) { toast("Pilih kontak terlebih dahulu."); return; }
+  if (selectedTarget.type === "group") { toast("Panggilan hanya mendukung percakapan pribadi."); return; }
   await initiateCall("voice");
 };
 
 // MULAI PANGGILAN VIDEO (VIDEO CALL)
 window.startVideoCall = async function() {
+  if (!currentUser) { toast("Silakan masuk terlebih dahulu."); return; }
+  if (!selectedTarget) { toast("Pilih kontak terlebih dahulu."); return; }
+  if (selectedTarget.type === "group") { toast("Panggilan hanya mendukung percakapan pribadi."); return; }
   await initiateCall("video");
 };
 
@@ -4451,8 +4700,16 @@ async function initiateCall(type) {
 
   try {
     const isVideo = activeCallType === "video";
+    const audioConstraints = {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+      channelCount: 1,
+      sampleRate: 48000
+    };
+
     const constraints = {
-      audio: true,
+      audio: audioConstraints,
       video: isVideo ? { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } : false
     };
 
@@ -4476,8 +4733,33 @@ async function initiateCall(type) {
       handleRemoteTrack(event);
     };
 
-    const offer = await peerConnection.createOffer();
-    await peerConnection.setLocalDescription(offer);
+    const offer = await peerConnection.createOffer({
+      offerToReceiveAudio: true,
+      offerToReceiveVideo: isVideo
+    });
+    
+    // Tune SDP for High-Definition Opus Audio
+    const tunedOfferSdp = tuneSdpAudio(offer.sdp);
+    const tunedOffer = new RTCSessionDescription({ type: offer.type, sdp: tunedOfferSdp });
+    await peerConnection.setLocalDescription(tunedOffer);
+
+    // Tunggu ICE gathering selesai agar SDP berisi host & srflx candidates
+    await new Promise(function(resolve) {
+      if (peerConnection.iceGatheringState === "complete") {
+        resolve();
+      } else {
+        function checkState() {
+          if (peerConnection.iceGatheringState === "complete") {
+            peerConnection.removeEventListener("icegatheringstatechange", checkState);
+            resolve();
+          }
+        }
+        peerConnection.addEventListener("icegatheringstatechange", checkState);
+        setTimeout(resolve, 1200);
+      }
+    });
+
+    const fullOffer = peerConnection.localDescription || tunedOffer;
 
     // Simpan sinyal panggilan ke Supabase melalui tabel calls
     await supabaseRest("calls", {
@@ -4488,7 +4770,7 @@ async function initiateCall(type) {
         callee_id: selectedTarget.id,
         call_type: activeCallType,
         status: "ringing",
-        offer: JSON.stringify(offer),
+        offer: JSON.stringify(fullOffer),
         answer: null,
         ice_candidates: "[]"
       })
@@ -4506,11 +4788,28 @@ async function initiateCall(type) {
   }
 }
 
+// Helper untuk meningkatkan kualitas audio Opus pada SDP WebRTC
+function tuneSdpAudio(sdp) {
+  if (!sdp) return sdp;
+  return sdp.replace(/a=fmtp:(\d+) minptime=\d+;useinbandfec=1/gi, function(m, pt) {
+    return 'a=fmtp:' + pt + ' minptime=10;useinbandfec=1;maxaveragebitrate=64000;stereo=0;sprop-stereo=0;cbr=1';
+  }).replace(/a=fmtp:(\d+) (.*useinbandfec=1.*)/gi, function(m, pt, rest) {
+    if (rest.includes("maxaveragebitrate")) return m;
+    return 'a=fmtp:' + pt + ' ' + rest + ';maxaveragebitrate=64000;cbr=1';
+  });
+}
+
 function handleRemoteTrack(event) {
   if (event.streams && event.streams[0]) {
     const stream = event.streams[0];
     const remoteAudio = document.getElementById("remoteAudio");
-    if (remoteAudio) remoteAudio.srcObject = stream;
+    if (remoteAudio) {
+      remoteAudio.srcObject = stream;
+      remoteAudio.volume = isSpeakerOn ? 1.0 : 0.9;
+      remoteAudio.play().catch(function(e) {
+        console.warn("Audio playback notice:", e);
+      });
+    }
 
     if (activeCallType === "video") {
       const remoteVideo = document.getElementById("remoteVideo");
@@ -4586,7 +4885,7 @@ function startIncomingCallPoll() {
       const call = data[0];
       if (incomingCallData && incomingCallData.id === call.id) return;
 
-      const callerInfo = teachers.find(function(t) { return t.id === call.caller_id; });
+      const callerInfo = teachers.find(function(t) { return String(t.id) === String(call.caller_id); });
       if (!callerInfo) return;
 
       incomingCallData = call;
@@ -4620,12 +4919,20 @@ window.acceptIncomingCall = async function() {
   activeCallType = call.call_type || "voice";
   const isVideo = activeCallType === "video";
 
-  const callerInfo = teachers.find(function(t) { return t.id === call.caller_id; });
+  const callerInfo = teachers.find(function(t) { return String(t.id) === String(call.caller_id); });
   showCallOverlay(callerInfo || { nama: "Guru", avatar: "" }, "Menghubungkan...", activeCallType);
 
   try {
+    const audioConstraints = {
+      echoCancellation: true,
+      noiseSuppression: true,
+      autoGainControl: true,
+      channelCount: 1,
+      sampleRate: 48000
+    };
+
     const constraints = {
-      audio: true,
+      audio: audioConstraints,
       video: isVideo ? { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } : false
     };
 
@@ -4648,14 +4955,39 @@ window.acceptIncomingCall = async function() {
 
     const offer = JSON.parse(call.offer);
     await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-    const answer = await peerConnection.createAnswer();
-    await peerConnection.setLocalDescription(answer);
+    const answer = await peerConnection.createAnswer({
+      offerToReceiveAudio: true,
+      offerToReceiveVideo: isVideo
+    });
+    
+    // Tune SDP for High-Definition Opus Audio
+    const tunedAnswerSdp = tuneSdpAudio(answer.sdp);
+    const tunedAnswer = new RTCSessionDescription({ type: answer.type, sdp: tunedAnswerSdp });
+    await peerConnection.setLocalDescription(tunedAnswer);
+
+    // Tunggu ICE gathering selesai
+    await new Promise(function(resolve) {
+      if (peerConnection.iceGatheringState === "complete") {
+        resolve();
+      } else {
+        function checkState() {
+          if (peerConnection.iceGatheringState === "complete") {
+            peerConnection.removeEventListener("icegatheringstatechange", checkState);
+            resolve();
+          }
+        }
+        peerConnection.addEventListener("icegatheringstatechange", checkState);
+        setTimeout(resolve, 1200);
+      }
+    });
+
+    const fullAnswer = peerConnection.localDescription || tunedAnswer;
 
     await supabaseRest("calls?id=eq." + call.id, {
       method: "PATCH",
       body: JSON.stringify({
         status: "answered",
-        answer: JSON.stringify(answer)
+        answer: JSON.stringify(fullAnswer)
       })
     });
 
@@ -4716,7 +5048,10 @@ window.endCall = function() {
   const localVideo = document.getElementById("localVideo");
   if (localVideo) localVideo.srcObject = null;
   const remoteAudio = document.getElementById("remoteAudio");
-  if (remoteAudio) remoteAudio.srcObject = null;
+  if (remoteAudio) {
+    remoteAudio.pause();
+    remoteAudio.srcObject = null;
+  }
 
   hideCallOverlay();
   isMuted = false;
@@ -4798,7 +5133,15 @@ window.switchCamera = async function() {
 window.toggleSpeaker = function() {
   isSpeakerOn = !isSpeakerOn;
   const btn = document.getElementById("speakerBtn");
-  if (btn) btn.classList.toggle("speaker-on", isSpeakerOn);
+  if (btn) {
+    btn.classList.toggle("speaker-on", isSpeakerOn);
+    btn.title = isSpeakerOn ? "Speaker Aktif (Keras)" : "Speaker Normal";
+  }
+  const remoteAudio = document.getElementById("remoteAudio");
+  if (remoteAudio) {
+    remoteAudio.volume = isSpeakerOn ? 1.0 : 0.8;
+  }
+  toast(isSpeakerOn ? "🔊 Speaker Eksternal Aktif" : "🔈 Speaker Normal");
 };
 
 function showCallOverlay(contactOrGroup, statusText, callType) {
@@ -4947,21 +5290,7 @@ function stopIncomingRingSound() {
   }
 }
 
-// Override startApplication untuk tambah notifikasi & call poll
-const _origStart = window.startApplication || startApplication;
-function startApplication() {
-  document.getElementById("loginScreen").style.display = "none";
-  document.getElementById("app").style.display = "flex";
-  updateMyProfile();
-  loadAllData();
-  startPolling();
-  requestNotifPermission();
-  startIncomingCallPoll();
-  toast("Selamat datang, " + currentUser.nama);
-}
-
-// Override handleIncomingMessage untuk notifikasi & badge
-const _origHandleMsg = window.handleIncomingMessage;
+// Realtime/Incoming Message Handler (Notification & Unread Badge)
 window.handleIncomingMessage = function(msg) {
   if (!currentUser) return;
 
@@ -4993,7 +5322,7 @@ window.handleIncomingMessage = function(msg) {
       playNotificationSound();
     }
   } else if (!inActiveChat && msg.receiver_id === currentUser.id && msg.sender_id !== currentUser.id) {
-    const sender = teachers.find(function(t) { return t.id === msg.sender_id; });
+    const sender = teachers.find(function(t) { return String(t.id) === String(msg.sender_id); });
     const senderName = sender ? sender.nama : "Guru";
     const senderAvatar = sender ? sender.avatar : "";
     const preview = msg.message_type === "IMAGE"
@@ -5007,30 +5336,6 @@ window.handleIncomingMessage = function(msg) {
     updateContactBadge(msg.sender_id, true);
   }
 };
-
-// Patch renderSidebarList untuk badge
-const _origRenderList = window.renderSidebarList || renderSidebarList;
-function renderSidebarListWithBadge() {
-  if (typeof _origRenderList === "function") _origRenderList();
-  const container = document.getElementById("contacts");
-  if (!container) return;
-  container.querySelectorAll(".contact").forEach(function(el) {
-    const id = el.dataset.contactId;
-    if (!id) return;
-    const old = el.querySelector(".notif-badge");
-    if (old) old.remove();
-    if (unreadCounts[id]) {
-      const avatarEl = el.querySelector(".avatar");
-      if (avatarEl) {
-        avatarEl.style.position = "relative";
-        const badge = document.createElement("span");
-        badge.className = "notif-badge";
-        badge.textContent = unreadCounts[id] > 99 ? "99+" : unreadCounts[id];
-        avatarEl.appendChild(badge);
-      }
-    }
-  });
-}
 </script>
 </body>
 </html>
