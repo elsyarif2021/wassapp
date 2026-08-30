@@ -761,8 +761,78 @@
     }
 
     .message-status {
-      color: #53bdeb;
-      font-size: 11px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: -1px;
+      margin-left: 2px;
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+      user-select: none;
+    }
+
+    /* Centang 2 Warna Hijau: Pesan Sudah Dibaca */
+    .message-status.read {
+      color: #25d366;
+    }
+
+    /* Centang 2 Warna Merah: Pesan Belum Dibaca */
+    .message-status.delivered {
+      color: #ea4335;
+    }
+
+    /* Centang 1: Lawan Bicara Tidak Aktif / Offline */
+    .message-status.sent {
+      color: #8696a0;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
+    /* Tanda Silang Merah: Nomor Sudah Tidak Digunakan / Tidak Aktif */
+    .message-status.invalid {
+      color: #ea4335;
+      font-size: 12px;
+      cursor: pointer;
+      animation: pulseAlert 1.5s infinite ease-in-out;
+    }
+
+    @keyframes pulseAlert {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    /* Indikator Animasi Sedang Mengetik */
+    .status-typing {
+      color: var(--green, #128c7e) !important;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .typing-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 2.5px;
+      margin-left: 4px;
+    }
+
+    .typing-dot {
+      width: 4px;
+      height: 4px;
+      background-color: var(--green, #128c7e);
+      border-radius: 50%;
+      display: inline-block;
+      animation: typingBounce 1.3s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    .typing-dot:nth-child(3) { animation-delay: 0s; }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0.3); opacity: 0.3; }
+      40% { transform: scale(1); opacity: 1; }
     }
 
     /* Message Action Buttons (Edit & Delete) */
@@ -2232,6 +2302,7 @@
         </div>
       </div>
       <div class="header-actions">
+        <button type="button" class="icon-btn" title="Pengaturan Nada & Notifikasi" onclick="openSettingsModal()">⚙️</button>
         <button type="button" class="icon-btn" title="Buat Grup Chat" onclick="openCreateGroupModal()">👥</button>
         <button type="button" class="icon-btn" title="Tambah Kontak Guru" onclick="openAddContactModal()">➕</button>
         <button type="button" class="icon-btn" title="Keluar / Logout" onclick="logout()">🚪</button>
@@ -2582,7 +2653,7 @@
         <img id="previewImage" alt="Preview attachment">
       </div>
 
-      <textarea id="messageInput" class="message-input" placeholder="Ketik pesan..." rows="1" onkeydown="handleMessageKey(event)" oninput="autoResize(this)"></textarea>
+      <textarea id="messageInput" class="message-input" placeholder="Ketik pesan..." rows="1" onkeydown="handleMessageKey(event)" oninput="autoResize(this); handleTypingActivity();"></textarea>
       <button type="button" class="icon-btn record-vn-btn" id="recordVnBtn" onclick="toggleVoiceRecording()" title="Rekam Voice Note (Pesan Suara)">🎙️</button>
       <button type="button" class="send-btn" id="sendMsgBtn" onclick="sendMessage()" title="Kirim">➤</button>
     </div>
@@ -2684,6 +2755,75 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" onclick="closeProfile()">Batal</button>
       <button type="button" class="btn btn-save" onclick="saveProfile()">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Pengaturan Nada Pesan & Nada Telpon -->
+<div class="modal" id="settingsModal">
+  <div class="modal-card" style="max-width: 480px;">
+    <div class="modal-header">
+      <h2>⚙️ Pengaturan Nada & Notifikasi</h2>
+      <button type="button" class="close" onclick="closeSettingsModal()">×</button>
+    </div>
+
+    <!-- Section 1: Nada Pesan Masuk -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <label style="font-weight: 700; color: #1e293b; font-size: 14px; margin: 0;">💬 Nada Pesan Masuk</label>
+        <button type="button" class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px; border-radius: 6px;" onclick="testMessageRingtone()">▶ Putar Nada</button>
+      </div>
+      <div class="form-group" style="margin-bottom: 10px;">
+        <select id="settingMsgRingtone" class="auth-input" style="background: #fff; font-size: 13.5px;" onchange="testMessageRingtone()">
+          <option value="chime">Chime Harmoni (Default)</option>
+          <option value="ding">Ding Lembut (Acoustic)</option>
+          <option value="pop">Pop Modern (Bubble)</option>
+          <option value="bell">Dua Nada Bell (Crystal)</option>
+          <option value="marimba">Marimba Ringkas</option>
+          <option value="mute">Hening / Bisukan</option>
+        </select>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: #64748b;">
+        <span>Volume Pesan:</span>
+        <span id="msgVolLabel" style="font-weight: 600; color: #00a884;">80%</span>
+      </div>
+      <input type="range" id="settingMsgVolume" min="0" max="100" value="80" style="width: 100%; accent-color: #00a884; cursor: pointer; margin-top: 4px;" oninput="document.getElementById('msgVolLabel').textContent=this.value+'%'">
+    </div>
+
+    <!-- Section 2: Nada Panggilan Masuk (Voice & Video Call) -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px; margin-bottom: 16px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <label style="font-weight: 700; color: #1e293b; font-size: 14px; margin: 0;">📞 Nada Dering Panggilan</label>
+        <button type="button" id="btnTestCallRingtone" class="btn btn-secondary" style="padding: 4px 10px; font-size: 12px; border-radius: 6px;" onclick="toggleTestCallRingtone()">▶ Uji Dering Panggilan</button>
+      </div>
+      <div class="form-group" style="margin-bottom: 10px;">
+        <select id="settingCallRingtone" class="auth-input" style="background: #fff; font-size: 13.5px;" onchange="onCallRingtoneSelectChange()">
+          <option value="melody">Melodi Digital (WassApp Style)</option>
+          <option value="classic">Telepon Klasik (Dual-Tone Bell)</option>
+          <option value="marimba">Marimba Panggilan (Harmonis)</option>
+          <option value="sonar">Radar Beat (Modern Pulse)</option>
+          <option value="mute">Hening / Bisukan</option>
+        </select>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; color: #64748b;">
+        <span>Volume Panggilan:</span>
+        <span id="callVolLabel" style="font-weight: 600; color: #00a884;">90%</span>
+      </div>
+      <input type="range" id="settingCallVolume" min="0" max="100" value="90" style="width: 100%; accent-color: #00a884; cursor: pointer; margin-top: 4px;" oninput="document.getElementById('callVolLabel').textContent=this.value+'%'">
+    </div>
+
+    <!-- Section 3: Notifikasi Pop-up Desktop -->
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
+      <div>
+        <strong style="font-size: 13.5px; color: #166534; display: block;">🔔 Notifikasi Desktop Pop-up</strong>
+        <span style="font-size: 11.5px; color: #15803d;">Tampilkan pemberitahuan saat layar sedang di tab lain</span>
+      </div>
+      <input type="checkbox" id="settingDesktopNotif" checked style="width: 20px; height: 20px; accent-color: #00a884; cursor: pointer;">
+    </div>
+
+    <div class="modal-footer" style="display: flex; gap: 10px;">
+      <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeSettingsModal()">Batal</button>
+      <button type="button" class="btn btn-save" style="flex: 2;" onclick="saveAppSettings()">💾 Simpan Pengaturan</button>
     </div>
   </div>
 </div>
@@ -3378,6 +3518,18 @@ function renderSidebarList() {
       ? (item.description || "Grup Chat Guru")
       : (item.mataPelajaran || "Belum diatur");
 
+    const isTyping = !isGroup && item.status && item.status.includes("mengetik");
+    const isInactive = !isGroup && (item.status === "Tidak Aktif" || item.status === "Inactive");
+
+    let subHtml = "";
+    if (isTyping) {
+      subHtml = '<span style="color:#25d366; font-weight:600;">✍️ Sedang mengetik...</span>';
+    } else if (isInactive) {
+      subHtml = '<span style="color:#ea4335; font-weight:600;">❌ Nomor Tidak Aktif</span>';
+    } else {
+      subHtml = (!isGroup ? '<span class="online-dot ' + (item.status === "Online" ? "online" : "") + '"></span>' : '👥 ') + escapeHtml(subtitle);
+    }
+
     const details = document.createElement("div");
     details.className = "contact-details";
     details.innerHTML =
@@ -3385,10 +3537,7 @@ function renderSidebarList() {
         '<span>' + escapeHtml(title) + (isGroup ? '<span class="group-badge">GRUP</span>' : '') + '</span>' +
       '</div>' +
       '<div class="contact-sub">' +
-        '<span>' +
-          (!isGroup ? '<span class="online-dot ' + (item.status === "Online" ? "online" : "") + '"></span>' : '👥 ') +
-          escapeHtml(subtitle) +
-        '</span>' +
+        '<span>' + subHtml + '</span>' +
       '</div>';
 
     el.appendChild(avatar);
@@ -3407,12 +3556,31 @@ window.selectTarget = function(item) {
 
   const isGroup = item.type === "group";
   const title = isGroup ? item.name : item.nama;
-  const status = isGroup ? (item.description || "Grup Chat Guru") : (item.status === "Online" ? "Online" : (item.mataPelajaran || "Offline"));
 
   document.getElementById("chatName").textContent = title;
   const statusEl = document.getElementById("chatStatus");
-  statusEl.textContent = status;
-  statusEl.className = "chat-status " + (!isGroup && item.status === "Online" ? "status-online" : "");
+
+  if (isGroup) {
+    statusEl.textContent = item.description || "Grup Chat Guru";
+    statusEl.className = "chat-status";
+    statusEl.style.color = "";
+  } else if (item.status && item.status.includes("mengetik")) {
+    statusEl.innerHTML = '✍️ Sedang mengetik<span class="typing-dots"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></span>';
+    statusEl.className = "chat-status status-typing";
+    statusEl.style.color = "";
+  } else if (item.status === "Tidak Aktif" || item.status === "Inactive") {
+    statusEl.innerHTML = '❌ Nomor Sudah Tidak Aktif';
+    statusEl.className = "chat-status";
+    statusEl.style.color = "#ea4335";
+  } else if (item.status === "Online") {
+    statusEl.innerHTML = '🟢 Online';
+    statusEl.className = "chat-status status-online";
+    statusEl.style.color = "";
+  } else {
+    statusEl.textContent = item.mataPelajaran || "Offline";
+    statusEl.className = "chat-status";
+    statusEl.style.color = "";
+  }
   
   const chatAvatar = document.getElementById("chatAvatar");
   chatAvatar.className = "avatar " + (isGroup ? "group-avatar" : "");
@@ -3706,8 +3874,234 @@ window.saveNewGroup = async function() {
 };
 
 // ============================================================================
-// CHAT MESSAGES (LOAD, SEND, EDIT, DELETE, AUDIO VN, PHOTO)
+// CHAT MESSAGES (LOAD, SEND, STATUS CHECKMARKS, TYPING INDICATOR, AUDIO VN)
 // ============================================================================
+let typingTimer = null;
+// ============================================================================
+// PENGATURAN APLIKASI (NADA PESAN, NADA TELPON, NOTIFIKASI)
+// ============================================================================
+const DEFAULT_APP_SETTINGS = {
+  msgRingtone: "chime",
+  msgVolume: 80,
+  callRingtone: "melody",
+  callVolume: 90,
+  desktopNotif: true
+};
+
+let appSettings = Object.assign({}, DEFAULT_APP_SETTINGS);
+
+function loadAppSettings() {
+  try {
+    const saved = localStorage.getItem("wassapp_settings");
+    if (saved) {
+      appSettings = Object.assign({}, DEFAULT_APP_SETTINGS, JSON.parse(saved));
+    }
+  } catch (e) {}
+}
+loadAppSettings();
+
+window.openSettingsModal = function() {
+  loadAppSettings();
+  const el = document.getElementById("settingsModal");
+  if (!el) return;
+
+  const msgToneSelect = document.getElementById("settingMsgRingtone");
+  const msgVolInput = document.getElementById("settingMsgVolume");
+  const msgVolLabel = document.getElementById("msgVolLabel");
+  const callToneSelect = document.getElementById("settingCallRingtone");
+  const callVolInput = document.getElementById("settingCallVolume");
+  const callVolLabel = document.getElementById("callVolLabel");
+  const desktopNotifChk = document.getElementById("settingDesktopNotif");
+
+  if (msgToneSelect) msgToneSelect.value = appSettings.msgRingtone || "chime";
+  if (msgVolInput) {
+    msgVolInput.value = appSettings.msgVolume != null ? appSettings.msgVolume : 80;
+    if (msgVolLabel) msgVolLabel.textContent = msgVolInput.value + "%";
+  }
+  if (callToneSelect) callToneSelect.value = appSettings.callRingtone || "melody";
+  if (callVolInput) {
+    callVolInput.value = appSettings.callVolume != null ? appSettings.callVolume : 90;
+    if (callVolLabel) callVolLabel.textContent = callVolInput.value + "%";
+  }
+  if (desktopNotifChk) desktopNotifChk.checked = appSettings.desktopNotif !== false;
+
+  stopTestCallRingtone();
+  el.classList.add("show");
+};
+
+window.closeSettingsModal = function() {
+  stopTestCallRingtone();
+  const el = document.getElementById("settingsModal");
+  if (el) el.classList.remove("show");
+};
+
+window.saveAppSettings = function() {
+  try {
+    const msgTone = document.getElementById("settingMsgRingtone").value;
+    const msgVol = parseInt(document.getElementById("settingMsgVolume").value, 10) || 80;
+    const callTone = document.getElementById("settingCallRingtone").value;
+    const callVol = parseInt(document.getElementById("settingCallVolume").value, 10) || 90;
+    const desktopN = document.getElementById("settingDesktopNotif").checked;
+
+    appSettings = {
+      msgRingtone: msgTone,
+      msgVolume: msgVol,
+      callRingtone: callTone,
+      callVolume: callVol,
+      desktopNotif: desktopN
+    };
+
+    localStorage.setItem("wassapp_settings", JSON.stringify(appSettings));
+    stopTestCallRingtone();
+    closeSettingsModal();
+    toast("✅ Pengaturan nada & notifikasi berhasil disimpan!");
+  } catch (err) {
+    console.error("Save settings error:", err);
+    toast("Gagal menyimpan pengaturan: " + err.message);
+  }
+};
+
+// ============================================================================
+// NADA PESAN MASUK (AUDIO SYNTHESIZER)
+// ============================================================================
+window.playMessageRingtone = function(toneType, volumePercent) {
+  const type = toneType || appSettings.msgRingtone || "chime";
+  const volPct = volumePercent != null ? volumePercent : (appSettings.msgVolume != null ? appSettings.msgVolume : 80);
+
+  if (type === "mute" || volPct <= 0) return;
+
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ctx = new AC();
+    const now = ctx.currentTime;
+    const masterGain = ctx.createGain();
+    const baseVolume = (volPct / 100) * 0.22;
+
+    masterGain.gain.setValueAtTime(baseVolume, now);
+    masterGain.connect(ctx.destination);
+
+    if (type === "chime") {
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const g1 = ctx.createGain();
+      const g2 = ctx.createGain();
+
+      osc1.type = "sine";
+      osc1.frequency.setValueAtTime(659.25, now);
+      osc1.frequency.exponentialRampToValueAtTime(880, now + 0.12);
+
+      osc2.type = "triangle";
+      osc2.frequency.setValueAtTime(1318.51, now + 0.08);
+      osc2.frequency.exponentialRampToValueAtTime(1760, now + 0.22);
+
+      g1.gain.setValueAtTime(1, now);
+      g1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+      g2.gain.setValueAtTime(0.8, now + 0.08);
+      g2.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+      osc1.connect(g1); g1.connect(masterGain);
+      osc2.connect(g2); g2.connect(masterGain);
+
+      osc1.start(now); osc1.stop(now + 0.35);
+      osc2.start(now + 0.08); osc2.stop(now + 0.35);
+    } else if (type === "ding") {
+      const osc = ctx.createOscillator();
+      const oscSub = ctx.createOscillator();
+      const g = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(880, now);
+      oscSub.type = "sine";
+      oscSub.frequency.setValueAtTime(1760, now);
+
+      g.gain.setValueAtTime(1, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+
+      osc.connect(g);
+      oscSub.connect(g);
+      g.connect(masterGain);
+
+      osc.start(now); osc.stop(now + 0.5);
+      oscSub.start(now); oscSub.stop(now + 0.5);
+    } else if (type === "pop") {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(350, now);
+      osc.frequency.exponentialRampToValueAtTime(950, now + 0.08);
+
+      g.gain.setValueAtTime(1, now);
+      g.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+
+      osc.connect(g); g.connect(masterGain);
+      osc.start(now); osc.stop(now + 0.12);
+    } else if (type === "bell") {
+      const notes = [783.99, 1174.66];
+      notes.forEach(function(freq, i) {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        const t = now + i * 0.09;
+
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, t);
+
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.9, t + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.4);
+
+        osc.connect(g); g.connect(masterGain);
+        osc.start(t); osc.stop(t + 0.4);
+      });
+    } else if (type === "marimba") {
+      const notes = [1046.50, 1318.51, 1567.98];
+      notes.forEach(function(freq, i) {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        const t = now + i * 0.07;
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, t);
+
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(0.85, t + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.001, t + 0.22);
+
+        osc.connect(g); g.connect(masterGain);
+        osc.start(t); osc.stop(t + 0.25);
+      });
+    }
+  } catch (e) {
+    console.warn("Play message tone error:", e);
+  }
+};
+
+window.testMessageRingtone = function() {
+  const tone = document.getElementById("settingMsgRingtone").value;
+  const vol = parseInt(document.getElementById("settingMsgVolume").value, 10) || 80;
+  playMessageRingtone(tone, vol);
+};
+
+window.playNotificationSound = function() {
+  playMessageRingtone(appSettings.msgRingtone, appSettings.msgVolume);
+};
+
+window.showInactiveNotice = function() {
+  toast("⚠️ Nomor kontak ini sudah tidak digunakan / akun tidak aktif.");
+};
+
+function notifyIncomingMessage(senderName, messageText) {
+  if (appSettings.desktopNotif && Notification.permission === "granted" && document.hidden) {
+    try {
+      new Notification("💬 " + senderName, {
+        body: messageText,
+        icon: "https://img.icons8.com/color/96/whatsapp--v1.png"
+      });
+    } catch(e) {}
+  }
+}
+
 window.refreshMessages = async function(isSilent = false) {
   if (!currentUser || !selectedTarget) return;
 
@@ -3724,6 +4118,7 @@ window.refreshMessages = async function(isSilent = false) {
     const oldLen = currentMessages.length;
     currentMessages = Array.isArray(data)
       ? data.map(function(m) {
+          const isMsgRead = m.is_read === true || (selectedTarget && selectedTarget.status === "Online" && new Date(selectedTarget.last_seen || 0) > new Date(m.created_at));
           return {
             id: m.id,
             sender: m.sender_id,
@@ -3732,14 +4127,19 @@ window.refreshMessages = async function(isSilent = false) {
             messageText: m.message_text,
             messageType: m.message_type || "TEXT",
             attachment: m.attachment_url,
-            timestamp: m.created_at
+            timestamp: m.created_at,
+            isRead: isMsgRead
           };
         })
       : [];
 
     if (!isSilent || currentMessages.length !== oldLen) {
       if (isSilent && currentMessages.length > oldLen) {
-        playNotificationSound();
+        const latestMsg = currentMessages[currentMessages.length - 1];
+        if (latestMsg && String(latestMsg.sender) !== String(currentUser.id)) {
+          playNotificationSound();
+          notifyIncomingMessage(selectedTarget.nama || "Pesan Baru", latestMsg.messageText || "Pesan baru");
+        }
       }
       renderMessages();
     }
@@ -3763,6 +4163,9 @@ function renderMessages() {
       '<div class="empty-chat"><div class="big">👋</div><h3>Belum ada percakapan</h3><p>Kirim pesan pertama kepada ' + escapeHtml(title) + '</p></div>';
     return;
   }
+
+  const otherReplies = currentMessages.filter(function(m) { return String(m.sender) !== String(currentUser.id); });
+  const latestOtherReplyTime = otherReplies.length > 0 ? new Date(otherReplies[otherReplies.length - 1].timestamp).getTime() : 0;
 
   container.innerHTML = "";
   currentMessages.forEach(function(message) {
@@ -3825,10 +4228,33 @@ function renderMessages() {
       html += '<span id="text_' + message.id + '">' + escapeHtml(message.messageText).replace(/\n/g, "<br>") + '</span>';
     }
 
+    // Status Centang:
+    // 1. Inactive: Silang Merah ❌
+    // 2. Read: Centang 2 Hijau ✓✓
+    // 3. Delivered (Online / Mengetik): Centang 2 Merah ✓✓
+    // 4. Sent (Offline): Centang 1 Abu-abu ✓
+    let statusHtml = "";
+    if (mine) {
+      const isInactive = selectedTarget && (selectedTarget.status === "Tidak Aktif" || selectedTarget.status === "Inactive");
+      const msgTime = new Date(message.timestamp).getTime();
+      const isReadByReply = latestOtherReplyTime >= msgTime;
+      const isRead = message.isRead === true || isReadByReply;
+
+      if (isInactive) {
+        statusHtml = '<span class="message-status invalid" onclick="showInactiveNotice()" title="⚠️ Nomor sudah tidak digunakan / tidak aktif">❌</span>';
+      } else if (isRead) {
+        statusHtml = '<span class="message-status read" title="✓✓ Pesan sudah dibaca">✓✓</span>';
+      } else if (selectedTarget && (selectedTarget.status === "Online" || (selectedTarget.status && selectedTarget.status.includes("mengetik")))) {
+        statusHtml = '<span class="message-status delivered" title="✓✓ Terkirim (Belum dibaca)">✓✓</span>';
+      } else {
+        statusHtml = '<span class="message-status sent" title="✓ Terkirim (Lawan bicara offline)">✓</span>';
+      }
+    }
+
     html +=
       '<span class="message-meta">' +
       formatTime(message.timestamp) +
-      (mine ? '<span class="message-status">✓✓</span>' : "") +
+      statusHtml +
       "</span>";
 
     wrapper.innerHTML = html;
@@ -3840,7 +4266,6 @@ function renderMessages() {
 
 function generateWaveformBarsHtml(msgId, count) {
   let bars = "";
-  // Pola tinggi bervariasi menyerupai gelombang suara alami
   const heights = [8, 14, 18, 10, 16, 22, 12, 19, 14, 8, 16, 20, 11, 17, 21, 9, 15, 18, 12, 16, 10, 14, 8, 12];
   for (let i = 0; i < count; i++) {
     const h = heights[i % heights.length];
@@ -3919,6 +4344,12 @@ window.sendMessage = async function() {
     return;
   }
 
+  // Peringatan jika kontak sudah tidak aktif
+  if (selectedTarget.type !== "group" && (selectedTarget.status === "Tidak Aktif" || selectedTarget.status === "Inactive")) {
+    toast("⚠️ Nomor kontak ini sudah tidak digunakan / tidak aktif.");
+    return;
+  }
+
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
 
@@ -3966,6 +4397,12 @@ window.sendMessage = async function() {
   removeAttachment();
   hideEmoji();
 
+  // Reset status typing pengirim ke Online
+  if (currentUser && currentUser.status === "mengetik...") {
+    currentUser.status = "Online";
+    supabaseRest("users?id=eq." + currentUser.id, { method: "PATCH", body: JSON.stringify({ status: "Online" }) }).catch(function(){});
+  }
+
   try {
     const res = await supabaseRest("messages", {
       method: "POST",
@@ -3984,7 +4421,8 @@ window.sendMessage = async function() {
           messageText: newMsg.message_text,
           messageType: newMsg.message_type || "TEXT",
           attachment: newMsg.attachment_url,
-          timestamp: newMsg.created_at
+          timestamp: newMsg.created_at,
+          isRead: false
         });
         renderMessages();
       }
@@ -5244,40 +5682,168 @@ function stopRingbackSound() {
   }
 }
 
-function playIncomingRingSound() {
+let isTestingCallRingtone = false;
+
+window.playIncomingRingSound = function(customTone, customVol) {
   stopIncomingRingSound();
+  const toneType = customTone || appSettings.callRingtone || "melody";
+  const volPct = customVol != null ? customVol : (appSettings.callVolume != null ? appSettings.callVolume : 90);
+
+  if (toneType === "mute" || volPct <= 0) return;
+
   try {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
-    const playRing = function() {
-      incomingRingCtx = new AC();
-      const freqs = [880, 1174.66];
-      freqs.forEach(function(freq, i) {
-        const osc = incomingRingCtx.createOscillator();
-        const gain = incomingRingCtx.createGain();
-        osc.type = "sine";
-        osc.frequency.value = freq;
-        const t = incomingRingCtx.currentTime + i * 0.18;
-        gain.gain.setValueAtTime(0, t);
-        gain.gain.linearRampToValueAtTime(0.12, t + 0.05);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
-        osc.connect(gain); gain.connect(incomingRingCtx.destination);
-        osc.start(t); osc.stop(t + 0.35);
-      });
-    };
-    playRing();
-    incomingRingTimer = setInterval(playRing, 2200);
-  } catch (e) {}
-}
 
-function stopIncomingRingSound() {
-  clearInterval(incomingRingTimer);
-  incomingRingTimer = null;
+    const playPattern = function() {
+      if (incomingRingCtx) {
+        try { incomingRingCtx.close(); } catch(e) {}
+      }
+      incomingRingCtx = new AC();
+      const ctx = incomingRingCtx;
+      const now = ctx.currentTime;
+      const masterGain = ctx.createGain();
+      const baseVol = (volPct / 100) * 0.22;
+      masterGain.gain.setValueAtTime(baseVol, now);
+      masterGain.connect(ctx.destination);
+
+      if (toneType === "melody") {
+        // Melodi WassApp Style: E5, G#5, B5, E6 (cheerful cadence)
+        const notes = [659.25, 830.61, 987.77, 1318.51, 987.77, 1318.51];
+        notes.forEach(function(freq, i) {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          const t = now + i * 0.14;
+
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(freq, t);
+
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(0.8, t + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.001, t + 0.2);
+
+          osc.connect(g); g.connect(masterGain);
+          osc.start(t); osc.stop(t + 0.22);
+        });
+      } else if (toneType === "classic") {
+        // Telepon Klasik Dual-Tone (440Hz + 480Hz pulses)
+        const pulses = [0, 0.45];
+        pulses.forEach(function(startOffset) {
+          const osc1 = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const g = ctx.createGain();
+          const t = now + startOffset;
+
+          osc1.type = "sine";
+          osc1.frequency.setValueAtTime(440, t);
+          osc2.type = "sine";
+          osc2.frequency.setValueAtTime(480, t);
+
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(0.65, t + 0.02);
+          g.gain.setValueAtTime(0.65, t + 0.32);
+          g.gain.exponentialRampToValueAtTime(0.001, t + 0.36);
+
+          osc1.connect(g); osc2.connect(g);
+          g.connect(masterGain);
+
+          osc1.start(t); osc1.stop(t + 0.36);
+          osc2.start(t); osc2.stop(t + 0.36);
+        });
+      } else if (toneType === "marimba") {
+        // Upbeat Marimba Phone Ring (C5, G5, E5, C6)
+        const notes = [523.25, 783.99, 659.25, 1046.50, 783.99, 1046.50];
+        notes.forEach(function(freq, i) {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          const t = now + i * 0.12;
+
+          osc.type = "triangle";
+          osc.frequency.setValueAtTime(freq, t);
+
+          g.gain.setValueAtTime(0, t);
+          g.gain.linearRampToValueAtTime(0.85, t + 0.015);
+          g.gain.exponentialRampToValueAtTime(0.001, t + 0.18);
+
+          osc.connect(g); g.connect(masterGain);
+          osc.start(t); osc.stop(t + 0.2);
+        });
+      } else if (toneType === "sonar") {
+        // Radar Sonar Pulse
+        const pulses = [0, 0.4, 0.8];
+        pulses.forEach(function(startOffset) {
+          const osc = ctx.createOscillator();
+          const g = ctx.createGain();
+          const t = now + startOffset;
+
+          osc.type = "sine";
+          osc.frequency.setValueAtTime(800, t);
+          osc.frequency.exponentialRampToValueAtTime(320, t + 0.22);
+
+          g.gain.setValueAtTime(0.9, t);
+          g.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+
+          osc.connect(g); g.connect(masterGain);
+          osc.start(t); osc.stop(t + 0.25);
+        });
+      }
+    };
+
+    playPattern();
+    incomingRingTimer = setInterval(playPattern, 2400);
+  } catch (e) {
+    console.warn("Play incoming ring error:", e);
+  }
+};
+
+window.stopIncomingRingSound = function() {
+  if (incomingRingTimer) {
+    clearInterval(incomingRingTimer);
+    incomingRingTimer = null;
+  }
   if (incomingRingCtx) {
     try { incomingRingCtx.close(); } catch(e) {}
     incomingRingCtx = null;
   }
-}
+};
+
+window.toggleTestCallRingtone = function() {
+  const btn = document.getElementById("btnTestCallRingtone");
+  if (isTestingCallRingtone) {
+    stopTestCallRingtone();
+  } else {
+    const tone = document.getElementById("settingCallRingtone").value;
+    const vol = parseInt(document.getElementById("settingCallVolume").value, 10) || 90;
+    isTestingCallRingtone = true;
+    if (btn) {
+      btn.textContent = "⏹ Berhenti Uji";
+      btn.style.background = "#ea4335";
+      btn.style.color = "#fff";
+      btn.style.borderColor = "#ea4335";
+    }
+    playIncomingRingSound(tone, vol);
+  }
+};
+
+window.stopTestCallRingtone = function() {
+  isTestingCallRingtone = false;
+  const btn = document.getElementById("btnTestCallRingtone");
+  if (btn) {
+    btn.textContent = "▶ Uji Dering Panggilan";
+    btn.style.background = "";
+    btn.style.color = "";
+    btn.style.borderColor = "";
+  }
+  stopIncomingRingSound();
+};
+
+window.onCallRingtoneSelectChange = function() {
+  if (isTestingCallRingtone) {
+    const tone = document.getElementById("settingCallRingtone").value;
+    const vol = parseInt(document.getElementById("settingCallVolume").value, 10) || 90;
+    playIncomingRingSound(tone, vol);
+  }
+};
 
 // Realtime/Incoming Message Handler (Notification & Unread Badge)
 window.handleIncomingMessage = function(msg) {
