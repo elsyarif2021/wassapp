@@ -1422,8 +1422,259 @@
       background: #128c7e;
     }
 
+    /* Message Audio / Voice Note Player (WhatsApp Style) */
+    .vn-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 210px;
+      max-width: 290px;
+      padding: 4px 2px;
+    }
+
+    .vn-avatar-badge {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--green);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+      overflow: visible;
+    }
+
+    .vn-avatar-badge img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 !important;
+    }
+
+    .vn-mic-icon {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      background: #128c7e;
+      color: white;
+      font-size: 10px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid white;
+    }
+
+    .vn-play-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      background: var(--green);
+      color: white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+      transition: transform 0.15s ease, background-color 0.15s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    }
+
+    .vn-play-btn:hover {
+      background: var(--green-dark);
+      transform: scale(1.06);
+    }
+
+    .vn-body {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .vn-waveform-track {
+      position: relative;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      gap: 2.5px;
+      cursor: pointer;
+      padding: 2px 0;
+    }
+
+    .vn-wave-bar {
+      flex: 1;
+      width: 3px;
+      background: #b0bec5;
+      border-radius: 3px;
+      transition: height 0.1s ease, background-color 0.15s ease;
+      pointer-events: none;
+    }
+
+    .vn-wave-bar.active {
+      background: var(--green-dark);
+    }
+
+    .vn-progress-slider {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .vn-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .vn-speed-btn {
+      background: rgba(0, 0, 0, 0.06);
+      border: none;
+      border-radius: 10px;
+      padding: 1px 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: #555;
+      cursor: pointer;
+      transition: background-color 0.15s;
+    }
+
+    .vn-speed-btn:hover {
+      background: rgba(0, 0, 0, 0.12);
+      color: var(--green-dark);
+    }
+
+    /* Voice Note Recording Bar in Composer */
+    .record-vn-btn {
+      color: #54656f;
+      transition: color 0.15s, transform 0.15s;
+    }
+
+    .record-vn-btn:hover {
+      color: #ea4335;
+      transform: scale(1.1);
+    }
+
+    .recording-bar {
+      position: absolute;
+      inset: 0;
+      background: var(--header-bg);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      z-index: 50;
+      animation: fadeInDown 0.2s ease;
+    }
+
+    .recording-bar.show {
+      display: flex;
+    }
+
+    .recording-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .recording-dot {
+      width: 14px;
+      height: 14px;
+      background: #ea4335;
+      border-radius: 50%;
+      animation: recordPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes recordPulse {
+      0%, 100% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.25); opacity: 1; box-shadow: 0 0 10px rgba(234, 67, 53, 0.7); }
+    }
+
+    .recording-timer {
+      font-size: 15px;
+      font-weight: 700;
+      color: #ea4335;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .recording-waves {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      height: 20px;
+    }
+
+    .recording-waves .wave {
+      width: 3px;
+      height: 6px;
+      background: #ea4335;
+      border-radius: 2px;
+      animation: waveMove 0.8s ease-in-out infinite alternate;
+    }
+
+    .recording-waves .wave:nth-child(2) { animation-delay: 0.15s; }
+    .recording-waves .wave:nth-child(3) { animation-delay: 0.3s; }
+    .recording-waves .wave:nth-child(4) { animation-delay: 0.45s; }
+    .recording-waves .wave:nth-child(5) { animation-delay: 0.6s; }
+
+    @keyframes waveMove {
+      0% { height: 4px; }
+      100% { height: 18px; }
+    }
+
+    .recording-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .recording-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: transform 0.15s;
+    }
+
+    .recording-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .recording-btn.cancel {
+      background: #fee2e2;
+      color: #ea4335;
+    }
+
+    .recording-btn.send {
+      background: var(--green);
+      color: white;
+      box-shadow: 0 2px 6px rgba(18, 140, 126, 0.35);
+    }
+
     /* ==========================================
-       ACTIVE CALL OVERLAY
+       ACTIVE CALL OVERLAY & VIDEO CALL SYSTEM
        ========================================== */
     .call-overlay {
       position: fixed;
@@ -1434,11 +1685,79 @@
       align-items: center;
       justify-content: center;
       animation: overlayFadeIn 0.35s ease;
+      overflow: hidden;
     }
 
     @keyframes overlayFadeIn {
       from { opacity: 0; }
       to   { opacity: 1; }
+    }
+
+    /* Video Call Containers */
+    .video-viewport {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: none;
+      z-index: 2;
+    }
+
+    .video-viewport.show {
+      display: block;
+    }
+
+    .remote-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #111;
+    }
+
+    /* Local Camera PiP (Picture in Picture) */
+    .local-video-pip {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 140px;
+      height: 190px;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      background: #1a1a1a;
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+
+    @media (max-width: 600px) {
+      .local-video-pip {
+        width: 105px;
+        height: 145px;
+        top: 15px;
+        right: 15px;
+      }
+    }
+
+    .local-video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1); /* Mirror selfie camera */
+    }
+
+    .local-video-off-label {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      color: #eee;
+      font-size: 11px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6px;
     }
 
     .call-bg-animation {
@@ -1468,28 +1787,40 @@
 
     .call-content {
       position: relative;
-      z-index: 1;
+      z-index: 5;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       color: white;
       text-align: center;
-      padding: 40px 20px;
+      padding: 30px 20px;
+      width: 100%;
+      height: 100%;
+      justify-content: space-between;
+    }
+
+    .call-header-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
     }
 
     .call-avatar-large {
-      width: 110px;
-      height: 110px;
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.15);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 48px;
+      font-size: 44px;
       border: 3px solid rgba(255, 255, 255, 0.3);
       overflow: hidden;
       backdrop-filter: blur(4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     }
 
     .call-avatar-large img {
@@ -1499,72 +1830,94 @@
     }
 
     .call-name {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
+      letter-spacing: 0.3px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    .call-type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
       letter-spacing: 0.3px;
     }
 
     .call-status {
       font-size: 14px;
-      opacity: 0.8;
+      opacity: 0.9;
       letter-spacing: 0.5px;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
     }
 
     .call-timer {
-      font-size: 18px;
+      font-size: 17px;
       font-weight: 600;
       font-variant-numeric: tabular-nums;
       letter-spacing: 1px;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px 14px;
+      border-radius: 12px;
     }
 
     .call-controls {
       display: flex;
-      gap: 28px;
-      margin-top: 32px;
-      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 25px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 20px;
+      border-radius: 36px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     }
 
     .call-ctrl-btn {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.15);
+      justify-content: center;
+      gap: 4px;
+      background: rgba(255, 255, 255, 0.18);
       border: none;
       border-radius: 50%;
-      width: 58px;
-      height: 58px;
+      width: 52px;
+      height: 52px;
       cursor: pointer;
       color: white;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       transition: all 0.2s ease;
       backdrop-filter: blur(8px);
-      position: relative;
-    }
-
-    .call-ctrl-btn span {
-      position: absolute;
-      bottom: -22px;
-      font-size: 11px;
-      font-weight: 600;
-      white-space: nowrap;
     }
 
     .call-ctrl-btn:hover {
-      background: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.32);
       transform: scale(1.08);
     }
 
+    .call-ctrl-btn.off {
+      background: rgba(234, 67, 53, 0.85);
+      color: white;
+    }
+
     .call-ctrl-btn.muted {
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.65);
       color: #075e54;
     }
 
     .call-ctrl-btn.end-call {
       background: #ea4335;
-      width: 68px;
-      height: 68px;
+      width: 60px;
+      height: 60px;
       transform: rotate(135deg);
     }
 
@@ -1726,8 +2079,11 @@
         </div>
       </div>
       <div class="header-call-actions">
-        <button type="button" class="icon-btn call-btn" id="voiceCallBtn" onclick="startVoiceCall()" title="Panggil Suara" style="display:none;">
+        <button type="button" class="icon-btn call-btn" id="voiceCallBtn" onclick="startVoiceCall()" title="Panggilan Suara" style="display:none;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.47 11.47 0 0 0 3.59.57 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.59a1 1 0 0 1-.25 1.02l-2.2 2.18z"/></svg>
+        </button>
+        <button type="button" class="icon-btn call-btn" id="videoCallBtn" onclick="startVideoCall()" title="Panggilan Video (Video Call)" style="display:none;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
         </button>
         <button type="button" class="icon-btn" onclick="refreshMessages()" title="Muat Ulang Pesan">🔄</button>
       </div>
@@ -1749,6 +2105,25 @@
 
     <!-- Message Composer -->
     <div class="composer">
+      <!-- Voice Note Recording Overlay Bar -->
+      <div class="recording-bar" id="recordingBar">
+        <div class="recording-left">
+          <span class="recording-dot"></span>
+          <span class="recording-timer" id="recordingTimer">00:00</span>
+          <div class="recording-waves">
+            <span class="wave"></span>
+            <span class="wave"></span>
+            <span class="wave"></span>
+            <span class="wave"></span>
+            <span class="wave"></span>
+          </div>
+        </div>
+        <div class="recording-actions">
+          <button type="button" class="recording-btn cancel" onclick="cancelVoiceRecording()" title="Batal & Hapus Rekaman">🗑️</button>
+          <button type="button" class="recording-btn send" onclick="sendVoiceRecording()" title="Kirim Voice Note">➤</button>
+        </div>
+      </div>
+
       <button type="button" class="icon-btn" onclick="toggleEmoji()" title="Emoji & Kaligrafi Islami">😊</button>
       <button type="button" class="icon-btn" onclick="document.getElementById('imageInput').click()" title="Kirim Foto">📎</button>
       <input id="imageInput" class="attachment-input" type="file" accept="image/*" onchange="previewImage(this)">
@@ -2015,6 +2390,7 @@
       </div>
 
       <textarea id="messageInput" class="message-input" placeholder="Ketik pesan..." rows="1" onkeydown="handleMessageKey(event)" oninput="autoResize(this)"></textarea>
+      <button type="button" class="icon-btn record-vn-btn" id="recordVnBtn" onclick="toggleVoiceRecording()" title="Rekam Voice Note (Pesan Suara)">🎙️</button>
       <button type="button" class="send-btn" id="sendMsgBtn" onclick="sendMessage()" title="Kirim">➤</button>
     </div>
   </main>
@@ -2110,14 +2486,14 @@
 <div id="toast"></div>
 
 <!-- ========================================================================
-     INCOMING CALL POPUP (Notifikasi Panggilan Masuk)
+     INCOMING CALL POPUP (Notifikasi Panggilan Masuk Suara & Video)
      ======================================================================== -->
 <div id="incomingCallPopup" class="incoming-call-popup" style="display:none;">
   <div class="incoming-call-card">
-    <div class="incoming-call-ring">📞</div>
+    <div class="incoming-call-ring" id="incomingCallIcon">📞</div>
     <div class="incoming-call-info">
       <div class="incoming-call-name" id="incomingCallerName">Guru</div>
-      <div class="incoming-call-label">Panggilan Suara Masuk...</div>
+      <div class="incoming-call-label" id="incomingCallLabel">Panggilan Suara Masuk...</div>
     </div>
     <div class="incoming-call-actions">
       <button type="button" class="call-action-btn reject" onclick="rejectIncomingCall()" title="Tolak Panggilan">
@@ -2131,37 +2507,59 @@
 </div>
 
 <!-- ========================================================================
-     ACTIVE CALL OVERLAY (Layar Panggilan Aktif)
+     ACTIVE CALL OVERLAY (Layar Panggilan Suara & Video Aktif)
      ======================================================================== -->
 <div id="callOverlay" class="call-overlay" style="display:none;">
-  <div class="call-bg-animation">
+  <!-- Video Viewport (Remote Video + Local Video PiP) -->
+  <div class="video-viewport" id="videoViewport">
+    <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
+    <div class="local-video-pip" id="localVideoContainer">
+      <video id="localVideo" class="local-video" autoplay playsinline muted></video>
+      <div class="local-video-off-label" id="localVideoOffLabel">Kamera Dimatikan</div>
+    </div>
+  </div>
+
+  <!-- Audio Animation Background (Khusus Voice Call) -->
+  <div class="call-bg-animation" id="callBgAnimation">
     <div class="call-ring-circle r1"></div>
     <div class="call-ring-circle r2"></div>
     <div class="call-ring-circle r3"></div>
   </div>
-  <div class="call-content">
-    <div class="call-avatar-large" id="callOverlayAvatar">👤</div>
-    <div class="call-name" id="callOverlayName">Guru</div>
-    <div class="call-status" id="callOverlayStatus">Menghubungi...</div>
-    <div class="call-timer" id="callTimer" style="display:none;">00:00</div>
+
+  <div class="call-content" id="callContent">
+    <div class="call-header-info">
+      <div class="call-avatar-large" id="callOverlayAvatar">👤</div>
+      <div class="call-name" id="callOverlayName">Guru</div>
+      <div class="call-type-badge" id="callOverlayType">📞 Panggilan Suara</div>
+      <div class="call-status" id="callOverlayStatus">Menghubungi...</div>
+      <div class="call-timer" id="callTimer" style="display:none;">00:00</div>
+    </div>
+
     <div class="call-controls">
       <button type="button" class="call-ctrl-btn" id="muteMicBtn" onclick="toggleMuteMic()" title="Matikan Mikrofon">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16c-2.47 0-4.52-1.8-4.93-4.15-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/></svg>
-        <span>Mikrofon</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16c-2.47 0-4.52-1.8-4.93-4.15-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/></svg>
       </button>
+
+      <button type="button" class="call-ctrl-btn" id="toggleCamBtn" onclick="toggleCameraVideo()" title="Kamera On/Off" style="display:none;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+      </button>
+
+      <button type="button" class="call-ctrl-btn" id="switchCamBtn" onclick="switchCamera()" title="Ganti Kamera Depan/Belakang" style="display:none;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 11.5V13H9v2.5L5.5 12 9 8.5V11h6V8.5l3.5 3.5-3.5 3.5z"/></svg>
+      </button>
+
       <button type="button" class="call-ctrl-btn end-call" onclick="endCall()" title="Akhiri Panggilan">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.47 11.47 0 0 0 3.59.57 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.59a1 1 0 0 1-.25 1.02l-2.2 2.18z"/></svg>
-        <span>Akhiri</span>
       </button>
+
       <button type="button" class="call-ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()" title="Speaker">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-        <span>Speaker</span>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
       </button>
     </div>
   </div>
-  <!-- Remote & Local Audio Elements -->
+
+  <!-- Audio Elements -->
   <audio id="remoteAudio" autoplay playsinline></audio>
-  <audio id="localAudioMonitor" muted playsinline></audio>
 </div>
 
 <!-- ========================================================================
@@ -2651,98 +3049,8 @@ window.saveNewGroup = async function() {
       body: JSON.stringify({
         name: name,
         description: desc || "Grup Chat Guru",
-        created_by: currentUser.id
-      })
-    });
-
-    const groupData = Array.isArray(newGroup) ? newGroup[0] : newGroup;
-
-    const membersToInsert = [
-      { group_id: groupData.id, user_id: currentUser.id },
-      ...selectedUserIds.map(function(uid) { return { group_id: groupData.id, user_id: uid }; })
-    ];
-
-    await supabaseRest("group_members", {
-      method: "POST",
-      body: JSON.stringify(membersToInsert)
-    }).catch(function(e) { console.warn("Group members note:", e); });
-
-    hideLoading();
-    closeCreateGroupModal();
-    toast("Grup '" + name + "' berhasil dibuat!");
-    await loadGroups();
-    setSidebarTab("group");
-    selectTarget({
-      type: "group",
-      id: groupData.id,
-      name: groupData.name,
-      description: groupData.description,
-      avatar: groupData.avatar
-    });
-  } catch (err) {
-    hideLoading();
-    console.error("Buat grup error:", err);
-    alert("Gagal membuat grup: " + err.message);
-  }
-};
-
-window.openAddContactModal = function() {
-  document.getElementById("addContactName").value = "";
-  document.getElementById("addContactSubject").value = "";
-  document.getElementById("addContactEmail").value = "";
-  document.getElementById("addContactPass").value = "";
-  document.getElementById("addContactModal").classList.add("show");
-};
-
-window.closeAddContactModal = function() {
-  document.getElementById("addContactModal").classList.remove("show");
-};
-
-window.saveNewContact = async function() {
-  const name = (document.getElementById("addContactName").value || "").trim();
-  const subject = (document.getElementById("addContactSubject").value || "").trim();
-  const email = (document.getElementById("addContactEmail").value || "").trim().toLowerCase();
-  const pass = (document.getElementById("addContactPass").value || "");
-
-  if (!name || !email || !pass) {
-    alert("Harap isi Nama Lengkap, Email, dan Password.");
-    return;
-  }
-
-  showLoading();
-  try {
-    const existing = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&select=id");
-    if (existing && existing.length > 0) {
-      hideLoading();
-      alert("Guru dengan email tersebut sudah terdaftar.");
-      return;
-    }
-
-    await supabaseRest("users", {
-      method: "POST",
-      body: JSON.stringify({
-        nama: name,
-        mata_pelajaran: subject || "Belum diatur",
-        email: email,
-        password: pass,
-        status: "Offline",
-        last_seen: new Date().toISOString()
-      })
-    });
-
-    hideLoading();
-    closeAddContactModal();
-    toast("Kontak guru " + name + " berhasil ditambahkan!");
-    loadTeachers().then(renderSidebarList);
-  } catch (err) {
-    hideLoading();
-    console.error("Tambah kontak error:", err);
-    alert("Gagal menambahkan kontak: " + err.message);
-  }
-};
-
-// ============================================================================
-// CHAT MESSAGES (LOAD, SEND, EDIT, DELETE)
+        created_by: currentUser.id// ============================================================================
+// CHAT MESSAGES (LOAD, SEND, EDIT, DELETE, AUDIO VN, PHOTO)
 // ============================================================================
 window.refreshMessages = async function(isSilent = false) {
   if (!currentUser || !selectedTarget) return;
@@ -2766,7 +3074,7 @@ window.refreshMessages = async function(isSilent = false) {
             receiver: m.receiver_id,
             groupId: m.group_id,
             messageText: m.message_text,
-            messageType: m.message_type,
+            messageType: m.message_type || "TEXT",
             attachment: m.attachment_url,
             timestamp: m.created_at
           };
@@ -2808,7 +3116,7 @@ function renderMessages() {
     wrapper.id = "msg_" + message.id;
 
     let html = "";
-    const type = message.messageType || "TEXT";
+    const type = (message.messageType || "TEXT").toUpperCase();
     const attachment = message.attachment || "";
 
     if (!mine && selectedTarget.type === "group") {
@@ -2830,7 +3138,34 @@ function renderMessages() {
       html += '<img src="' + escapeAttribute(attachment) + '" alt="foto" onclick="openLightbox(\'' + escapeAttribute(attachment) + '\')">';
     }
 
-    if (message.messageText) {
+    // WhatsApp-Style Voice Note (AUDIO)
+    if (type === "AUDIO" && attachment) {
+      const senderObj = mine ? currentUser : teachers.find(function(t) { return String(t.id) === String(message.sender); });
+      const senderAv = (senderObj && senderObj.avatar) || "";
+      const displayDuration = message.messageText || "0:00";
+
+      html +=
+        '<div class="vn-container">' +
+          '<div class="vn-avatar-badge">' +
+            (senderAv ? '<img src="' + escapeAttribute(senderAv) + '" alt="avatar">' : (mine ? '👤' : getInitial(senderObj ? senderObj.nama : 'Guru'))) +
+            '<span class="vn-mic-icon">🎙️</span>' +
+          '</div>' +
+          '<button type="button" class="vn-play-btn" id="playBtn_' + message.id + '" onclick="togglePlayAudio(\'audio_' + message.id + '\', \'' + message.id + '\')" title="Putar Suara">▶</button>' +
+          '<div class="vn-body">' +
+            '<div class="vn-waveform-track" id="waveform_' + message.id + '" onclick="seekAudio(event, \'' + message.id + '\')">' +
+              generateWaveformBarsHtml(message.id, 24) +
+            '</div>' +
+            '<div class="vn-info-row">' +
+              '<span class="vn-time" id="timer_' + message.id + '">' + escapeHtml(displayDuration) + '</span>' +
+              '<button type="button" class="vn-speed-btn" id="speedBtn_' + message.id + '" onclick="cycleAudioSpeed(\'audio_' + message.id + '\', \'' + message.id + '\')">1x</button>' +
+            '</div>' +
+          '</div>' +
+          '<audio id="audio_' + message.id + '" src="' + escapeAttribute(attachment) + '" preload="metadata" ' +
+            'ontimeupdate="updateAudioProgress(\'' + message.id + '\')" ' +
+            'onended="onAudioEnded(\'' + message.id + '\')" ' +
+            'onloadedmetadata="initAudioDuration(\'' + message.id + '\')"></audio>' +
+        '</div>';
+    } else if (message.messageText) {
       html += '<span id="text_' + message.id + '">' + escapeHtml(message.messageText).replace(/\n/g, "<br>") + '</span>';
     }
 
@@ -2845,6 +3180,17 @@ function renderMessages() {
   });
 
   scrollMessages();
+}
+
+function generateWaveformBarsHtml(msgId, count) {
+  let bars = "";
+  // Pola tinggi bervariasi menyerupai gelombang suara alami
+  const heights = [8, 14, 18, 10, 16, 22, 12, 19, 14, 8, 16, 20, 11, 17, 21, 9, 15, 18, 12, 16, 10, 14, 8, 12];
+  for (let i = 0; i < count; i++) {
+    const h = heights[i % heights.length];
+    bars += '<span class="vn-wave-bar" id="wave_' + msgId + '_' + i + '" style="height:' + h + 'px;"></span>';
+  }
+  return bars;
 }
 
 window.toggleMsgMenu = function(e, msgId) {
@@ -2973,7 +3319,7 @@ window.sendMessage = async function() {
           receiver: newMsg.receiver_id,
           groupId: newMsg.group_id,
           messageText: newMsg.message_text,
-          messageType: newMsg.message_type,
+          messageType: newMsg.message_type || "TEXT",
           attachment: newMsg.attachment_url,
           timestamp: newMsg.created_at
         });
@@ -2985,6 +3331,280 @@ window.sendMessage = async function() {
   } catch (err) {
     console.error("Send message error:", err);
     toast("Gagal mengirim pesan: " + err.message);
+  }
+};
+
+// ============================================================================
+// VOICE NOTE RECORDING & PLAYBACK SYSTEM
+// ============================================================================
+let voiceMediaRecorder = null;
+let voiceAudioChunks = [];
+let voiceRecordingTimerInterval = null;
+let voiceRecordingSeconds = 0;
+let voiceRecordingStream = null;
+
+window.toggleVoiceRecording = function() {
+  const bar = document.getElementById("recordingBar");
+  if (bar && bar.classList.contains("show")) {
+    sendVoiceRecording();
+  } else {
+    startVoiceRecording();
+  }
+};
+
+window.startVoiceRecording = async function() {
+  if (!currentUser || !selectedTarget) {
+    toast("Pilih kontak terlebih dahulu untuk merekam voice note.");
+    return;
+  }
+
+  try {
+    voiceRecordingStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voiceAudioChunks = [];
+    voiceRecordingSeconds = 0;
+
+    let options = { mimeType: "audio/webm;codecs=opus" };
+    if (!MediaRecorder.isTypeSupported("audio/webm;codecs=opus")) {
+      if (MediaRecorder.isTypeSupported("audio/webm")) {
+        options = { mimeType: "audio/webm" };
+      } else if (MediaRecorder.isTypeSupported("audio/ogg;codecs=opus")) {
+        options = { mimeType: "audio/ogg;codecs=opus" };
+      } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
+        options = { mimeType: "audio/mp4" };
+      } else {
+        options = {};
+      }
+    }
+
+    voiceMediaRecorder = new MediaRecorder(voiceRecordingStream, options);
+
+    voiceMediaRecorder.ondataavailable = function(e) {
+      if (e.data && e.data.size > 0) {
+        voiceAudioChunks.push(e.data);
+      }
+    };
+
+    voiceMediaRecorder.start(100);
+
+    // Tampilkan UI Recording Bar
+    document.getElementById("recordingBar").classList.add("show");
+    document.getElementById("recordingTimer").textContent = "00:00";
+
+    clearInterval(voiceRecordingTimerInterval);
+    voiceRecordingTimerInterval = setInterval(function() {
+      voiceRecordingSeconds++;
+      const m = String(Math.floor(voiceRecordingSeconds / 60)).padStart(2, "0");
+      const s = String(voiceRecordingSeconds % 60).padStart(2, "0");
+      document.getElementById("recordingTimer").textContent = m + ":" + s;
+    }, 1000);
+  } catch (err) {
+    console.error("Voice record error:", err);
+    if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+      toast("🎙️ Izin mikrofon ditolak. Izinkan akses mikrofon di browser Anda.");
+    } else {
+      toast("Gagal mengakses mikrofon: " + err.message);
+    }
+  }
+};
+
+window.cancelVoiceRecording = function() {
+  cleanupVoiceRecording();
+  toast("Rekaman dibatalkan.");
+};
+
+window.sendVoiceRecording = function() {
+  if (!voiceMediaRecorder || voiceMediaRecorder.state === "inactive") return;
+
+  const durationSec = voiceRecordingSeconds;
+  const m = Math.floor(durationSec / 60);
+  const s = String(durationSec % 60).padStart(2, "0");
+  const formattedDuration = m + ":" + s;
+
+  voiceMediaRecorder.onstop = async function() {
+    if (!voiceAudioChunks.length || durationSec < 1) {
+      cleanupVoiceRecording();
+      toast("Rekaman terlalu singkat.");
+      return;
+    }
+
+    const mime = (voiceMediaRecorder && voiceMediaRecorder.mimeType) || "audio/webm";
+    const audioBlob = new Blob(voiceAudioChunks, { type: mime });
+    cleanupVoiceRecording();
+
+    // Konversi audio blob ke Base64 Data URL
+    const reader = new FileReader();
+    reader.onload = async function() {
+      const base64Audio = reader.result;
+      if (!currentUser || !selectedTarget) return;
+
+      const isGroup = selectedTarget.type === "group";
+      const payload = {
+        sender_id: currentUser.id,
+        receiver_id: isGroup ? null : selectedTarget.id,
+        group_id: isGroup ? selectedTarget.id : null,
+        message_text: formattedDuration,
+        message_type: "AUDIO",
+        attachment_url: base64Audio
+      };
+
+      showLoading();
+      try {
+        const res = await supabaseRest("messages", {
+          method: "POST",
+          body: JSON.stringify(payload)
+        });
+
+        const newMsg = Array.isArray(res) ? res[0] : res;
+        hideLoading();
+        if (newMsg && newMsg.id) {
+          currentMessages.push({
+            id: newMsg.id,
+            sender: newMsg.sender_id,
+            receiver: newMsg.receiver_id,
+            groupId: newMsg.group_id,
+            messageText: newMsg.message_text,
+            messageType: "AUDIO",
+            attachment: newMsg.attachment_url,
+            timestamp: newMsg.created_at
+          });
+          renderMessages();
+        } else {
+          refreshMessages();
+        }
+      } catch (err) {
+        hideLoading();
+        console.error("Send VN error:", err);
+        toast("Gagal mengirim Voice Note: " + err.message);
+      }
+    };
+    reader.readAsDataURL(audioBlob);
+  };
+
+  try {
+    voiceMediaRecorder.stop();
+  } catch (e) {
+    cleanupVoiceRecording();
+  }
+};
+
+function cleanupVoiceRecording() {
+  clearInterval(voiceRecordingTimerInterval);
+  voiceRecordingTimerInterval = null;
+  voiceRecordingSeconds = 0;
+
+  if (voiceRecordingStream) {
+    voiceRecordingStream.getTracks().forEach(function(t) { t.stop(); });
+    voiceRecordingStream = null;
+  }
+  if (voiceMediaRecorder && voiceMediaRecorder.state !== "inactive") {
+    try { voiceMediaRecorder.stop(); } catch (e) {}
+  }
+  voiceMediaRecorder = null;
+  voiceAudioChunks = [];
+
+  const bar = document.getElementById("recordingBar");
+  if (bar) bar.classList.remove("show");
+}
+
+// Audio Player Interaktif untuk Pesan Voice Note
+window.togglePlayAudio = function(audioId, msgId) {
+  const audio = document.getElementById(audioId);
+  const btn = document.getElementById("playBtn_" + msgId);
+  if (!audio) return;
+
+  // Hentikan audio lain yang sedang berputar
+  document.querySelectorAll("audio").forEach(function(a) {
+    if (a.id !== audioId && !a.paused && a.id !== "remoteAudio") {
+      a.pause();
+      const otherId = a.id.replace("audio_", "");
+      const otherBtn = document.getElementById("playBtn_" + otherId);
+      if (otherBtn) otherBtn.textContent = "▶";
+    }
+  });
+
+  if (audio.paused) {
+    audio.play().then(function() {
+      if (btn) btn.textContent = "⏸";
+    }).catch(function(e) {
+      console.warn("Play audio err:", e);
+    });
+  } else {
+    audio.pause();
+    if (btn) btn.textContent = "▶";
+  }
+};
+
+window.updateAudioProgress = function(msgId) {
+  const audio = document.getElementById("audio_" + msgId);
+  if (!audio || isNaN(audio.duration) || audio.duration <= 0) return;
+
+  const current = audio.currentTime;
+  const duration = audio.duration;
+  const progressRatio = current / duration;
+
+  // Update timer display
+  const m = Math.floor(current / 60);
+  const s = String(Math.floor(current % 60)).padStart(2, "0");
+  const timerEl = document.getElementById("timer_" + msgId);
+  if (timerEl) timerEl.textContent = m + ":" + s;
+
+  // Update wave bars active state
+  const totalBars = 24;
+  const activeCount = Math.floor(progressRatio * totalBars);
+  for (let i = 0; i < totalBars; i++) {
+    const bar = document.getElementById("wave_" + msgId + "_" + i);
+    if (bar) {
+      if (i <= activeCount) {
+        bar.classList.add("active");
+      } else {
+        bar.classList.remove("active");
+      }
+    }
+  }
+};
+
+window.seekAudio = function(event, msgId) {
+  const audio = document.getElementById("audio_" + msgId);
+  const track = document.getElementById("waveform_" + msgId);
+  if (!audio || !track || isNaN(audio.duration)) return;
+
+  const rect = track.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
+  const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+  audio.currentTime = ratio * audio.duration;
+  updateAudioProgress(msgId);
+};
+
+window.cycleAudioSpeed = function(audioId, msgId) {
+  const audio = document.getElementById(audioId);
+  const btn = document.getElementById("speedBtn_" + msgId);
+  if (!audio || !btn) return;
+
+  const speeds = [1, 1.5, 2];
+  const currentSpeed = audio.playbackRate || 1;
+  let nextIdx = speeds.indexOf(currentSpeed) + 1;
+  if (nextIdx >= speeds.length || nextIdx < 0) nextIdx = 0;
+
+  const newSpeed = speeds[nextIdx];
+  audio.playbackRate = newSpeed;
+  btn.textContent = newSpeed + "x";
+};
+
+window.onAudioEnded = function(msgId) {
+  const btn = document.getElementById("playBtn_" + msgId);
+  if (btn) btn.textContent = "▶";
+  const audio = document.getElementById("audio_" + msgId);
+  if (audio) audio.currentTime = 0;
+  updateAudioProgress(msgId);
+};
+
+window.initAudioDuration = function(msgId) {
+  const audio = document.getElementById("audio_" + msgId);
+  const timerEl = document.getElementById("timer_" + msgId);
+  if (audio && timerEl && !isNaN(audio.duration) && audio.duration > 0) {
+    const m = Math.floor(audio.duration / 60);
+    const s = String(Math.floor(audio.duration % 60)).padStart(2, "0");
+    timerEl.textContent = m + ":" + s;
   }
 };
 
@@ -3200,8 +3820,8 @@ function escapeAttribute(v) {
   return String(v == null ? "" : v)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;");
+    .replace(/"/g, "&quot;")
+    .replace(/>/g, "&gt;");
 }
 
 function formatTime(timestamp) {
@@ -3258,9 +3878,8 @@ function requestNotifPermission() {
 }
 
 function showInAppNotif(senderName, messagePreview, senderAvatar, contactId) {
-  // Browser notification (jika permission granted dan tab tidak fokus)
   if (!document.hasFocus() && "Notification" in window && Notification.permission === "granted") {
-    const n = new Notification("\uD83D\uDCAC " + senderName + " \u2014 WassApp", {
+    const n = new Notification("💬 " + senderName + " — WassApp", {
       body: messagePreview || "Pesan baru",
       icon: senderAvatar || "",
       badge: senderAvatar || "",
@@ -3273,13 +3892,12 @@ function showInAppNotif(senderName, messagePreview, senderAvatar, contactId) {
     };
   }
 
-  // In-App floating banner
   if (!msgNotifBanner) {
     msgNotifBanner = document.createElement("div");
     msgNotifBanner.className = "msg-notif-banner";
     msgNotifBanner.innerHTML =
       '<div class="msg-notif-icon">' +
-        '<div id="notifBannerAvatar" style="width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:18px;color:white;overflow:hidden;">\uD83D\uDC64</div>' +
+        '<div id="notifBannerAvatar" style="width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:18px;color:white;overflow:hidden;">👤</div>' +
       '</div>' +
       '<div class="msg-notif-text">' +
         '<div class="msg-notif-sender" id="notifBannerSender"></div>' +
@@ -3295,7 +3913,7 @@ function showInAppNotif(senderName, messagePreview, senderAvatar, contactId) {
   if (senderAvatar) {
     avatarEl.innerHTML = '<img src="' + escapeAttribute(senderAvatar) + '" style="width:100%;height:100%;object-fit:cover;">';
   } else {
-    avatarEl.textContent = "\uD83D\uDC64";
+    avatarEl.textContent = "👤";
   }
 
   msgNotifBanner.classList.add("show");
@@ -3315,7 +3933,6 @@ function updateContactBadge(contactId, increment) {
   renderSidebarList();
 }
 
-// Tambahkan badge ke contact item (dipanggil di renderSidebarList)
 function getUnreadBadgeHtml(contactId) {
   const count = unreadCounts[contactId];
   if (!count) return "";
@@ -3323,16 +3940,19 @@ function getUnreadBadgeHtml(contactId) {
 }
 
 // ============================================================================
-// VOICE CALL SYSTEM (WebRTC)
+// VOICE & VIDEO CALL SYSTEM (WebRTC ENGINE)
 // ============================================================================
 let localStream = null;
 let peerConnection = null;
 let callTimerInterval = null;
 let callTimerSeconds = 0;
 let isMuted = false;
+let isCameraOff = false;
 let isSpeakerOn = false;
 let activeCallId = null;
 let activeCallTargetId = null;
+let activeCallType = "voice"; // 'voice' | 'video'
+let currentFacingMode = "user"; // 'user' | 'environment'
 let callPollInterval = null;
 let incomingCallData = null;
 
@@ -3345,43 +3965,65 @@ const iceServers = {
   ]
 };
 
-// Tampilkan tombol call ketika ada kontak yang dipilih
+// Tampilkan tombol Voice Call & Video Call ketika ada kontak guru yang dipilih
 function updateCallButton() {
-  const btn = document.getElementById("voiceCallBtn");
-  if (!btn) return;
-  if (selectedTarget && selectedTarget.type !== "group") {
-    btn.style.display = "flex";
-  } else {
-    btn.style.display = "none";
-  }
+  const voiceBtn = document.getElementById("voiceCallBtn");
+  const videoBtn = document.getElementById("videoCallBtn");
+  const isDirect = selectedTarget && selectedTarget.type !== "group";
+
+  if (voiceBtn) voiceBtn.style.display = isDirect ? "flex" : "none";
+  if (videoBtn) videoBtn.style.display = isDirect ? "flex" : "none";
 }
 
-// Override selectContact untuk juga panggil updateCallButton & requestNotif
 const _origSelectTarget = window.selectTarget;
 window.selectTarget = function(item) {
   if (typeof _origSelectTarget === "function") _origSelectTarget(item);
   updateCallButton();
-  // Hapus badge unread saat buka chat
   if (item && item.id) {
     updateContactBadge(item.id, false);
   }
   requestNotifPermission();
 };
 
-// Mulai panggilan suara
+// MULAI PANGGILAN SUARA (VOICE CALL)
 window.startVoiceCall = async function() {
+  await initiateCall("voice");
+};
+
+// MULAI PANGGILAN VIDEO (VIDEO CALL)
+window.startVideoCall = async function() {
+  await initiateCall("video");
+};
+
+async function initiateCall(type) {
   if (!selectedTarget || !currentUser) return;
   if (activeCallId) { toast("Sedang dalam panggilan."); return; }
 
+  activeCallType = type || "voice";
   const callId = "call_" + currentUser.id + "_" + selectedTarget.id + "_" + Date.now();
   activeCallId = callId;
   activeCallTargetId = selectedTarget.id;
 
-  showCallOverlay(selectedTarget, "Menghubungi...");
+  showCallOverlay(selectedTarget, "Menghubungi...", activeCallType);
   playRingbackSound();
 
   try {
-    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    const isVideo = activeCallType === "video";
+    const constraints = {
+      audio: true,
+      video: isVideo ? { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } : false
+    };
+
+    localStream = await navigator.mediaDevices.getUserMedia(constraints);
+    
+    // Tampilkan local video jika Video Call
+    if (isVideo) {
+      const localVideo = document.getElementById("localVideo");
+      if (localVideo) {
+        localVideo.srcObject = localStream;
+      }
+    }
+
     peerConnection = new RTCPeerConnection(iceServers);
 
     localStream.getTracks().forEach(function(track) {
@@ -3389,10 +4031,7 @@ window.startVoiceCall = async function() {
     });
 
     peerConnection.ontrack = function(event) {
-      const remoteAudio = document.getElementById("remoteAudio");
-      if (remoteAudio && event.streams && event.streams[0]) {
-        remoteAudio.srcObject = event.streams[0];
-      }
+      handleRemoteTrack(event);
     };
 
     const offer = await peerConnection.createOffer();
@@ -3405,6 +4044,7 @@ window.startVoiceCall = async function() {
         id: callId,
         caller_id: currentUser.id,
         callee_id: selectedTarget.id,
+        call_type: activeCallType,
         status: "ringing",
         offer: JSON.stringify(offer),
         answer: null,
@@ -3412,23 +4052,37 @@ window.startVoiceCall = async function() {
       })
     });
 
-    // Poll untuk jawaban
     startCallAnswerPoll(callId);
   } catch (err) {
-    console.error("Voice call error:", err);
+    console.error("Call initiate error:", err);
     if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-      toast("\uD83C\uDFA4 Izin mikrofon ditolak. Harap izinkan akses mikrofon di pengaturan browser.");
+      toast(activeCallType === "video" ? "📹 Izin kamera atau mikrofon ditolak." : "🎙️ Izin mikrofon ditolak.");
     } else {
       toast("Gagal memulai panggilan: " + err.message);
     }
     endCall();
   }
-};
+}
 
-// Poll untuk jawaban dari callee
+function handleRemoteTrack(event) {
+  if (event.streams && event.streams[0]) {
+    const stream = event.streams[0];
+    const remoteAudio = document.getElementById("remoteAudio");
+    if (remoteAudio) remoteAudio.srcObject = stream;
+
+    if (activeCallType === "video") {
+      const remoteVideo = document.getElementById("remoteVideo");
+      if (remoteVideo) {
+        remoteVideo.srcObject = stream;
+        document.getElementById("videoViewport").classList.add("show");
+      }
+    }
+  }
+}
+
 function startCallAnswerPoll(callId) {
   let attempts = 0;
-  const maxAttempts = 40; // ~40 detik timeout
+  const maxAttempts = 45; // ~45 detik timeout
   callPollInterval = setInterval(async function() {
     attempts++;
     if (attempts > maxAttempts) {
@@ -3460,7 +4114,6 @@ function startCallAnswerPoll(callId) {
         const answer = JSON.parse(row.answer);
         await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 
-        // Apply ICE candidates dari callee
         if (row.ice_candidates) {
           const candidates = JSON.parse(row.ice_candidates);
           if (Array.isArray(candidates)) {
@@ -3479,33 +4132,35 @@ function startCallAnswerPoll(callId) {
   }, 1000);
 }
 
-// Poll untuk panggilan masuk
 function startIncomingCallPoll() {
   if (!currentUser) return;
   setInterval(async function() {
     if (!currentUser) return;
     try {
       const data = await supabaseRest(
-        "calls?callee_id=eq." + currentUser.id + "&status=eq.ringing&select=id,caller_id,offer&order=created_at.desc&limit=1"
+        "calls?callee_id=eq." + currentUser.id + "&status=eq.ringing&select=id,caller_id,call_type,offer&order=created_at.desc&limit=1"
       );
       if (!data || !data.length) return;
       const call = data[0];
-      if (incomingCallData && incomingCallData.id === call.id) return; // Sudah tampil
+      if (incomingCallData && incomingCallData.id === call.id) return;
 
-      // Cari nama pemanggil
       const callerInfo = teachers.find(function(t) { return t.id === call.caller_id; });
       if (!callerInfo) return;
 
       incomingCallData = call;
-      showIncomingCallPopup(callerInfo);
+      showIncomingCallPopup(callerInfo, call.call_type || "voice");
     } catch (e) {
       console.warn("Incoming poll error:", e);
     }
-  }, 3000);
+  }, 2500);
 }
 
-function showIncomingCallPopup(callerInfo) {
+function showIncomingCallPopup(callerInfo, callType) {
+  const isVideo = callType === "video";
   document.getElementById("incomingCallerName").textContent = callerInfo.nama || "Guru";
+  document.getElementById("incomingCallIcon").textContent = isVideo ? "📹" : "📞";
+  document.getElementById("incomingCallLabel").textContent = isVideo ? "Panggilan Video Masuk..." : "Panggilan Suara Masuk...";
+  
   const popup = document.getElementById("incomingCallPopup");
   popup.style.display = "block";
   playIncomingRingSound();
@@ -3520,11 +4175,25 @@ window.acceptIncomingCall = async function() {
   const call = incomingCallData;
   incomingCallData = null;
 
+  activeCallType = call.call_type || "voice";
+  const isVideo = activeCallType === "video";
+
   const callerInfo = teachers.find(function(t) { return t.id === call.caller_id; });
-  showCallOverlay(callerInfo || { nama: "Guru", avatar: "" }, "Terhubung...");
+  showCallOverlay(callerInfo || { nama: "Guru", avatar: "" }, "Menghubungkan...", activeCallType);
 
   try {
-    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    const constraints = {
+      audio: true,
+      video: isVideo ? { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } } : false
+    };
+
+    localStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+    if (isVideo) {
+      const localVideo = document.getElementById("localVideo");
+      if (localVideo) localVideo.srcObject = localStream;
+    }
+
     peerConnection = new RTCPeerConnection(iceServers);
 
     localStream.getTracks().forEach(function(track) {
@@ -3532,10 +4201,7 @@ window.acceptIncomingCall = async function() {
     });
 
     peerConnection.ontrack = function(event) {
-      const remoteAudio = document.getElementById("remoteAudio");
-      if (remoteAudio && event.streams && event.streams[0]) {
-        remoteAudio.srcObject = event.streams[0];
-      }
+      handleRemoteTrack(event);
     };
 
     const offer = JSON.parse(call.offer);
@@ -3557,7 +4223,7 @@ window.acceptIncomingCall = async function() {
     startCallTimer();
   } catch (err) {
     console.error("Accept call error:", err);
-    toast("Gagal menerima panggilan.");
+    toast("Gagal menerima panggilan: " + err.message);
     endCall();
   }
 };
@@ -3585,7 +4251,6 @@ window.endCall = function() {
   clearInterval(callPollInterval);
   callPollInterval = null;
 
-  // Update status panggilan ke ended
   if (activeCallId) {
     supabaseRest("calls?id=eq." + activeCallId, {
       method: "PATCH",
@@ -3604,15 +4269,24 @@ window.endCall = function() {
     localStream = null;
   }
 
-  // Stop remote audio
+  const remoteVideo = document.getElementById("remoteVideo");
+  if (remoteVideo) remoteVideo.srcObject = null;
+  const localVideo = document.getElementById("localVideo");
+  if (localVideo) localVideo.srcObject = null;
   const remoteAudio = document.getElementById("remoteAudio");
   if (remoteAudio) remoteAudio.srcObject = null;
 
   hideCallOverlay();
   isMuted = false;
+  isCameraOff = false;
   isSpeakerOn = false;
-  document.getElementById("muteMicBtn").classList.remove("muted");
-  document.getElementById("speakerBtn").classList.remove("speaker-on");
+
+  const muteBtn = document.getElementById("muteMicBtn");
+  if (muteBtn) muteBtn.classList.remove("muted");
+  const camBtn = document.getElementById("toggleCamBtn");
+  if (camBtn) camBtn.classList.remove("off");
+  const speakerBtn = document.getElementById("speakerBtn");
+  if (speakerBtn) speakerBtn.classList.remove("speaker-on");
 };
 
 window.toggleMuteMic = function() {
@@ -3620,41 +4294,115 @@ window.toggleMuteMic = function() {
   isMuted = !isMuted;
   localStream.getAudioTracks().forEach(function(track) { track.enabled = !isMuted; });
   const btn = document.getElementById("muteMicBtn");
-  btn.classList.toggle("muted", isMuted);
-  btn.title = isMuted ? "Aktifkan Mikrofon" : "Matikan Mikrofon";
-  btn.querySelector("span").textContent = isMuted ? "Bisu" : "Mikrofon";
+  if (btn) {
+    btn.classList.toggle("muted", isMuted);
+    btn.title = isMuted ? "Aktifkan Mikrofon" : "Matikan Mikrofon";
+  }
+};
+
+window.toggleCameraVideo = function() {
+  if (!localStream || activeCallType !== "video") return;
+  isCameraOff = !isCameraOff;
+  localStream.getVideoTracks().forEach(function(track) { track.enabled = !isCameraOff; });
+  
+  const btn = document.getElementById("toggleCamBtn");
+  if (btn) {
+    btn.classList.toggle("off", isCameraOff);
+    btn.title = isCameraOff ? "Nyalakan Kamera" : "Matikan Kamera";
+  }
+
+  const offLabel = document.getElementById("localVideoOffLabel");
+  if (offLabel) offLabel.style.display = isCameraOff ? "flex" : "none";
+};
+
+window.switchCamera = async function() {
+  if (!localStream || activeCallType !== "video" || !peerConnection) return;
+
+  currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+  try {
+    const newStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: currentFacingMode, width: { ideal: 1280 }, height: { ideal: 720 } },
+      audio: false
+    });
+
+    const newVideoTrack = newStream.getVideoTracks()[0];
+    const oldVideoTrack = localStream.getVideoTracks()[0];
+
+    if (oldVideoTrack) {
+      oldVideoTrack.stop();
+      localStream.removeTrack(oldVideoTrack);
+    }
+    localStream.addTrack(newVideoTrack);
+
+    const localVideo = document.getElementById("localVideo");
+    if (localVideo) {
+      localVideo.srcObject = localStream;
+      localVideo.style.transform = currentFacingMode === "user" ? "scaleX(-1)" : "none";
+    }
+
+    // Replace WebRTC video sender track
+    const senders = peerConnection.getSenders();
+    const videoSender = senders.find(function(s) { return s.track && s.track.kind === "video"; });
+    if (videoSender) {
+      await videoSender.replaceTrack(newVideoTrack);
+    }
+    toast("Kamera dibalik (" + (currentFacingMode === "user" ? "Depan" : "Belakang") + ")");
+  } catch (err) {
+    console.warn("Switch camera error:", err);
+    toast("Gagal membalik kamera: " + err.message);
+  }
 };
 
 window.toggleSpeaker = function() {
   isSpeakerOn = !isSpeakerOn;
   const btn = document.getElementById("speakerBtn");
-  btn.classList.toggle("speaker-on", isSpeakerOn);
-  btn.querySelector("span").textContent = isSpeakerOn ? "Speaker On" : "Speaker";
-  // Di desktop, speaker selalu aktif; toggle ini untuk UI feedback
+  if (btn) btn.classList.toggle("speaker-on", isSpeakerOn);
 };
 
-function showCallOverlay(contactOrGroup, statusText) {
+function showCallOverlay(contactOrGroup, statusText, callType) {
   const overlay = document.getElementById("callOverlay");
   overlay.style.display = "flex";
 
+  const isVideo = callType === "video";
   const name = (contactOrGroup && (contactOrGroup.nama || contactOrGroup.name)) || "Guru";
   const avatar = (contactOrGroup && contactOrGroup.avatar) || "";
 
   document.getElementById("callOverlayName").textContent = name;
   document.getElementById("callOverlayStatus").textContent = statusText || "Menghubungi...";
   document.getElementById("callTimer").style.display = "none";
+  document.getElementById("callOverlayStatus").style.display = "block";
+  document.getElementById("callOverlayType").textContent = isVideo ? "📹 Panggilan Video" : "📞 Panggilan Suara";
+
+  const videoViewport = document.getElementById("videoViewport");
+  const callBgAnimation = document.getElementById("callBgAnimation");
+  const toggleCamBtn = document.getElementById("toggleCamBtn");
+  const switchCamBtn = document.getElementById("switchCamBtn");
+
+  if (isVideo) {
+    videoViewport.style.display = "block";
+    callBgAnimation.style.display = "none";
+    toggleCamBtn.style.display = "flex";
+    switchCamBtn.style.display = "flex";
+  } else {
+    videoViewport.style.display = "none";
+    callBgAnimation.style.display = "flex";
+    toggleCamBtn.style.display = "none";
+    switchCamBtn.style.display = "none";
+  }
 
   const avatarEl = document.getElementById("callOverlayAvatar");
   if (avatar) {
     avatarEl.innerHTML = '<img src="' + escapeAttribute(avatar) + '" alt="avatar">';
   } else {
-    avatarEl.textContent = "\uD83D\uDC64";
+    avatarEl.textContent = "👤";
   }
 }
 
 function hideCallOverlay() {
   const overlay = document.getElementById("callOverlay");
   overlay.style.display = "none";
+  document.getElementById("videoViewport").classList.remove("show");
+  document.getElementById("videoViewport").style.display = "none";
 }
 
 function updateCallOverlayStatus(status) {
@@ -3776,7 +4524,7 @@ window.handleIncomingMessage = function(msg) {
   if (!currentUser) return;
 
   const isCurrentChat = selectedTarget &&
-    !selectedTarget.type !== "group" &&
+    selectedTarget.type !== "group" &&
     ((msg.sender_id === selectedTarget.id && msg.receiver_id === currentUser.id) ||
      (msg.sender_id === currentUser.id && msg.receiver_id === selectedTarget.id));
 
@@ -3794,7 +4542,7 @@ window.handleIncomingMessage = function(msg) {
       receiver: msg.receiver_id,
       groupId: msg.group_id,
       messageText: msg.message_text,
-      messageType: msg.message_type,
+      messageType: msg.message_type || "TEXT",
       attachment: msg.attachment_url,
       timestamp: msg.created_at
     });
@@ -3803,11 +4551,14 @@ window.handleIncomingMessage = function(msg) {
       playNotificationSound();
     }
   } else if (!inActiveChat && msg.receiver_id === currentUser.id && msg.sender_id !== currentUser.id) {
-    // Pesan dari chat lain — tampilkan notifikasi
     const sender = teachers.find(function(t) { return t.id === msg.sender_id; });
     const senderName = sender ? sender.nama : "Guru";
     const senderAvatar = sender ? sender.avatar : "";
-    const preview = msg.message_type === "IMAGE" ? "\uD83D\uDDBC\uFE0F Foto" : (msg.message_text || "Pesan baru");
+    const preview = msg.message_type === "IMAGE"
+      ? "🖼️ Foto"
+      : msg.message_type === "AUDIO"
+      ? "🎙️ Pesan Suara (Voice Note)"
+      : (msg.message_text || "Pesan baru");
 
     playNotificationSound();
     showInAppNotif(senderName, preview, senderAvatar, msg.sender_id);
@@ -3818,18 +4569,14 @@ window.handleIncomingMessage = function(msg) {
 // Patch renderSidebarList untuk badge
 const _origRenderList = window.renderSidebarList || renderSidebarList;
 function renderSidebarListWithBadge() {
-  // Panggil fungsi asli
   if (typeof _origRenderList === "function") _origRenderList();
-  // Tambah badge ke tiap item kontak
   const container = document.getElementById("contacts");
   if (!container) return;
   container.querySelectorAll(".contact").forEach(function(el) {
     const id = el.dataset.contactId;
     if (!id) return;
-    // Hapus badge lama
     const old = el.querySelector(".notif-badge");
     if (old) old.remove();
-    // Tambah badge baru jika ada unread
     if (unreadCounts[id]) {
       const avatarEl = el.querySelector(".avatar");
       if (avatarEl) {
