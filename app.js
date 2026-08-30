@@ -92,7 +92,6 @@ async function submitLogin() {
 
   showLoading();
   try {
-    // Authenticate via Supabase Auth
     const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
       email,
       password: pass
@@ -100,7 +99,6 @@ async function submitLogin() {
     if (authError) throw authError;
     const user = authData.user;
 
-    // Retrieve user profile from 'users' table
     const { data: profile, error: profileError } = await supabaseClient
       .from('users')
       .select('*')
@@ -108,13 +106,11 @@ async function submitLogin() {
       .maybeSingle();
     if (profileError) throw profileError;
 
-    // Set user status to Online
     await supabaseClient
       .from('users')
       .update({ status: 'Online', last_seen: new Date().toISOString() })
       .eq('id', user.id);
 
-    // Store current user info
     currentUser = {
       id: user.id,
       email: user.email,
@@ -131,53 +127,6 @@ async function submitLogin() {
     toast("Gagal masuk: " + (err.message || "Periksa koneksi"));
   }
 }
-const name = document.getElementById("regName").value.trim();
-    const subject = document.getElementById("regSubject").value.trim();
-    const email = document.getElementById("regEmail").value.trim().toLowerCase();
-    const pass = document.getElementById("regPassword").value;
-
-    if (!name || !email || !pass) {
-      toast("Nama, Email, dan Password wajib diisi.");
-      return;
-    }
-
-    showLoading();
-    try {
-      // Sign up via Supabase Auth
-      const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-        email,
-        password: pass,
-        options: {
-          data: {
-            nama: name,
-            mata_pelajaran: subject || "Belum diatur",
-            avatar: "",
-            status: "Online"
-          }
-        }
-      });
-      if (authError) throw authError;
-      const user = authData.user;
-      // Insert profile into users table (if not automatically added)
-      const { data: profile, error: profileError } = await supabaseClient
-        .from('users')
-        .insert([{ id: user.id, nama: name, mata_pelajaran: subject || "Belum diatur", email, avatar: "", status: "Online", last_seen: new Date().toISOString() }])
-        .select()
-        .single();
-      if (profileError) throw profileError;
-
-      currentUser = {
-        id: user.id,
-        email: user.email,
-        nama: name,
-        mataPelajaran: subject || "Belum diatur",
-        avatar: ""
-      };
-      localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
-      hideLoading();
-      startApplication();
-    } catch (err) {
-      hideLoading();
 
 async function submitRegister() {
   if (!ensureSupabaseReady()) return;
@@ -192,49 +141,53 @@ async function submitRegister() {
     return;
   }
 
+  if (pass.length < 6) {
+    toast("Password minimal 6 karakter.");
+    return;
+  }
+
   showLoading();
   try {
-    // Cek apakah email sudah terdaftar
-    const { data: existingUser, error: checkErr } = await supabaseClient
-      .from("users")
-      .select("id")
-      .eq("email", email)
-      .maybeSingle();
-
-    if (checkErr) throw checkErr;
-
-    if (existingUser) {
-      hideLoading();
-      toast("Email ini sudah terdaftar. Silakan login.");
-      return;
-    }
-
-    // Insert user baru
-    const { data, error } = await supabaseClient
-      .from("users")
-      .insert([
-        {
+    // Daftar via Supabase Auth
+    const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+      email,
+      password: pass,
+      options: {
+        data: {
           nama: name,
-          mata_pelajaran: subject || "Belum diatur",
-          email: email,
-          password: pass,
-          status: "Online",
-          last_seen: new Date().toISOString()
+          mata_pelajaran: subject || "Belum diatur"
         }
-      ])
+      }
+    });
+    if (authError) throw authError;
+
+    const user = authData.user;
+    if (!user) throw new Error("Pendaftaran gagal, coba lagi.");
+
+    // Simpan profil ke tabel users
+    const { data: insertedProfile, error: profileError } = await supabaseClient
+      .from('users')
+      .upsert([{
+        id: user.id,
+        nama: name,
+        mata_pelajaran: subject || "Belum diatur",
+        email: email,
+        avatar: "",
+        status: "Online",
+        last_seen: new Date().toISOString()
+      }], { onConflict: 'id' })
       .select()
       .single();
 
-    if (error) throw error;
+    if (profileError) throw profileError;
 
     currentUser = {
-      id: data.id,
-      email: data.email,
-      nama: data.nama,
-      mataPelajaran: data.mata_pelajaran || "Belum diatur",
-      avatar: data.avatar || ""
+      id: user.id,
+      email: user.email,
+      nama: name,
+      mataPelajaran: subject || "Belum diatur",
+      avatar: ""
     };
-
     localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
     hideLoading();
     startApplication();
