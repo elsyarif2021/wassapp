@@ -92,35 +92,36 @@ async function submitLogin() {
 
   showLoading();
   try {
-    const { data, error } = await supabaseClient
-      .from("users")
-      .select("*")
-      .eq("email", email)
-      .eq("password", pass)
+    // Authenticate via Supabase Auth
+    const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({
+      email,
+      password: pass
+    });
+    if (authError) throw authError;
+    const user = authData.user;
+
+    // Retrieve user profile from 'users' table
+    const { data: profile, error: profileError } = await supabaseClient
+      .from('users')
+      .select('*')
+      .eq('id', user.id)
       .maybeSingle();
+    if (profileError) throw profileError;
 
-    if (error) throw error;
-
-    if (!data) {
-      hideLoading();
-      toast("Email atau Password salah!");
-      return;
-    }
-
-    // Update status menjadi Online & last_seen
+    // Set user status to Online
     await supabaseClient
-      .from("users")
-      .update({ status: "Online", last_seen: new Date().toISOString() })
-      .eq("id", data.id);
+      .from('users')
+      .update({ status: 'Online', last_seen: new Date().toISOString() })
+      .eq('id', user.id);
 
+    // Store current user info
     currentUser = {
-      id: data.id,
-      email: data.email,
-      nama: data.nama,
-      mataPelajaran: data.mata_pelajaran || "Belum diatur",
-      avatar: data.avatar || ""
+      id: user.id,
+      email: user.email,
+      nama: profile?.nama || '',
+      mataPelajaran: profile?.mata_pelajaran || 'Belum diatur',
+      avatar: profile?.avatar || ''
     };
-
     localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
     hideLoading();
     startApplication();
@@ -130,6 +131,53 @@ async function submitLogin() {
     toast("Gagal masuk: " + (err.message || "Periksa koneksi"));
   }
 }
+const name = document.getElementById("regName").value.trim();
+    const subject = document.getElementById("regSubject").value.trim();
+    const email = document.getElementById("regEmail").value.trim().toLowerCase();
+    const pass = document.getElementById("regPassword").value;
+
+    if (!name || !email || !pass) {
+      toast("Nama, Email, dan Password wajib diisi.");
+      return;
+    }
+
+    showLoading();
+    try {
+      // Sign up via Supabase Auth
+      const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+        email,
+        password: pass,
+        options: {
+          data: {
+            nama: name,
+            mata_pelajaran: subject || "Belum diatur",
+            avatar: "",
+            status: "Online"
+          }
+        }
+      });
+      if (authError) throw authError;
+      const user = authData.user;
+      // Insert profile into users table (if not automatically added)
+      const { data: profile, error: profileError } = await supabaseClient
+        .from('users')
+        .insert([{ id: user.id, nama: name, mata_pelajaran: subject || "Belum diatur", email, avatar: "", status: "Online", last_seen: new Date().toISOString() }])
+        .select()
+        .single();
+      if (profileError) throw profileError;
+
+      currentUser = {
+        id: user.id,
+        email: user.email,
+        nama: name,
+        mataPelajaran: subject || "Belum diatur",
+        avatar: ""
+      };
+      localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
+      hideLoading();
+      startApplication();
+    } catch (err) {
+      hideLoading();
 
 async function submitRegister() {
   if (!ensureSupabaseReady()) return;
