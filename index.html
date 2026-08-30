@@ -123,6 +123,60 @@
       display: none;
       word-break: break-word;
       line-height: 1.4;
+      animation: shakeAlert 0.35s ease;
+    }
+
+    .auth-success-alert {
+      background: #ecfdf5;
+      border: 1.5px solid #6ee7b7;
+      color: #065f46;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: left;
+      display: none;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    @keyframes shakeAlert {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    /* Password input wrapper with show/hide toggle */
+    .auth-input-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .auth-input-wrap .auth-input {
+      margin-bottom: 0;
+      padding-right: 46px;
+    }
+
+    .auth-toggle-pwd {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 17px;
+      color: #667781;
+      padding: 4px;
+      line-height: 1;
+      transition: color 0.15s;
+      user-select: none;
+    }
+
+    .auth-toggle-pwd:hover {
+      color: var(--green);
     }
 
     .auth-input {
@@ -134,12 +188,58 @@
       font-size: 14.5px;
       outline: none;
       background: #f8fafb;
-      transition: border-color 0.2s, background-color 0.2s;
+      transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+      display: block;
     }
 
     .auth-input:focus {
       border-color: var(--green);
       background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(18,140,126,0.12);
+    }
+
+    .auth-input.input-error {
+      border-color: #ea4335;
+      background: #fff8f8;
+    }
+
+    /* Password strength bar */
+    .pwd-strength-bar {
+      height: 4px;
+      border-radius: 4px;
+      background: #e1e6e8;
+      margin-top: -8px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .pwd-strength-fill {
+      height: 100%;
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.3s, background-color 0.3s;
+    }
+    .pwd-strength-hint {
+      font-size: 11.5px;
+      color: var(--muted);
+      text-align: left;
+      margin-top: -8px;
+      margin-bottom: 10px;
+    }
+
+    /* Auth divider */
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 4px 0 14px;
+      color: #b0bec5;
+      font-size: 12px;
+    }
+    .auth-divider::before, .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #e1e6e8;
     }
 
     .toggle-auth {
@@ -152,6 +252,32 @@
 
     .toggle-auth:hover {
       text-decoration: underline;
+    }
+
+    /* Button loading/disabled state */
+    .btn-primary:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .btn-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* View transition */
+    #formLoginView, #formRegisterView {
+      transition: opacity 0.18s ease;
     }
 
     .btn {
@@ -2008,23 +2134,87 @@
     
     <!-- Kotak Pesan Error Visual -->
     <div id="authErrorAlert" class="auth-error-alert"></div>
+    <div id="authSuccessAlert" class="auth-success-alert"></div>
 
     <!-- Login Form -->
     <div id="formLoginView">
-      <input type="email" id="loginEmail" class="auth-input" placeholder="Alamat Email" autocomplete="email">
-      <input type="password" id="loginPassword" class="auth-input" placeholder="Password" autocomplete="current-password">
-      <button type="button" class="btn btn-primary" onclick="submitLogin()">MASUK</button>
-      <div class="toggle-auth" onclick="toggleAuthView('register')">Belum punya akun? Daftar di sini</div>
+      <input
+        type="email"
+        id="loginEmail"
+        class="auth-input"
+        placeholder="Alamat Email"
+        autocomplete="email"
+        onkeydown="if(event.key==='Enter'){document.getElementById('loginPassword').focus();}"
+      >
+      <div class="auth-input-wrap">
+        <input
+          type="password"
+          id="loginPassword"
+          class="auth-input"
+          placeholder="Password"
+          autocomplete="current-password"
+          onkeydown="if(event.key==='Enter'){submitLogin();}"
+        >
+        <button type="button" class="auth-toggle-pwd" onclick="togglePwdVisibility('loginPassword',this)" title="Tampilkan/Sembunyikan Password">👁️</button>
+      </div>
+      <button type="button" id="btnLogin" class="btn btn-primary" onclick="submitLogin()">MASUK</button>
+      <div class="auth-divider">atau</div>
+      <div class="toggle-auth" onclick="toggleAuthView('register')">Belum punya akun? <strong>Daftar di sini</strong></div>
     </div>
     
     <!-- Register Form -->
     <div id="formRegisterView" style="display:none;">
-      <input type="text" id="regName" class="auth-input" placeholder="Nama Lengkap">
-      <input type="tel" id="regSubject" class="auth-input" placeholder="Nomor HP / WhatsApp (Contoh: 081234567890)">
-      <input type="email" id="regEmail" class="auth-input" placeholder="Alamat Email" autocomplete="email">
-      <input type="password" id="regPassword" class="auth-input" placeholder="Password" autocomplete="new-password">
-      <button type="button" class="btn btn-primary" onclick="submitRegister()">DAFTAR AKUN</button>
-      <div class="toggle-auth" onclick="toggleAuthView('login')">Sudah punya akun? Masuk di sini</div>
+      <input
+        type="text"
+        id="regName"
+        class="auth-input"
+        placeholder="Nama Lengkap *"
+        autocomplete="name"
+        onkeydown="if(event.key==='Enter'){document.getElementById('regSubject').focus();}"
+      >
+      <input
+        type="tel"
+        id="regSubject"
+        class="auth-input"
+        placeholder="Nomor HP / WhatsApp (Contoh: 081234567890)"
+        onkeydown="if(event.key==='Enter'){document.getElementById('regEmail').focus();}"
+      >
+      <input
+        type="email"
+        id="regEmail"
+        class="auth-input"
+        placeholder="Alamat Email *"
+        autocomplete="email"
+        onkeydown="if(event.key==='Enter'){document.getElementById('regPassword').focus();}"
+      >
+      <div class="auth-input-wrap">
+        <input
+          type="password"
+          id="regPassword"
+          class="auth-input"
+          placeholder="Password (min. 6 karakter) *"
+          autocomplete="new-password"
+          oninput="updatePwdStrength(this.value)"
+          onkeydown="if(event.key==='Enter'){document.getElementById('regConfirmPassword').focus();}"
+        >
+        <button type="button" class="auth-toggle-pwd" onclick="togglePwdVisibility('regPassword',this)" title="Tampilkan/Sembunyikan Password">👁️</button>
+      </div>
+      <div class="pwd-strength-bar"><div class="pwd-strength-fill" id="pwdStrengthFill"></div></div>
+      <div class="pwd-strength-hint" id="pwdStrengthHint"></div>
+      <div class="auth-input-wrap">
+        <input
+          type="password"
+          id="regConfirmPassword"
+          class="auth-input"
+          placeholder="Konfirmasi Password *"
+          autocomplete="new-password"
+          onkeydown="if(event.key==='Enter'){submitRegister();}"
+        >
+        <button type="button" class="auth-toggle-pwd" onclick="togglePwdVisibility('regConfirmPassword',this)" title="Tampilkan/Sembunyikan Password">👁️</button>
+      </div>
+      <button type="button" id="btnRegister" class="btn btn-primary" onclick="submitRegister()">DAFTAR AKUN</button>
+      <div class="auth-divider">atau</div>
+      <div class="toggle-auth" onclick="toggleAuthView('login')">Sudah punya akun? <strong>Masuk di sini</strong></div>
     </div>
   </div>
 </div>
@@ -2626,17 +2816,29 @@ document.addEventListener("DOMContentLoaded", function() {
 // UI Feedback
 function showAuthError(msg) {
   const el = document.getElementById("authErrorAlert");
+  const ok = document.getElementById("authSuccessAlert");
+  if (ok) { ok.style.display = "none"; ok.innerHTML = ""; }
   if (el) {
     el.innerHTML = "⚠️ " + escapeHtml(msg).replace(/\n/g, "<br>");
     el.style.display = "block";
+    // re-trigger animation
+    el.classList.remove("shake");
+    void el.offsetWidth;
+    el.classList.add("shake");
   }
 }
 
 function hideAuthError() {
   const el = document.getElementById("authErrorAlert");
+  if (el) { el.style.display = "none"; el.innerHTML = ""; }
+}
+
+function showAuthSuccess(msg) {
+  hideAuthError();
+  const el = document.getElementById("authSuccessAlert");
   if (el) {
-    el.style.display = "none";
-    el.innerHTML = "";
+    el.innerHTML = "✅ " + escapeHtml(msg);
+    el.style.display = "block";
   }
 }
 
@@ -2657,95 +2859,302 @@ function toast(message) {
   }, 3000);
 }
 
-// Switch Between Login and Register Views
-window.toggleAuthView = function(view) {
-  hideAuthError();
-  if (view === "register") {
-    document.getElementById("formLoginView").style.display = "none";
-    document.getElementById("formRegisterView").style.display = "block";
+// ============ AUTH UX HELPERS ============
+
+// Toggle password visibility (show/hide)
+window.togglePwdVisibility = function(inputId, btn) {
+  const inp = document.getElementById(inputId);
+  if (!inp) return;
+  if (inp.type === "password") {
+    inp.type = "text";
+    btn.textContent = "🙈";
+    btn.title = "Sembunyikan Password";
   } else {
-    document.getElementById("formRegisterView").style.display = "none";
-    document.getElementById("formLoginView").style.display = "block";
+    inp.type = "password";
+    btn.textContent = "👁️";
+    btn.title = "Tampilkan Password";
   }
 };
 
-// Login Logic
+// Password strength indicator
+window.updatePwdStrength = function(val) {
+  const fill = document.getElementById("pwdStrengthFill");
+  const hint = document.getElementById("pwdStrengthHint");
+  if (!fill || !hint) return;
+
+  let score = 0;
+  let label = "";
+  let color = "";
+
+  if (val.length === 0) {
+    fill.style.width = "0%";
+    hint.textContent = "";
+    return;
+  }
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+
+  if (score <= 1) { label = "Lemah 😟"; color = "#ea4335"; }
+  else if (score === 2) { label = "Sedang 😐"; color = "#fbbc05"; }
+  else if (score === 3) { label = "Kuat 💪"; color = "#34a853"; }
+  else { label = "Sangat Kuat 🔒"; color = "#128c7e"; }
+
+  fill.style.width = (score * 20) + "%";
+  fill.style.backgroundColor = color;
+  hint.textContent = "Kekuatan: " + label;
+  hint.style.color = color;
+};
+
+// Validate Indonesian phone number
+function isValidPhone(phone) {
+  if (!phone) return true; // optional field
+  const cleaned = phone.replace(/[\s\-]/g, "");
+  return /^(\+62|62|0)[0-9]{8,13}$/.test(cleaned);
+}
+
+// Validate email format
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// SHA-256 hash using Web Crypto API (consistent with future upgrade path)
+async function hashPassword(plain) {
+  if (!plain) return plain;
+  try {
+    const enc = new TextEncoder();
+    const buf = await crypto.subtle.digest("SHA-256", enc.encode(plain));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+  } catch (e) {
+    // Fallback: return plain if crypto not available (should not happen in modern browsers)
+    console.warn("crypto.subtle unavailable, using plain password");
+    return plain;
+  }
+}
+
+// Set button loading state
+function setAuthBtnLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  if (loading) {
+    btn.disabled = true;
+    btn._origText = btn.innerHTML;
+    btn.innerHTML = '<span class="btn-spinner"></span> Memproses...';
+  } else {
+    btn.disabled = false;
+    if (btn._origText) btn.innerHTML = btn._origText;
+  }
+}
+
+// Switch Between Login and Register Views
+window.toggleAuthView = function(view) {
+  hideAuthError();
+  const loginView = document.getElementById("formLoginView");
+  const regView = document.getElementById("formRegisterView");
+  if (view === "register") {
+    loginView.style.opacity = "0";
+    setTimeout(function() {
+      loginView.style.display = "none";
+      regView.style.display = "block";
+      regView.style.opacity = "0";
+      setTimeout(function() { regView.style.opacity = "1"; }, 10);
+    }, 150);
+  } else {
+    regView.style.opacity = "0";
+    setTimeout(function() {
+      regView.style.display = "none";
+      loginView.style.display = "block";
+      loginView.style.opacity = "0";
+      setTimeout(function() { loginView.style.opacity = "1"; }, 10);
+    }, 150);
+  }
+};
+
+// ============ LOGIN LOGIC ============
 window.submitLogin = async function() {
   hideAuthError();
-  const email = (document.getElementById("loginEmail").value || "").trim().toLowerCase();
-  const pass = (document.getElementById("loginPassword").value || "");
 
-  if (!email || !pass) {
-    showAuthError("Email dan Password harus diisi.");
+  const emailEl = document.getElementById("loginEmail");
+  const passEl = document.getElementById("loginPassword");
+  const email = (emailEl.value || "").trim().toLowerCase();
+  const pass = (passEl.value || "");
+
+  // Validation
+  emailEl.classList.remove("input-error");
+  passEl.classList.remove("input-error");
+
+  if (!email) {
+    emailEl.classList.add("input-error");
+    emailEl.focus();
+    showAuthError("Alamat Email harus diisi.");
+    return;
+  }
+  if (!isValidEmail(email)) {
+    emailEl.classList.add("input-error");
+    emailEl.focus();
+    showAuthError("Format Email tidak valid.");
+    return;
+  }
+  if (!pass) {
+    passEl.classList.add("input-error");
+    passEl.focus();
+    showAuthError("Password harus diisi.");
     return;
   }
 
-  showLoading();
+  setAuthBtnLoading("btnLogin", true);
   try {
-    const users = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&password=eq." + encodeURIComponent(pass) + "&select=*");
+    // Hash the password for comparison
+    const hashedPass = await hashPassword(pass);
+
+    // Try hashed password first, fallback to plain for backward compat
+    let users = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&select=*");
 
     if (!users || !users.length) {
-      hideLoading();
-      showAuthError("Email atau Password salah! Jika belum punya akun, klik 'Daftar di sini'.");
+      showAuthError("Email tidak terdaftar. Silakan daftar akun terlebih dahulu.");
+      setAuthBtnLoading("btnLogin", false);
       return;
     }
 
-    const data = users[0];
+    const dbUser = users[0];
+
+    // Check password: support both hashed (64 char hex) and plain (legacy)
+    const storedPwd = dbUser.password || "";
+    const pwdMatch = (storedPwd === hashedPass) || (storedPwd === pass) || (storedPwd.length < 64 && storedPwd === pass);
+
+    if (!pwdMatch) {
+      passEl.classList.add("input-error");
+      showAuthError("Password salah. Silakan coba lagi.");
+      setAuthBtnLoading("btnLogin", false);
+      return;
+    }
 
     // Update status Online
-    supabaseRest("users?id=eq." + data.id, {
+    supabaseRest("users?id=eq." + dbUser.id, {
       method: "PATCH",
       body: JSON.stringify({ status: "Online", last_seen: new Date().toISOString() })
     }).catch(function() {});
 
     currentUser = {
-      id: data.id,
-      email: data.email,
-      nama: data.nama,
-      mataPelajaran: data.mata_pelajaran || "Belum diatur",
-      avatar: data.avatar || ""
+      id: dbUser.id,
+      email: dbUser.email,
+      nama: dbUser.nama,
+      mataPelajaran: dbUser.mata_pelajaran || "Belum diatur",
+      avatar: dbUser.avatar || ""
     };
 
     localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
-    hideLoading();
+    setAuthBtnLoading("btnLogin", false);
     startApplication();
   } catch (err) {
-    hideLoading();
+    setAuthBtnLoading("btnLogin", false);
     console.error("Login error:", err);
-    showAuthError(err.message || "Gagal masuk. Periksa koneksi internet.");
+    showAuthError("Gagal masuk. Periksa koneksi internet Anda.");
   }
 };
 
-// Register Logic
+// ============ REGISTER LOGIC ============
 window.submitRegister = async function() {
   hideAuthError();
-  const name = (document.getElementById("regName").value || "").trim();
-  const subject = (document.getElementById("regSubject").value || "").trim();
-  const email = (document.getElementById("regEmail").value || "").trim().toLowerCase();
-  const pass = (document.getElementById("regPassword").value || "");
 
-  if (!name || !email || !pass) {
-    showAuthError("Nama Lengkap, Email, dan Password wajib diisi.");
+  const nameEl = document.getElementById("regName");
+  const phoneEl = document.getElementById("regSubject");
+  const emailEl = document.getElementById("regEmail");
+  const passEl = document.getElementById("regPassword");
+  const confirmEl = document.getElementById("regConfirmPassword");
+
+  const name = (nameEl.value || "").trim();
+  const phone = (phoneEl.value || "").trim();
+  const email = (emailEl.value || "").trim().toLowerCase();
+  const pass = (passEl.value || "");
+  const confirm = (confirmEl.value || "");
+
+  // Clear error states
+  [nameEl, phoneEl, emailEl, passEl, confirmEl].forEach(function(el) { el.classList.remove("input-error"); });
+
+  // Validations
+  if (!name) {
+    nameEl.classList.add("input-error");
+    nameEl.focus();
+    showAuthError("Nama Lengkap wajib diisi.");
+    return;
+  }
+  if (name.length < 2) {
+    nameEl.classList.add("input-error");
+    nameEl.focus();
+    showAuthError("Nama terlalu pendek (minimal 2 karakter).");
     return;
   }
 
-  showLoading();
-  try {
-    const existing = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&select=id");
+  if (phone && !isValidPhone(phone)) {
+    phoneEl.classList.add("input-error");
+    phoneEl.focus();
+    showAuthError("Format nomor HP tidak valid. Contoh: 081234567890 atau +628123456789");
+    return;
+  }
 
+  if (!email) {
+    emailEl.classList.add("input-error");
+    emailEl.focus();
+    showAuthError("Alamat Email wajib diisi.");
+    return;
+  }
+  if (!isValidEmail(email)) {
+    emailEl.classList.add("input-error");
+    emailEl.focus();
+    showAuthError("Format Email tidak valid.");
+    return;
+  }
+
+  if (!pass) {
+    passEl.classList.add("input-error");
+    passEl.focus();
+    showAuthError("Password wajib diisi.");
+    return;
+  }
+  if (pass.length < 6) {
+    passEl.classList.add("input-error");
+    passEl.focus();
+    showAuthError("Password minimal 6 karakter.");
+    return;
+  }
+
+  if (!confirm) {
+    confirmEl.classList.add("input-error");
+    confirmEl.focus();
+    showAuthError("Konfirmasi Password harus diisi.");
+    return;
+  }
+  if (pass !== confirm) {
+    confirmEl.classList.add("input-error");
+    confirmEl.focus();
+    showAuthError("Password dan Konfirmasi Password tidak cocok.");
+    return;
+  }
+
+  setAuthBtnLoading("btnRegister", true);
+  try {
+    // Check duplicate email
+    const existing = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&select=id");
     if (existing && existing.length > 0) {
-      hideLoading();
-      showAuthError("Email ini sudah terdaftar. Silakan masuk di sini.");
+      emailEl.classList.add("input-error");
+      showAuthError("Email ini sudah terdaftar. Silakan masuk.");
+      setAuthBtnLoading("btnRegister", false);
       return;
     }
+
+    // Hash password with SHA-256
+    const hashedPass = await hashPassword(pass);
 
     const newUser = await supabaseRest("users", {
       method: "POST",
       body: JSON.stringify({
         nama: name,
-        mata_pelajaran: subject || "Belum diatur",
+        mata_pelajaran: phone || "Belum diatur",
         email: email,
-        password: pass,
+        password: hashedPass,
         status: "Online",
         last_seen: new Date().toISOString()
       })
@@ -2762,12 +3171,12 @@ window.submitRegister = async function() {
     };
 
     localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
-    hideLoading();
+    setAuthBtnLoading("btnRegister", false);
     startApplication();
   } catch (err) {
-    hideLoading();
+    setAuthBtnLoading("btnRegister", false);
     console.error("Register error:", err);
-    showAuthError(err.message || "Gagal mendaftar. Periksa koneksi internet.");
+    showAuthError(err.message || "Gagal mendaftar. Periksa koneksi internet Anda.");
   }
 };
 
@@ -3049,7 +3458,40 @@ window.saveNewGroup = async function() {
       body: JSON.stringify({
         name: name,
         description: desc || "Grup Chat Guru",
-        created_by: currentUser.id// ============================================================================
+        created_by: currentUser.id,
+        avatar: ""
+      })
+    });
+
+    const gData = Array.isArray(newGroup) ? newGroup[0] : newGroup;
+    if (!gData || !gData.id) throw new Error("Gagal membuat grup.");
+
+    // Add selected members to group_members
+    const insertMembers = selectedUserIds.map(function(uid) {
+      return { group_id: gData.id, user_id: uid };
+    });
+    // Also add current user as member
+    insertMembers.push({ group_id: gData.id, user_id: currentUser.id });
+
+    if (insertMembers.length) {
+      await supabaseRest("group_members", {
+        method: "POST",
+        body: JSON.stringify(insertMembers)
+      });
+    }
+
+    hideLoading();
+    closeCreateGroupModal();
+    toast("Grup '" + name + "' berhasil dibuat!");
+    await loadAllData();
+  } catch (err) {
+    hideLoading();
+    console.error("Create group error:", err);
+    alert("Gagal membuat grup: " + err.message);
+  }
+};
+
+// ============================================================================
 // CHAT MESSAGES (LOAD, SEND, EDIT, DELETE, AUDIO VN, PHOTO)
 // ============================================================================
 window.refreshMessages = async function(isSilent = false) {
