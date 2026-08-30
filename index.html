@@ -1,0 +1,3847 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Al-Ghozali Messenger</title>
+
+  <style>
+    /* ==========================================================================
+       AL-GHOZALI MESSENGER - STYLES
+       ========================================================================== */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --green: #128c7e;
+      --green-dark: #075e54;
+      --green-light: #25d366;
+      --green-teal: #054c44;
+      --bg: #efeae2;
+      --sidebar-bg: #ffffff;
+      --header-bg: #f0f2f5;
+      --border: #e9edef;
+      --text: #111b21;
+      --muted: #667781;
+      --white: #ffffff;
+      --bubble-me: #d9fdd3;
+      --bubble-other: #ffffff;
+      --danger: #ea4335;
+      --shadow-sm: 0 1px 2px rgba(11, 20, 26, 0.08);
+      --shadow-md: 0 4px 16px rgba(11, 20, 26, 0.12);
+      --shadow-lg: 0 12px 36px rgba(11, 20, 26, 0.2);
+    }
+
+    html, body {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #dfe5e7;
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================
+       LOGIN & REGISTER SCREEN
+       ========================================== */
+    #loginScreen {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #075e54, #128c7e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+      overflow-y: auto;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 22px;
+      padding: 34px 26px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      animation: fadeInDown 0.35s ease;
+      position: relative;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .brand-logo {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #128c7e, #25d366);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 38px;
+      box-shadow: 0 6px 18px rgba(18, 140, 126, 0.35);
+    }
+
+    .login-card h1 {
+      font-size: 23px;
+      color: var(--green-dark);
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .login-card p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .auth-error-alert {
+      background: #fde8e8;
+      border: 1.5px solid #f8b4b4;
+      color: #9b1c1c;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      text-align: left;
+      display: none;
+      word-break: break-word;
+      line-height: 1.4;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 13px 15px;
+      margin-bottom: 12px;
+      border: 1.5px solid #e1e6e8;
+      border-radius: 10px;
+      font-size: 14.5px;
+      outline: none;
+      background: #f8fafb;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .auth-input:focus {
+      border-color: var(--green);
+      background: #ffffff;
+    }
+
+    .toggle-auth {
+      margin-top: 18px;
+      font-size: 13.5px;
+      color: var(--green);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .toggle-auth:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 11px 16px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--green);
+      color: white;
+      margin-top: 6px;
+      font-size: 15px;
+      padding: 13px;
+      box-shadow: 0 4px 12px rgba(18, 140, 126, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-secondary {
+      background: #eee;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn-save {
+      background: var(--green);
+      color: white;
+    }
+
+    .btn-save:hover {
+      background: var(--green-dark);
+    }
+
+    .btn-danger {
+      background: #ea4335;
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background: #c5221f;
+    }
+
+    /* ==========================================
+       APP MAIN LAYOUT (FIXED VIEWPORT)
+       ========================================== */
+    #app {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      max-width: 1680px;
+      margin: auto;
+      background: white;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    /* ==========================================
+       SIDEBAR
+       ========================================== */
+    .sidebar {
+      width: 380px;
+      height: 100%;
+      border-right: 1px solid var(--border);
+      background: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 20;
+      flex-shrink: 0;
+    }
+
+    .sidebar-header {
+      height: 64px;
+      background: var(--header-bg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .profile-mini {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #dfe5e7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      font-size: 19px;
+      color: #555;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    .avatar.group-avatar {
+      background: #00a884;
+      color: white;
+      font-size: 20px;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-info {
+      min-width: 0;
+    }
+
+    .profile-info strong {
+      display: block;
+      font-size: 14.5px;
+      color: var(--text);
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .profile-info span {
+      font-size: 12px;
+      color: var(--muted);
+      display: block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      position: relative;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border: none;
+      background: transparent;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #54656f;
+      transition: background-color 0.15s;
+    }
+
+    .icon-btn:hover {
+      background: #e9edef;
+    }
+
+    /* Tabs Filter (Semua, Pribadi, Grup) */
+    .sidebar-tabs {
+      display: flex;
+      background: #f0f2f5;
+      padding: 6px 12px;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 6px 0;
+      border: none;
+      background: white;
+      border-radius: 18px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #54656f;
+      cursor: pointer;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+
+    .tab-btn.active {
+      background: #e7f8f5;
+      color: var(--green-dark);
+      border-color: #bbf0e7;
+    }
+
+    .search-area {
+      padding: 8px 14px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .search-box {
+      height: 36px;
+      background: var(--header-bg);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 8px;
+    }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 13.5px;
+      color: var(--text);
+    }
+
+    .contacts {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .contact {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #f6f7f8;
+      transition: background-color 0.15s;
+      position: relative;
+    }
+
+    .contact:hover {
+      background: #f5f6f6;
+    }
+
+    .contact.active {
+      background: #ebebeb;
+    }
+
+    .contact-details {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .contact-name {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .contact-name span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .contact-sub {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 3px;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .online-dot {
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      border-radius: 50%;
+      background: #bbb;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+
+    .online-dot.online {
+      background: var(--green-light);
+      box-shadow: 0 0 6px rgba(37, 211, 102, 0.7);
+    }
+
+    .group-badge {
+      background: #e2f7f4;
+      color: #075e54;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      margin-left: 6px;
+    }
+
+    /* ==========================================
+       CHAT MAIN PANEL
+       ========================================== */
+    .chat {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      height: 64px;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 12px;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+
+    .back-btn {
+      display: none;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .chat-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .chat-user-info {
+      min-width: 0;
+    }
+
+    .chat-user-name {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .chat-status {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+
+    .chat-status.status-online {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .messages {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 16px 8%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background-color: var(--bg);
+      background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+      background-size: 22px 22px;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .empty-chat {
+      margin: auto;
+      text-align: center;
+      color: var(--muted);
+      max-width: 380px;
+      padding: 20px;
+    }
+
+    .empty-chat .big {
+      font-size: 52px;
+      margin-bottom: 12px;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 8px 12px 6px;
+      border-radius: 8px;
+      box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.12);
+      position: relative;
+      word-break: break-word;
+      font-size: 14.5px;
+      line-height: 1.45;
+      animation: messagePop 0.18s ease;
+    }
+
+    @keyframes messagePop {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.me {
+      align-self: flex-end;
+      background: var(--bubble-me);
+      border-top-right-radius: 2px;
+    }
+
+    .message.other {
+      align-self: flex-start;
+      background: var(--bubble-other);
+      border-top-left-radius: 2px;
+    }
+
+    .msg-sender-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #128c7e;
+      margin-bottom: 3px;
+      display: block;
+    }
+
+    .message img {
+      max-width: 280px;
+      max-height: 320px;
+      border-radius: 6px;
+      display: block;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .message img:hover {
+      transform: scale(1.015);
+    }
+
+    .message-meta {
+      float: right;
+      margin-left: 10px;
+      margin-top: 4px;
+      font-size: 10.5px;
+      color: #667781;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .message-status {
+      color: #53bdeb;
+      font-size: 11px;
+    }
+
+    /* Message Action Buttons (Edit & Delete) */
+    .msg-action-trigger {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 22px;
+      height: 22px;
+      border: none;
+      background: rgba(255, 255, 255, 0.75);
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 13px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    .message:hover .msg-action-trigger,
+    .message:active .msg-action-trigger {
+      display: flex;
+    }
+
+    .msg-menu {
+      position: absolute;
+      top: 28px;
+      right: 4px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      display: none;
+      flex-direction: column;
+      z-index: 100;
+      min-width: 130px;
+      overflow: hidden;
+    }
+
+    .msg-menu.show {
+      display: flex;
+      animation: fadeInDown 0.15s ease;
+    }
+
+    .msg-menu-item {
+      padding: 9px 12px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      background: white;
+      border: none;
+      text-align: left;
+      width: 100%;
+      color: var(--text);
+    }
+
+    .msg-menu-item:hover {
+      background: #f0f2f5;
+    }
+
+    .msg-menu-item.danger {
+      color: var(--danger);
+    }
+
+    .msg-menu-item.danger:hover {
+      background: #fee2e2;
+    }
+
+    /* Editing Banner in Composer */
+    .editing-banner {
+      background: #e7f8f5;
+      border-left: 4px solid var(--green);
+      padding: 6px 12px;
+      font-size: 12.5px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--green-dark);
+      position: absolute;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      z-index: 39;
+    }
+
+    .editing-banner.show {
+      display: flex;
+    }
+
+    .cancel-edit-btn {
+      background: transparent;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 0 4px;
+    }
+
+    /* ==========================================
+       COMPOSER & RICH ISLAMIC EMOJI PANEL
+       ========================================== */
+    .composer {
+      min-height: 60px;
+      background: var(--header-bg);
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      gap: 8px;
+      position: relative;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      z-index: 40;
+    }
+
+    .message-input {
+      flex: 1;
+      min-width: 0;
+      border: none;
+      outline: none;
+      resize: none;
+      background: white;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 14.5px;
+      max-height: 100px;
+      min-height: 40px;
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .send-btn {
+      background: var(--green);
+      color: white;
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 19px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s, transform 0.15s;
+      box-shadow: 0 2px 6px rgba(18, 140, 126, 0.35);
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover {
+      background: var(--green-dark);
+      transform: scale(1.05);
+    }
+
+    /* Rich Emoji & Islamic Picker Panel */
+    .emoji-panel {
+      position: absolute;
+      bottom: 66px;
+      left: 10px;
+      width: 360px;
+      max-width: calc(100vw - 20px);
+      height: 320px;
+      background: white;
+      border-radius: 14px;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      flex-direction: column;
+      z-index: 60;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .emoji-panel.show {
+      display: flex;
+      animation: fadeInDown 0.2s ease;
+    }
+
+    .emoji-tabs {
+      display: flex;
+      background: #f0f2f5;
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .emoji-tab-item {
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      background: transparent;
+      border: none;
+      color: #54656f;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .emoji-tab-item.active {
+      background: white;
+      color: var(--green-dark);
+      border-bottom: 2.5px solid var(--green);
+    }
+
+    .emoji-tab-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      scrollbar-width: thin;
+    }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 4px;
+    }
+
+    .emoji {
+      display: inline-flex;
+      width: 36px;
+      height: 36px;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.1s, transform 0.1s;
+    }
+
+    .emoji:hover {
+      background: #f0f2f5;
+      transform: scale(1.18);
+    }
+
+    /* Islamic Arabic Chips & Buttons */
+    .arabic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .arabic-chip {
+      background: #f8fafb;
+      border: 1px solid #e1e6e8;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: right;
+    }
+
+    .arabic-chip:hover {
+      background: #e7f8f5;
+      border-color: var(--green);
+      transform: translateY(-1px);
+    }
+
+    .arabic-text {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green-dark);
+      display: block;
+      font-family: "Traditional Arabic", "Amiri", "Scheherazade", Tahoma, sans-serif;
+    }
+
+    .arabic-latin {
+      font-size: 11.5px;
+      color: #667781;
+      display: block;
+      text-align: left;
+      margin-top: 2px;
+    }
+
+    .attachment-input {
+      display: none;
+    }
+
+    .attachment-preview {
+      position: absolute;
+      left: 12px;
+      bottom: 68px;
+      background: white;
+      padding: 8px;
+      border-radius: 12px;
+      box-shadow: var(--shadow-lg);
+      display: none;
+      border: 1px solid var(--border);
+      z-index: 45;
+    }
+
+    .attachment-preview.show {
+      display: block;
+    }
+
+    .attachment-preview img {
+      max-width: 150px;
+      max-height: 110px;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .remove-attachment {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 26px;
+      height: 26px;
+      border: none;
+      border-radius: 50%;
+      background: #333;
+      color: white;
+      cursor: pointer;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ==========================================
+       MODALS
+       ========================================== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 500;
+      backdrop-filter: blur(2px);
+    }
+
+    .modal.show {
+      display: flex;
+      animation: fadeInDown 0.25s ease;
+    }
+
+    .modal-card {
+      width: calc(100% - 32px);
+      max-width: 450px;
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h2 {
+      font-size: 19px;
+      color: var(--green-dark);
+      font-weight: 700;
+    }
+
+    .close {
+      border: none;
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+      color: #777;
+    }
+
+    .member-select-list {
+      max-height: 160px;
+      overflow-y: auto;
+      border: 1.5px solid #e1e6e8;
+      border-radius: 8px;
+      padding: 8px;
+      margin-top: 6px;
+    }
+
+    .member-select-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-bottom: 1px solid #f0f2f5;
+      font-size: 13.5px;
+      cursor: pointer;
+    }
+
+    .member-select-item:last-child {
+      border-bottom: none;
+    }
+
+    .profile-large {
+      width: 100px;
+      height: 100px;
+      margin: 8px auto 14px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-size: 42px;
+      border: 3px solid var(--green);
+    }
+
+    .profile-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .file-label {
+      display: block;
+      width: fit-content;
+      margin: auto;
+      background: var(--green);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .file-label:hover {
+      background: var(--green-dark);
+    }
+
+    .form-group {
+      margin-top: 14px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      border: 1.5px solid #e1e6e8;
+      padding: 10px 13px;
+      border-radius: 8px;
+      outline: none;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--green);
+    }
+
+    .modal-footer {
+      margin-top: 22px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    /* ==========================================
+       TOAST & LOADING
+       ========================================== */
+    #toast {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #323232;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      z-index: 99999;
+      box-shadow: var(--shadow-lg);
+      max-width: 90vw;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(2px);
+    }
+
+    .loader {
+      width: 44px;
+      height: 44px;
+      border: 4px solid #e1e6e8;
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Lightbox popup for image click */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.88);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+      padding: 20px;
+      cursor: pointer;
+    }
+
+    #lightbox.show {
+      display: flex;
+    }
+
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* ==========================================
+       RESPONSIVE DESIGN (MOBILE VIEWPORT FIX)
+       ========================================== */
+    @media (max-width: 820px) {
+      #app {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+      }
+      .sidebar {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform: translateX(0);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 20;
+        pointer-events: auto;
+      }
+      .chat {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        transform: translateX(100%);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 30;
+        pointer-events: none;
+        visibility: hidden;
+      }
+      #app.mobile-chat-open .chat {
+        transform: translateX(0);
+        pointer-events: auto;
+        visibility: visible;
+      }
+      #app.mobile-chat-open .sidebar {
+        transform: translateX(-100%);
+        pointer-events: none;
+      }
+      .back-btn {
+        display: flex;
+      }
+      .messages {
+        padding: 12px 14px;
+      }
+      .message {
+        max-width: 88%;
+      }
+      .composer {
+        padding: 6px 10px;
+        padding-bottom: max(6px, env(safe-area-inset-bottom));
+      }
+      .emoji-panel {
+        width: calc(100vw - 20px);
+        left: 10px;
+        height: 290px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .sidebar-header,
+      .chat-header {
+        height: 58px;
+        padding: 0 10px;
+      }
+      .avatar {
+        width: 38px;
+        height: 38px;
+      }
+      .send-btn {
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    @media (min-width: 821px) {
+      #app {
+        display: flex;
+        box-shadow: 0 0 24px rgba(0, 0, 0, 0.12);
+      }
+      .chat {
+        visibility: visible !important;
+        pointer-events: auto !important;
+      }
+    }
+
+    /* ==========================================
+       NOTIFICATION BADGE
+       ========================================== */
+    .notif-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ea4335;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 3px;
+      pointer-events: none;
+      animation: badgePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes badgePop {
+      from { transform: scale(0); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+
+    /* Header call actions group */
+    .header-call-actions {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Call button pulse animation when idle */
+    .call-btn {
+      position: relative;
+      color: var(--green);
+    }
+
+    .call-btn:hover {
+      background: rgba(18, 140, 126, 0.12);
+    }
+
+    /* ==========================================
+       INCOMING CALL POPUP
+       ========================================== */
+    .incoming-call-popup {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999999;
+      animation: slideInRight 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes slideInRight {
+      from { transform: translateX(120%); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+
+    .incoming-call-card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22), 0 0 0 1px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 300px;
+      max-width: 360px;
+    }
+
+    .incoming-call-ring {
+      font-size: 36px;
+      animation: ringShake 0.6s ease infinite;
+    }
+
+    @keyframes ringShake {
+      0%, 100% { transform: rotate(0); }
+      20%       { transform: rotate(-15deg); }
+      40%       { transform: rotate(15deg); }
+      60%       { transform: rotate(-10deg); }
+      80%       { transform: rotate(10deg); }
+    }
+
+    .incoming-call-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .incoming-call-name {
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .incoming-call-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .incoming-call-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .call-action-btn {
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .call-action-btn.reject {
+      background: #ea4335;
+      color: white;
+      transform: rotate(135deg);
+    }
+
+    .call-action-btn.reject:hover {
+      background: #c5221f;
+    }
+
+    .call-action-btn.accept {
+      background: #25d366;
+      color: white;
+    }
+
+    .call-action-btn.accept:hover {
+      background: #128c7e;
+    }
+
+    /* ==========================================
+       ACTIVE CALL OVERLAY
+       ========================================== */
+    .call-overlay {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(145deg, #054c44 0%, #075e54 40%, #128c7e 100%);
+      z-index: 9999998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: overlayFadeIn 0.35s ease;
+    }
+
+    @keyframes overlayFadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .call-bg-animation {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .call-ring-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      animation: ringPulse 2.4s ease-out infinite;
+    }
+
+    .call-ring-circle.r1 { width: 200px; height: 200px; animation-delay: 0s; }
+    .call-ring-circle.r2 { width: 310px; height: 310px; animation-delay: 0.6s; }
+    .call-ring-circle.r3 { width: 430px; height: 430px; animation-delay: 1.2s; }
+
+    @keyframes ringPulse {
+      0%   { opacity: 0.5; transform: scale(0.85); }
+      100% { opacity: 0;   transform: scale(1.15); }
+    }
+
+    .call-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .call-avatar-large {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      overflow: hidden;
+      backdrop-filter: blur(4px);
+    }
+
+    .call-avatar-large img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .call-name {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .call-status {
+      font-size: 14px;
+      opacity: 0.8;
+      letter-spacing: 0.5px;
+    }
+
+    .call-timer {
+      font-size: 18px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 1px;
+    }
+
+    .call-controls {
+      display: flex;
+      gap: 28px;
+      margin-top: 32px;
+      align-items: flex-end;
+    }
+
+    .call-ctrl-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      border: none;
+      border-radius: 50%;
+      width: 58px;
+      height: 58px;
+      cursor: pointer;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      position: relative;
+    }
+
+    .call-ctrl-btn span {
+      position: absolute;
+      bottom: -22px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .call-ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.28);
+      transform: scale(1.08);
+    }
+
+    .call-ctrl-btn.muted {
+      background: rgba(255, 255, 255, 0.5);
+      color: #075e54;
+    }
+
+    .call-ctrl-btn.end-call {
+      background: #ea4335;
+      width: 68px;
+      height: 68px;
+      transform: rotate(135deg);
+    }
+
+    .call-ctrl-btn.end-call:hover {
+      background: #c5221f;
+      transform: rotate(135deg) scale(1.08);
+    }
+
+    .call-ctrl-btn.speaker-on {
+      background: #25d366;
+      color: #054c44;
+    }
+
+    /* ==========================================
+       NOTIFICATION TOAST (Khusus Pesan Baru)
+       ========================================== */
+    .msg-notif-banner {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-80px);
+      background: white;
+      border-radius: 14px;
+      padding: 12px 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 999997;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+      max-width: 92vw;
+      min-width: 260px;
+    }
+
+    .msg-notif-banner.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .msg-notif-icon {
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .msg-notif-text {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .msg-notif-sender {
+      font-weight: 700;
+      font-size: 13.5px;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .msg-notif-preview {
+      font-size: 12.5px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 1px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading Spinner -->
+<div id="loading"><div class="loader"></div></div>
+
+<!-- Image Lightbox Popup -->
+<div id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="Full preview">
+</div>
+
+<!-- Login / Register Screen -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="brand-logo">💬</div>
+    <h1>Al-Ghozali Messenger</h1>
+    <p>Messenger khusus guru YPI Al-Ghozali</p>
+    
+    <!-- Kotak Pesan Error Visual -->
+    <div id="authErrorAlert" class="auth-error-alert"></div>
+
+    <!-- Login Form -->
+    <div id="formLoginView">
+      <input type="email" id="loginEmail" class="auth-input" placeholder="Alamat Email" autocomplete="email">
+      <input type="password" id="loginPassword" class="auth-input" placeholder="Password" autocomplete="current-password">
+      <button type="button" class="btn btn-primary" onclick="submitLogin()">MASUK</button>
+      <div class="toggle-auth" onclick="toggleAuthView('register')">Belum punya akun? Daftar di sini</div>
+    </div>
+    
+    <!-- Register Form -->
+    <div id="formRegisterView" style="display:none;">
+      <input type="text" id="regName" class="auth-input" placeholder="Nama Lengkap Guru">
+      <input type="text" id="regSubject" class="auth-input" placeholder="Mata Pelajaran (Contoh: Matematika)">
+      <input type="email" id="regEmail" class="auth-input" placeholder="Alamat Email" autocomplete="email">
+      <input type="password" id="regPassword" class="auth-input" placeholder="Password" autocomplete="new-password">
+      <button type="button" class="btn btn-primary" onclick="submitRegister()">DAFTAR AKUN</button>
+      <div class="toggle-auth" onclick="toggleAuthView('login')">Sudah punya akun? Masuk di sini</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Application Layout -->
+<div id="app">
+  <!-- Sidebar Contacts -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="profile-mini" onclick="openProfile()" title="Edit Profil">
+        <div class="avatar" id="myAvatar">👤</div>
+        <div class="profile-info">
+          <strong id="myName">Guru</strong>
+          <span id="mySubject">Mata pelajaran</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="icon-btn" title="Buat Grup Chat" onclick="openCreateGroupModal()">👥</button>
+        <button type="button" class="icon-btn" title="Tambah Kontak Guru" onclick="openAddContactModal()">➕</button>
+        <button type="button" class="icon-btn" title="Keluar / Logout" onclick="logout()">🚪</button>
+      </div>
+    </div>
+
+    <!-- Tabs Filter (Semua, Pribadi, Grup) -->
+    <div class="sidebar-tabs">
+      <button type="button" class="tab-btn active" id="tabAll" onclick="setSidebarTab('all')">Semua</button>
+      <button type="button" class="tab-btn" id="tabDirect" onclick="setSidebarTab('direct')">Pribadi</button>
+      <button type="button" class="tab-btn" id="tabGroup" onclick="setSidebarTab('group')">Grup</button>
+    </div>
+    
+    <div class="search-area">
+      <div class="search-box">
+        <span>🔎</span>
+        <input type="text" id="searchInput" placeholder="Cari guru atau grup..." oninput="filterContacts()">
+      </div>
+    </div>
+    
+    <div class="contacts" id="contacts">
+      <div style="padding:30px; text-align:center; color:#777;">Memuat obrolan...</div>
+    </div>
+  </aside>
+
+  <!-- Chat Main Area -->
+  <main class="chat">
+    <header class="chat-header">
+      <button type="button" class="icon-btn back-btn" onclick="closeMobileChat()" title="Kembali ke Daftar Guru">←</button>
+      <div class="chat-user">
+        <div class="avatar" id="chatAvatar">👤</div>
+        <div class="chat-user-info">
+          <div class="chat-user-name" id="chatName">Pilih guru atau grup</div>
+          <div class="chat-status" id="chatStatus">Pilih kontak untuk memulai percakapan</div>
+        </div>
+      </div>
+      <div class="header-call-actions">
+        <button type="button" class="icon-btn call-btn" id="voiceCallBtn" onclick="startVoiceCall()" title="Panggil Suara" style="display:none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.47 11.47 0 0 0 3.59.57 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.59a1 1 0 0 1-.25 1.02l-2.2 2.18z"/></svg>
+        </button>
+        <button type="button" class="icon-btn" onclick="refreshMessages()" title="Muat Ulang Pesan">🔄</button>
+      </div>
+    </header>
+
+    <div class="messages" id="messages">
+      <div class="empty-chat">
+        <div class="big">💬</div>
+        <h3>Al-Ghozali Messenger</h3>
+        <p style="margin-top:8px">Pilih guru atau grup di sebelah kiri untuk memulai percakapan.</p>
+      </div>
+    </div>
+
+    <!-- Banner Info saat sedang Edit Pesan -->
+    <div class="editing-banner" id="editingBanner">
+      <span>✏️ Mengedit Pesan...</span>
+      <button type="button" class="cancel-edit-btn" onclick="cancelEditMessage()" title="Batal Edit">×</button>
+    </div>
+
+    <!-- Message Composer -->
+    <div class="composer">
+      <button type="button" class="icon-btn" onclick="toggleEmoji()" title="Emoji & Kaligrafi Islami">😊</button>
+      <button type="button" class="icon-btn" onclick="document.getElementById('imageInput').click()" title="Kirim Foto">📎</button>
+      <input id="imageInput" class="attachment-input" type="file" accept="image/*" onchange="previewImage(this)">
+      
+      <!-- Rich Emoji & Islamic Arabic Phrases Panel -->
+      <div class="emoji-panel" id="emojiPanel">
+        <div class="emoji-tabs">
+          <button type="button" class="emoji-tab-item active" onclick="switchEmojiTab(event, 'islamic')">🕌 Islami</button>
+          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'dzikir')">📿 Dzikir</button>
+          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'faces')">😊 Ekspresi</button>
+          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'gestures')">🤲 Tangan</button>
+          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'school')">📚 Sekolah</button>
+        </div>
+
+        <!-- Tab 1: Islami & Simbol Arab -->
+        <div class="emoji-tab-content" id="tabContent_islamic">
+          <div style="font-size:12px; font-weight:700; color:#075e54; margin-bottom:8px;">🕌 Simbol & Alam Islami</div>
+          <div class="emoji-grid" style="margin-bottom:12px;">
+            <span class="emoji" onclick="addEmoji('🕌')">🕌</span>
+            <span class="emoji" onclick="addEmoji('🕋')">🕋</span>
+            <span class="emoji" onclick="addEmoji('📿')">📿</span>
+            <span class="emoji" onclick="addEmoji('🌙')">🌙</span>
+            <span class="emoji" onclick="addEmoji('⭐')">⭐</span>
+            <span class="emoji" onclick="addEmoji('✨')">✨</span>
+            <span class="emoji" onclick="addEmoji('🤲')">🤲</span>
+            <span class="emoji" onclick="addEmoji('📖')">📖</span>
+            <span class="emoji" onclick="addEmoji('🕯️')">🕯️</span>
+            <span class="emoji" onclick="addEmoji('🕊️')">🕊️</span>
+            <span class="emoji" onclick="addEmoji('🌴')">🌴</span>
+            <span class="emoji" onclick="addEmoji('🌿')">🌿</span>
+            <span class="emoji" onclick="addEmoji('🌺')">🌺</span>
+            <span class="emoji" onclick="addEmoji('🌸')">🌸</span>
+            <span class="emoji" onclick="addEmoji('☪️')">☪️</span>
+            <span class="emoji" onclick="addEmoji('🌠')">🌠</span>
+            <span class="emoji" onclick="addEmoji('🌟')">🌟</span>
+            <span class="emoji" onclick="addEmoji('💫')">💫</span>
+            <span class="emoji" onclick="addEmoji('🏮')">🏮</span>
+            <span class="emoji" onclick="addEmoji('🎋')">🎋</span>
+            <span class="emoji" onclick="addEmoji('🌄')">🌄</span>
+            <span class="emoji" onclick="addEmoji('🌅')">🌅</span>
+            <span class="emoji" onclick="addEmoji('🌊')">🌊</span>
+            <span class="emoji" onclick="addEmoji('🏔️')">🏔️</span>
+          </div>
+
+          <div style="font-size:12px; font-weight:700; color:#075e54; margin-bottom:8px;">📜 Kalimat Islami (Klik untuk kirim)</div>
+          <div class="arabic-list">
+            <div class="arabic-chip" onclick="addText('السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ')">
+              <span class="arabic-text">السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</span>
+              <span class="arabic-latin">Assalamu'alaikum Warahmatullahi Wabarakatuh</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('وَعَلَيْكُمُ السَّلاَمُ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ')">
+              <span class="arabic-text">وَعَلَيْكُمُ السَّلاَمُ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</span>
+              <span class="arabic-latin">Wa'alaikumussalam Warahmatullahi Wabarakatuh</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ')">
+              <span class="arabic-text">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+              <span class="arabic-latin">Bismillahirrahmanirrahim</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ')">
+              <span class="arabic-text">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</span>
+              <span class="arabic-latin">Alhamdulillahirabbil 'Alamin</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('إِنْ شَاءَ اللَّهُ')">
+              <span class="arabic-text">إِنْ شَاءَ اللَّهُ</span>
+              <span class="arabic-latin">Insya Allah</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('مَا شَاءَ اللَّهُ تَبَارَكَ اللَّهُ')">
+              <span class="arabic-text">مَا شَاءَ اللَّهُ تَبَارَكَ اللَّهُ</span>
+              <span class="arabic-latin">Masya Allah Tabarakallah</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('جَزَاكُمُ اللَّهُ خَيْرًا كَثِيرًا')">
+              <span class="arabic-text">جَزَاكُمُ اللَّهُ خَيْرًا كَثِيرًا</span>
+              <span class="arabic-latin">Jazakumullahu Khairan Katsiran</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('بَارَكَ اللَّهُ فِيكُمْ')">
+              <span class="arabic-text">بَارَكَ اللَّهُ فِيكُمْ</span>
+              <span class="arabic-latin">Barakallahu Fiikum</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('آمِيْن يَا رَبَّ العَالَمِيْنَ')">
+              <span class="arabic-text">آمِيْن يَا رَبَّ العَالَمِيْنَ</span>
+              <span class="arabic-latin">Aamiin Ya Rabbal 'Alamin</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ')">
+              <span class="arabic-text">أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ</span>
+              <span class="arabic-latin">Astaghfirullahal 'Azhim</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('لاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللَّهِ')">
+              <span class="arabic-text">لاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللَّهِ</span>
+              <span class="arabic-latin">Laa Hawla Wa Laa Quwwata Illa Billah</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('سُبْحَانَ اللَّهِ وَبِحَمْدِهِ')">
+              <span class="arabic-text">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</span>
+              <span class="arabic-latin">Subhanallahi Wa Bihamdihi</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي')">
+              <span class="arabic-text">رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي</span>
+              <span class="arabic-latin">Rabbisyrohlii Shadrii Wayassirlii Amrii</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا')">
+              <span class="arabic-text">اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا</span>
+              <span class="arabic-latin">Allahumma Baarik Lanaa Fiimaa Rozaqtanaa</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ')">
+              <span class="arabic-text">حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ</span>
+              <span class="arabic-latin">Hasbunallahu Wa Ni'mal Wakiil</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Baru: Dzikir & Doa Harian -->
+        <div class="emoji-tab-content" id="tabContent_dzikir" style="display:none;">
+          <div style="font-size:12px; font-weight:700; color:#075e54; margin-bottom:8px;">📿 Dzikir Harian (Klik untuk kirim)</div>
+          <div class="arabic-list">
+            <div class="arabic-chip" onclick="addText('سُبْحَانَ اللهِ')">
+              <span class="arabic-text">سُبْحَانَ اللهِ</span>
+              <span class="arabic-latin">Subhanallah (33×)</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('الْحَمْدُ لِلَّهِ')">
+              <span class="arabic-text">الْحَمْدُ لِلَّهِ</span>
+              <span class="arabic-latin">Alhamdulillah (33×)</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('اللَّهُ أَكْبَرُ')">
+              <span class="arabic-text">اللَّهُ أَكْبَرُ</span>
+              <span class="arabic-latin">Allahu Akbar (33×)</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ')">
+              <span class="arabic-text">لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ</span>
+              <span class="arabic-latin">Laa ilaaha illallahu wahdahu laa syariika lahu</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ')">
+              <span class="arabic-text">اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ</span>
+              <span class="arabic-latin">Sholawat Nabi Muhammad SAW</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ')">
+              <span class="arabic-text">أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ</span>
+              <span class="arabic-latin">A'uudzu billahi minasy syaithoonir rojiim</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('لاَ إِلَهَ إِلاَّ أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ')">
+              <span class="arabic-text">لاَ إِلَهَ إِلاَّ أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ</span>
+              <span class="arabic-latin">Doa Nabi Yunus (Doa Mustajab)</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ')">
+              <span class="arabic-text">اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ</span>
+              <span class="arabic-latin">Doa Mohon Kesehatan & Keselamatan</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ')">
+              <span class="arabic-text">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</span>
+              <span class="arabic-latin">Rabbanaa Aatinaa Fid Dunyaa Hasanah (Doa Sapu Jagad)</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ')">
+              <span class="arabic-text">اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ</span>
+              <span class="arabic-latin">Doa Mohon Pertolongan Ibadah (HR. Abu Dawud)</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('رَبِّ زِدْنِي عِلْمًا')">
+              <span class="arabic-text">رَبِّ زِدْنِي عِلْمًا</span>
+              <span class="arabic-latin">Rabbii Zidnii 'Ilmaa — Doa Mohon Tambah Ilmu</span>
+            </div>
+            <div class="arabic-chip" onclick="addText('اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ')">
+              <span class="arabic-text">اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ</span>
+              <span class="arabic-latin">Doa Mohon Dijauhkan dari Kesedihan & Kegelisahan</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Ekspresi & Wajah -->
+        <div class="emoji-tab-content" id="tabContent_faces" style="display:none;">
+          <div class="emoji-grid">
+            <span class="emoji" onclick="addEmoji('😊')">😊</span>
+            <span class="emoji" onclick="addEmoji('😀')">😀</span>
+            <span class="emoji" onclick="addEmoji('😃')">😃</span>
+            <span class="emoji" onclick="addEmoji('😄')">😄</span>
+            <span class="emoji" onclick="addEmoji('😁')">😁</span>
+            <span class="emoji" onclick="addEmoji('😆')">😆</span>
+            <span class="emoji" onclick="addEmoji('😅')">😅</span>
+            <span class="emoji" onclick="addEmoji('😂')">😂</span>
+            <span class="emoji" onclick="addEmoji('🤣')">🤣</span>
+            <span class="emoji" onclick="addEmoji('😇')">😇</span>
+            <span class="emoji" onclick="addEmoji('🥰')">🥰</span>
+            <span class="emoji" onclick="addEmoji('😍')">😍</span>
+            <span class="emoji" onclick="addEmoji('🤩')">🤩</span>
+            <span class="emoji" onclick="addEmoji('😘')">😘</span>
+            <span class="emoji" onclick="addEmoji('😗')">😗</span>
+            <span class="emoji" onclick="addEmoji('😚')">😚</span>
+            <span class="emoji" onclick="addEmoji('😋')">😋</span>
+            <span class="emoji" onclick="addEmoji('😛')">😛</span>
+            <span class="emoji" onclick="addEmoji('😜')">😜</span>
+            <span class="emoji" onclick="addEmoji('🤪')">🤪</span>
+            <span class="emoji" onclick="addEmoji('🤗')">🤗</span>
+            <span class="emoji" onclick="addEmoji('🤭')">🤭</span>
+            <span class="emoji" onclick="addEmoji('🤫')">🤫</span>
+            <span class="emoji" onclick="addEmoji('🤔')">🤔</span>
+            <span class="emoji" onclick="addEmoji('😐')">😐</span>
+            <span class="emoji" onclick="addEmoji('😑')">😑</span>
+            <span class="emoji" onclick="addEmoji('😶')">😶</span>
+            <span class="emoji" onclick="addEmoji('😏')">😏</span>
+            <span class="emoji" onclick="addEmoji('😌')">😌</span>
+            <span class="emoji" onclick="addEmoji('😴')">😴</span>
+            <span class="emoji" onclick="addEmoji('😷')">😷</span>
+            <span class="emoji" onclick="addEmoji('🤒')">🤒</span>
+            <span class="emoji" onclick="addEmoji('🥺')">🥺</span>
+            <span class="emoji" onclick="addEmoji('😢')">😢</span>
+            <span class="emoji" onclick="addEmoji('😭')">😭</span>
+            <span class="emoji" onclick="addEmoji('😎')">😎</span>
+          </div>
+        </div>
+
+        <!-- Tab 3: Tangan & Gestur -->
+        <div class="emoji-tab-content" id="tabContent_gestures" style="display:none;">
+          <div class="emoji-grid">
+            <span class="emoji" onclick="addEmoji('🤲')">🤲</span>
+            <span class="emoji" onclick="addEmoji('🙏')">🙏</span>
+            <span class="emoji" onclick="addEmoji('🤝')">🤝</span>
+            <span class="emoji" onclick="addEmoji('👍')">👍</span>
+            <span class="emoji" onclick="addEmoji('👎')">👎</span>
+            <span class="emoji" onclick="addEmoji('👌')">👌</span>
+            <span class="emoji" onclick="addEmoji('✌️')">✌️</span>
+            <span class="emoji" onclick="addEmoji('🤞')">🤞</span>
+            <span class="emoji" onclick="addEmoji('🤟')">🤟</span>
+            <span class="emoji" onclick="addEmoji('👏')">👏</span>
+            <span class="emoji" onclick="addEmoji('🙌')">🙌</span>
+            <span class="emoji" onclick="addEmoji('👐')">👐</span>
+            <span class="emoji" onclick="addEmoji('👋')">👋</span>
+            <span class="emoji" onclick="addEmoji('✍️')">✍️</span>
+            <span class="emoji" onclick="addEmoji('💪')">💪</span>
+            <span class="emoji" onclick="addEmoji('💖')">💖</span>
+            <span class="emoji" onclick="addEmoji('❤️')">❤️</span>
+            <span class="emoji" onclick="addEmoji('💚')">💚</span>
+            <span class="emoji" onclick="addEmoji('🤍')">🤍</span>
+            <span class="emoji" onclick="addEmoji('🌸')">🌸</span>
+          </div>
+        </div>
+
+        <!-- Tab 4: Sekolah & Pembelajaran -->
+        <div class="emoji-tab-content" id="tabContent_school" style="display:none;">
+          <div class="emoji-grid">
+            <span class="emoji" onclick="addEmoji('📚')">📚</span>
+            <span class="emoji" onclick="addEmoji('📖')">📖</span>
+            <span class="emoji" onclick="addEmoji('📝')">📝</span>
+            <span class="emoji" onclick="addEmoji('🎓')">🎓</span>
+            <span class="emoji" onclick="addEmoji('🏫')">🏫</span>
+            <span class="emoji" onclick="addEmoji('🎒')">🎒</span>
+            <span class="emoji" onclick="addEmoji('🖊️')">🖊️</span>
+            <span class="emoji" onclick="addEmoji('✏️')">✏️</span>
+            <span class="emoji" onclick="addEmoji('📌')">📌</span>
+            <span class="emoji" onclick="addEmoji('📍')">📍</span>
+            <span class="emoji" onclick="addEmoji('💡')">💡</span>
+            <span class="emoji" onclick="addEmoji('⏰')">⏰</span>
+            <span class="emoji" onclick="addEmoji('🗓️')">🗓️</span>
+            <span class="emoji" onclick="addEmoji('📊')">📊</span>
+            <span class="emoji" onclick="addEmoji('🏆')">🏆</span>
+            <span class="emoji" onclick="addEmoji('🥇')">🥇</span>
+            <span class="emoji" onclick="addEmoji('☕')">☕</span>
+            <span class="emoji" onclick="addEmoji('✅')">✅</span>
+            <span class="emoji" onclick="addEmoji('🎉')">🎉</span>
+            <span class="emoji" onclick="addEmoji('💐')">💐</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attachment Preview -->
+      <div class="attachment-preview" id="attachmentPreview">
+        <button type="button" class="remove-attachment" onclick="removeAttachment()">×</button>
+        <img id="previewImage" alt="Preview attachment">
+      </div>
+
+      <textarea id="messageInput" class="message-input" placeholder="Ketik pesan..." rows="1" onkeydown="handleMessageKey(event)" oninput="autoResize(this)"></textarea>
+      <button type="button" class="send-btn" id="sendMsgBtn" onclick="sendMessage()" title="Kirim">➤</button>
+    </div>
+  </main>
+</div>
+
+<!-- Modal Tambah Kontak Guru -->
+<div class="modal" id="addContactModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>Tambah Kontak Guru</h2>
+      <button type="button" class="close" onclick="closeAddContactModal()">×</button>
+    </div>
+    <p style="font-size:13.5px; color:#667781; margin-bottom:14px;">Daftarkan guru baru langsung ke database agar dapat saling berkirim pesan.</p>
+    <div class="form-group">
+      <label>Nama Lengkap Guru</label>
+      <input id="addContactName" type="text" placeholder="Contoh: Bpk. H. Ahmad Fauzi">
+    </div>
+    <div class="form-group">
+      <label>Mata Pelajaran</label>
+      <input id="addContactSubject" type="text" placeholder="Contoh: Bahasa Arab, PAI">
+    </div>
+    <div class="form-group">
+      <label>Alamat Email</label>
+      <input id="addContactEmail" type="email" placeholder="Contoh: ahmad@alghozali.sch.id">
+    </div>
+    <div class="form-group">
+      <label>Password Akun Guru</label>
+      <input id="addContactPass" type="password" placeholder="Password untuk login guru">
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeAddContactModal()">Batal</button>
+      <button type="button" class="btn btn-save" onclick="saveNewContact()">Tambah Kontak</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Buat Grup Chat Baru -->
+<div class="modal" id="createGroupModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>👥 Buat Grup Chat Baru</h2>
+      <button type="button" class="close" onclick="closeCreateGroupModal()">×</button>
+    </div>
+    <div class="form-group">
+      <label>Nama Grup</label>
+      <input id="groupNameInput" type="text" placeholder="Contoh: Dewan Guru Al-Ghozali">
+    </div>
+    <div class="form-group">
+      <label>Deskripsi Grup (Opsional)</label>
+      <input id="groupDescInput" type="text" placeholder="Contoh: Grup diskusi guru dan jadwal rapat">
+    </div>
+    <div class="form-group">
+      <label>Pilih Anggota Guru</label>
+      <div class="member-select-list" id="memberSelectList">
+        <div style="padding:10px; text-align:center; color:#777;">Memuat daftar guru...</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeCreateGroupModal()">Batal</button>
+      <button type="button" class="btn btn-save" onclick="saveNewGroup()">Buat Grup</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edit Profil -->
+<div class="modal" id="profileModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>Profil Saya</h2>
+      <button type="button" class="close" onclick="closeProfile()">×</button>
+    </div>
+    <div class="profile-large" id="profilePreview">👤</div>
+    <label class="file-label">
+      📷 Ganti Foto Profil
+      <input type="file" id="profileImageInput" accept="image/*" style="display:none" onchange="previewProfile(this)">
+    </label>
+    <div class="form-group">
+      <label>Nama Guru</label>
+      <input id="profileName" type="text" readonly>
+    </div>
+    <div class="form-group">
+      <label>Mata Pelajaran</label>
+      <input id="profileSubject" type="text" placeholder="Contoh: Sosiologi, Matematika">
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeProfile()">Batal</button>
+      <button type="button" class="btn btn-save" onclick="saveProfile()">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Alert -->
+<div id="toast"></div>
+
+<!-- ========================================================================
+     INCOMING CALL POPUP (Notifikasi Panggilan Masuk)
+     ======================================================================== -->
+<div id="incomingCallPopup" class="incoming-call-popup" style="display:none;">
+  <div class="incoming-call-card">
+    <div class="incoming-call-ring">📞</div>
+    <div class="incoming-call-info">
+      <div class="incoming-call-name" id="incomingCallerName">Guru</div>
+      <div class="incoming-call-label">Panggilan Suara Masuk...</div>
+    </div>
+    <div class="incoming-call-actions">
+      <button type="button" class="call-action-btn reject" onclick="rejectIncomingCall()" title="Tolak Panggilan">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.47 11.47 0 0 0 3.59.57 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.59a1 1 0 0 1-.25 1.02l-2.2 2.18z"/></svg>
+      </button>
+      <button type="button" class="call-action-btn accept" onclick="acceptIncomingCall()" title="Terima Panggilan">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.47 11.47 0 0 0 3.59.57 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.59a1 1 0 0 1-.25 1.02l-2.2 2.18z"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================================
+     ACTIVE CALL OVERLAY (Layar Panggilan Aktif)
+     ======================================================================== -->
+<div id="callOverlay" class="call-overlay" style="display:none;">
+  <div class="call-bg-animation">
+    <div class="call-ring-circle r1"></div>
+    <div class="call-ring-circle r2"></div>
+    <div class="call-ring-circle r3"></div>
+  </div>
+  <div class="call-content">
+    <div class="call-avatar-large" id="callOverlayAvatar">👤</div>
+    <div class="call-name" id="callOverlayName">Guru</div>
+    <div class="call-status" id="callOverlayStatus">Menghubungi...</div>
+    <div class="call-timer" id="callTimer" style="display:none;">00:00</div>
+    <div class="call-controls">
+      <button type="button" class="call-ctrl-btn" id="muteMicBtn" onclick="toggleMuteMic()" title="Matikan Mikrofon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16c-2.47 0-4.52-1.8-4.93-4.15-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/></svg>
+        <span>Mikrofon</span>
+      </button>
+      <button type="button" class="call-ctrl-btn end-call" onclick="endCall()" title="Akhiri Panggilan">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.47 11.47 0 0 0 3.59.57 1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.59a1 1 0 0 1-.25 1.02l-2.2 2.18z"/></svg>
+        <span>Akhiri</span>
+      </button>
+      <button type="button" class="call-ctrl-btn" id="speakerBtn" onclick="toggleSpeaker()" title="Speaker">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+        <span>Speaker</span>
+      </button>
+    </div>
+  </div>
+  <!-- Remote & Local Audio Elements -->
+  <audio id="remoteAudio" autoplay playsinline></audio>
+  <audio id="localAudioMonitor" muted playsinline></audio>
+</div>
+
+<!-- ========================================================================
+     JAVASCRIPT LOGIC (GROUP CHAT, ISLAMIC EMOJI PICKER, REST ENGINE)
+     ======================================================================== -->
+<script>
+// Supabase Credentials
+const SUPABASE_URL = "https://akroqfjspbqauwafcyuf.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrcm9xZmpzcGJxYXV3YWZjeXVmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwMzE2NDUsImV4cCI6MjEwMzYwNzY0NX0.a7fTDWwQ5cAMmOAwybAkf7f0vD_DppwRu78R_-M3RkY";
+
+// Global App State
+let currentUser = null;
+let teachers = [];
+let groups = [];
+let selectedTarget = null;
+let currentMessages = [];
+let selectedImage = null;
+let profileImage = null;
+let pollingTimer = null;
+let editingMessageId = null;
+let activeSidebarTab = "all";
+
+// REST API Request Function
+async function supabaseRest(endpoint, options = {}) {
+  const url = SUPABASE_URL + "/rest/v1/" + endpoint;
+  const headers = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": "Bearer " + SUPABASE_KEY,
+    "Content-Type": "application/json",
+    "Prefer": "return=representation"
+  };
+
+  if (options.headers) {
+    Object.assign(headers, options.headers);
+  }
+
+  const fetchOptions = {
+    method: options.method || "GET",
+    headers: headers
+  };
+
+  if (options.body) {
+    fetchOptions.body = options.body;
+  }
+
+  const res = await fetch(url, fetchOptions);
+  const text = await res.text();
+  let json = null;
+  try { json = JSON.parse(text); } catch (e) { json = text; }
+
+  if (!res.ok) {
+    const errMsg = (json && json.message) ? json.message : (json && json.error_description) ? json.error_description : text || ("HTTP Error " + res.status);
+    throw new Error(errMsg);
+  }
+  return json;
+}
+
+// Global Event Listeners
+document.addEventListener("DOMContentLoaded", function() {
+  setupOutsideClick();
+  restoreSession();
+});
+
+// UI Feedback
+function showAuthError(msg) {
+  const el = document.getElementById("authErrorAlert");
+  if (el) {
+    el.innerHTML = "⚠️ " + escapeHtml(msg).replace(/\n/g, "<br>");
+    el.style.display = "block";
+  }
+}
+
+function hideAuthError() {
+  const el = document.getElementById("authErrorAlert");
+  if (el) {
+    el.style.display = "none";
+    el.innerHTML = "";
+  }
+}
+
+function showLoading() {
+  document.getElementById("loading").style.display = "flex";
+}
+
+function hideLoading() {
+  document.getElementById("loading").style.display = "none";
+}
+
+function toast(message) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.classList.add("show");
+  setTimeout(function() {
+    el.classList.remove("show");
+  }, 3000);
+}
+
+// Switch Between Login and Register Views
+window.toggleAuthView = function(view) {
+  hideAuthError();
+  if (view === "register") {
+    document.getElementById("formLoginView").style.display = "none";
+    document.getElementById("formRegisterView").style.display = "block";
+  } else {
+    document.getElementById("formRegisterView").style.display = "none";
+    document.getElementById("formLoginView").style.display = "block";
+  }
+};
+
+// Login Logic
+window.submitLogin = async function() {
+  hideAuthError();
+  const email = (document.getElementById("loginEmail").value || "").trim().toLowerCase();
+  const pass = (document.getElementById("loginPassword").value || "");
+
+  if (!email || !pass) {
+    showAuthError("Email dan Password harus diisi.");
+    return;
+  }
+
+  showLoading();
+  try {
+    const users = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&password=eq." + encodeURIComponent(pass) + "&select=*");
+
+    if (!users || !users.length) {
+      hideLoading();
+      showAuthError("Email atau Password salah! Jika belum punya akun, klik 'Daftar di sini'.");
+      return;
+    }
+
+    const data = users[0];
+
+    // Update status Online
+    supabaseRest("users?id=eq." + data.id, {
+      method: "PATCH",
+      body: JSON.stringify({ status: "Online", last_seen: new Date().toISOString() })
+    }).catch(function() {});
+
+    currentUser = {
+      id: data.id,
+      email: data.email,
+      nama: data.nama,
+      mataPelajaran: data.mata_pelajaran || "Belum diatur",
+      avatar: data.avatar || ""
+    };
+
+    localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
+    hideLoading();
+    startApplication();
+  } catch (err) {
+    hideLoading();
+    console.error("Login error:", err);
+    showAuthError(err.message || "Gagal masuk. Periksa koneksi internet.");
+  }
+};
+
+// Register Logic
+window.submitRegister = async function() {
+  hideAuthError();
+  const name = (document.getElementById("regName").value || "").trim();
+  const subject = (document.getElementById("regSubject").value || "").trim();
+  const email = (document.getElementById("regEmail").value || "").trim().toLowerCase();
+  const pass = (document.getElementById("regPassword").value || "");
+
+  if (!name || !email || !pass) {
+    showAuthError("Nama Lengkap, Email, dan Password wajib diisi.");
+    return;
+  }
+
+  showLoading();
+  try {
+    const existing = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&select=id");
+
+    if (existing && existing.length > 0) {
+      hideLoading();
+      showAuthError("Email ini sudah terdaftar. Silakan masuk di sini.");
+      return;
+    }
+
+    const newUser = await supabaseRest("users", {
+      method: "POST",
+      body: JSON.stringify({
+        nama: name,
+        mata_pelajaran: subject || "Belum diatur",
+        email: email,
+        password: pass,
+        status: "Online",
+        last_seen: new Date().toISOString()
+      })
+    });
+
+    const data = Array.isArray(newUser) ? newUser[0] : newUser;
+
+    currentUser = {
+      id: data.id,
+      email: data.email,
+      nama: data.nama,
+      mataPelajaran: data.mata_pelajaran || "Belum diatur",
+      avatar: data.avatar || ""
+    };
+
+    localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
+    hideLoading();
+    startApplication();
+  } catch (err) {
+    hideLoading();
+    console.error("Register error:", err);
+    showAuthError(err.message || "Gagal mendaftar. Periksa koneksi internet.");
+  }
+};
+
+// Session Restoration
+function restoreSession() {
+  const saved = localStorage.getItem("alghozali_user_session");
+  if (saved) {
+    try {
+      currentUser = JSON.parse(saved);
+      if (currentUser && currentUser.id) {
+        supabaseRest("users?id=eq." + currentUser.id, {
+          method: "PATCH",
+          body: JSON.stringify({ status: "Online", last_seen: new Date().toISOString() })
+        }).catch(function() {});
+        startApplication();
+      }
+    } catch (e) {
+      localStorage.removeItem("alghozali_user_session");
+    }
+  }
+}
+
+// Logout
+window.logout = async function() {
+  if (currentUser) {
+    supabaseRest("users?id=eq." + currentUser.id, {
+      method: "PATCH",
+      body: JSON.stringify({ status: "Offline", last_seen: new Date().toISOString() })
+    }).catch(function() {});
+  }
+
+  if (pollingTimer) {
+    clearInterval(pollingTimer);
+    pollingTimer = null;
+  }
+
+  currentUser = null;
+  selectedTarget = null;
+  localStorage.removeItem("alghozali_user_session");
+
+  document.getElementById("app").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
+  toast("Anda telah keluar.");
+};
+
+// Start Application
+function startApplication() {
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+  updateMyProfile();
+  loadAllData();
+  startPolling();
+  toast("Selamat datang, " + currentUser.nama);
+}
+
+function startPolling() {
+  if (pollingTimer) clearInterval(pollingTimer);
+  pollingTimer = setInterval(function() {
+    if (selectedTarget) {
+      refreshMessages(true);
+    }
+    loadAllData(true);
+  }, 3500);
+}
+
+async function loadAllData(silent = false) {
+  if (!currentUser) return;
+  await Promise.all([loadTeachers(), loadGroups()]);
+  renderSidebarList();
+}
+
+// ============================================================================
+// CONTACTS & GROUPS MANAGEMENT
+// ============================================================================
+async function loadTeachers() {
+  try {
+    const data = await supabaseRest("users?select=id,nama,mata_pelajaran,avatar,status,last_seen&order=nama.asc");
+    teachers = Array.isArray(data)
+      ? data.map(function(t) {
+          return {
+            type: "user",
+            id: t.id,
+            nama: t.nama,
+            mataPelajaran: t.mata_pelajaran,
+            avatar: t.avatar,
+            status: t.status
+          };
+        })
+      : [];
+  } catch (err) {
+    console.error("Load teachers error:", err);
+  }
+}
+
+async function loadGroups() {
+  try {
+    const data = await supabaseRest("groups?select=id,name,description,avatar,created_by&order=created_at.desc");
+    groups = Array.isArray(data)
+      ? data.map(function(g) {
+          return {
+            type: "group",
+            id: g.id,
+            name: g.name,
+            description: g.description || "Grup Chat Guru",
+            avatar: g.avatar,
+            status: "Grup Chat"
+          };
+        })
+      : [];
+  } catch (err) {
+    console.error("Load groups error:", err);
+  }
+}
+
+window.setSidebarTab = function(tab) {
+  activeSidebarTab = tab;
+  document.getElementById("tabAll").classList.toggle("active", tab === "all");
+  document.getElementById("tabDirect").classList.toggle("active", tab === "direct");
+  document.getElementById("tabGroup").classList.toggle("active", tab === "group");
+  renderSidebarList();
+};
+
+function renderSidebarList() {
+  const container = document.getElementById("contacts");
+  const query = (document.getElementById("searchInput").value || "").trim().toLowerCase();
+
+  let list = [];
+  const otherTeachers = teachers.filter(function(t) { return !currentUser || t.id !== currentUser.id; });
+
+  if (activeSidebarTab === "all") {
+    list = [...groups, ...otherTeachers];
+  } else if (activeSidebarTab === "direct") {
+    list = otherTeachers;
+  } else if (activeSidebarTab === "group") {
+    list = groups;
+  }
+
+  if (query) {
+    list = list.filter(function(item) {
+      const name = item.type === "group" ? item.name : item.nama;
+      const sub = item.type === "group" ? item.description : item.mataPelajaran;
+      return (name || "").toLowerCase().includes(query) || (sub || "").toLowerCase().includes(query);
+    });
+  }
+
+  if (!list.length) {
+    container.innerHTML =
+      '<div style="padding:40px 20px; text-align:center; color:#667781;">' +
+        '<div style="font-size:42px; margin-bottom:12px;">💬</div>' +
+        '<strong style="display:block; font-size:15px; color:#111b21; margin-bottom:6px;">Belum Ada Obrolan</strong>' +
+        '<p style="font-size:13px; line-height:1.5; margin-bottom:16px;">Gunakan tombol ➕ untuk menambah guru atau 👥 untuk membuat grup.</p>' +
+      '</div>';
+    return;
+  }
+
+  container.innerHTML = "";
+  list.forEach(function(item) {
+    const isGroup = item.type === "group";
+    const el = document.createElement("div");
+    el.className = "contact";
+    if (selectedTarget && selectedTarget.type === item.type && String(selectedTarget.id) === String(item.id)) {
+      el.classList.add("active");
+    }
+    el.onclick = function() { selectTarget(item); };
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar " + (isGroup ? "group-avatar" : "");
+    if (item.avatar) {
+      avatar.innerHTML = '<img src="' + escapeAttribute(item.avatar) + '" alt="avatar">';
+    } else {
+      avatar.textContent = isGroup ? "👥" : getInitial(item.nama);
+    }
+
+    const title = isGroup ? item.name : item.nama;
+    const subtitle = isGroup
+      ? (item.description || "Grup Chat Guru")
+      : (item.mataPelajaran || "Belum diatur");
+
+    const details = document.createElement("div");
+    details.className = "contact-details";
+    details.innerHTML =
+      '<div class="contact-name">' +
+        '<span>' + escapeHtml(title) + (isGroup ? '<span class="group-badge">GRUP</span>' : '') + '</span>' +
+      '</div>' +
+      '<div class="contact-sub">' +
+        '<span>' +
+          (!isGroup ? '<span class="online-dot ' + (item.status === "Online" ? "online" : "") + '"></span>' : '👥 ') +
+          escapeHtml(subtitle) +
+        '</span>' +
+      '</div>';
+
+    el.appendChild(avatar);
+    el.appendChild(details);
+    container.appendChild(el);
+  });
+}
+
+window.filterContacts = function() {
+  renderSidebarList();
+};
+
+window.selectTarget = function(item) {
+  selectedTarget = item;
+  cancelEditMessage();
+
+  const isGroup = item.type === "group";
+  const title = isGroup ? item.name : item.nama;
+  const status = isGroup ? (item.description || "Grup Chat Guru") : (item.status === "Online" ? "Online" : (item.mataPelajaran || "Offline"));
+
+  document.getElementById("chatName").textContent = title;
+  const statusEl = document.getElementById("chatStatus");
+  statusEl.textContent = status;
+  statusEl.className = "chat-status " + (!isGroup && item.status === "Online" ? "status-online" : "");
+  
+  const chatAvatar = document.getElementById("chatAvatar");
+  chatAvatar.className = "avatar " + (isGroup ? "group-avatar" : "");
+  if (item.avatar) {
+    chatAvatar.innerHTML = '<img src="' + escapeAttribute(item.avatar) + '" alt="avatar">';
+  } else {
+    chatAvatar.textContent = isGroup ? "👥" : getInitial(item.nama);
+  }
+
+  renderSidebarList();
+  document.getElementById("app").classList.add("mobile-chat-open");
+  refreshMessages();
+};
+
+window.closeMobileChat = function() {
+  document.getElementById("app").classList.remove("mobile-chat-open");
+};
+
+// ============================================================================
+// MODAL BUAT GRUP & TAMBAH KONTAK
+// ============================================================================
+window.openCreateGroupModal = function() {
+  document.getElementById("groupNameInput").value = "";
+  document.getElementById("groupDescInput").value = "";
+
+  const container = document.getElementById("memberSelectList");
+  const otherTeachers = teachers.filter(function(t) { return !currentUser || t.id !== currentUser.id; });
+
+  if (!otherTeachers.length) {
+    container.innerHTML = '<div style="padding:10px; text-align:center; color:#777;">Belum ada guru lain yang terdaftar. Tambahkan kontak terlebih dahulu.</div>';
+  } else {
+    container.innerHTML = "";
+    otherTeachers.forEach(function(t) {
+      const item = document.createElement("label");
+      item.className = "member-select-item";
+      item.innerHTML =
+        '<input type="checkbox" name="groupMemberCheckbox" value="' + t.id + '"> ' +
+        '<span>' + escapeHtml(t.nama) + ' <small style="color:#777;">(' + escapeHtml(t.mataPelajaran || "Guru") + ')</small></span>';
+      container.appendChild(item);
+    });
+  }
+
+  document.getElementById("createGroupModal").classList.add("show");
+};
+
+window.closeCreateGroupModal = function() {
+  document.getElementById("createGroupModal").classList.remove("show");
+};
+
+window.saveNewGroup = async function() {
+  const name = (document.getElementById("groupNameInput").value || "").trim();
+  const desc = (document.getElementById("groupDescInput").value || "").trim();
+
+  if (!name) {
+    alert("Harap masukkan nama grup.");
+    return;
+  }
+
+  const checkboxes = document.querySelectorAll('input[name="groupMemberCheckbox"]:checked');
+  const selectedUserIds = Array.from(checkboxes).map(function(cb) { return cb.value; });
+
+  showLoading();
+  try {
+    const newGroup = await supabaseRest("groups", {
+      method: "POST",
+      body: JSON.stringify({
+        name: name,
+        description: desc || "Grup Chat Guru",
+        created_by: currentUser.id
+      })
+    });
+
+    const groupData = Array.isArray(newGroup) ? newGroup[0] : newGroup;
+
+    const membersToInsert = [
+      { group_id: groupData.id, user_id: currentUser.id },
+      ...selectedUserIds.map(function(uid) { return { group_id: groupData.id, user_id: uid }; })
+    ];
+
+    await supabaseRest("group_members", {
+      method: "POST",
+      body: JSON.stringify(membersToInsert)
+    }).catch(function(e) { console.warn("Group members note:", e); });
+
+    hideLoading();
+    closeCreateGroupModal();
+    toast("Grup '" + name + "' berhasil dibuat!");
+    await loadGroups();
+    setSidebarTab("group");
+    selectTarget({
+      type: "group",
+      id: groupData.id,
+      name: groupData.name,
+      description: groupData.description,
+      avatar: groupData.avatar
+    });
+  } catch (err) {
+    hideLoading();
+    console.error("Buat grup error:", err);
+    alert("Gagal membuat grup: " + err.message);
+  }
+};
+
+window.openAddContactModal = function() {
+  document.getElementById("addContactName").value = "";
+  document.getElementById("addContactSubject").value = "";
+  document.getElementById("addContactEmail").value = "";
+  document.getElementById("addContactPass").value = "";
+  document.getElementById("addContactModal").classList.add("show");
+};
+
+window.closeAddContactModal = function() {
+  document.getElementById("addContactModal").classList.remove("show");
+};
+
+window.saveNewContact = async function() {
+  const name = (document.getElementById("addContactName").value || "").trim();
+  const subject = (document.getElementById("addContactSubject").value || "").trim();
+  const email = (document.getElementById("addContactEmail").value || "").trim().toLowerCase();
+  const pass = (document.getElementById("addContactPass").value || "");
+
+  if (!name || !email || !pass) {
+    alert("Harap isi Nama Lengkap, Email, dan Password.");
+    return;
+  }
+
+  showLoading();
+  try {
+    const existing = await supabaseRest("users?email=eq." + encodeURIComponent(email) + "&select=id");
+    if (existing && existing.length > 0) {
+      hideLoading();
+      alert("Guru dengan email tersebut sudah terdaftar.");
+      return;
+    }
+
+    await supabaseRest("users", {
+      method: "POST",
+      body: JSON.stringify({
+        nama: name,
+        mata_pelajaran: subject || "Belum diatur",
+        email: email,
+        password: pass,
+        status: "Offline",
+        last_seen: new Date().toISOString()
+      })
+    });
+
+    hideLoading();
+    closeAddContactModal();
+    toast("Kontak guru " + name + " berhasil ditambahkan!");
+    loadTeachers().then(renderSidebarList);
+  } catch (err) {
+    hideLoading();
+    console.error("Tambah kontak error:", err);
+    alert("Gagal menambahkan kontak: " + err.message);
+  }
+};
+
+// ============================================================================
+// CHAT MESSAGES (LOAD, SEND, EDIT, DELETE)
+// ============================================================================
+window.refreshMessages = async function(isSilent = false) {
+  if (!currentUser || !selectedTarget) return;
+
+  try {
+    let endpoint = "";
+    if (selectedTarget.type === "group") {
+      endpoint = "messages?group_id=eq." + selectedTarget.id + "&order=created_at.asc";
+    } else {
+      endpoint = "messages?or=(and(sender_id.eq." + currentUser.id + ",receiver_id.eq." + selectedTarget.id + "),and(sender_id.eq." + selectedTarget.id + ",receiver_id.eq." + currentUser.id + "))&order=created_at.asc";
+    }
+
+    const data = await supabaseRest(endpoint);
+
+    const oldLen = currentMessages.length;
+    currentMessages = Array.isArray(data)
+      ? data.map(function(m) {
+          return {
+            id: m.id,
+            sender: m.sender_id,
+            receiver: m.receiver_id,
+            groupId: m.group_id,
+            messageText: m.message_text,
+            messageType: m.message_type,
+            attachment: m.attachment_url,
+            timestamp: m.created_at
+          };
+        })
+      : [];
+
+    if (!isSilent || currentMessages.length !== oldLen) {
+      if (isSilent && currentMessages.length > oldLen) {
+        playNotificationSound();
+      }
+      renderMessages();
+    }
+  } catch (err) {
+    console.error("Refresh messages error:", err);
+  }
+};
+
+function renderMessages() {
+  const container = document.getElementById("messages");
+  if (!selectedTarget) {
+    container.innerHTML =
+      '<div class="empty-chat"><div class="big">💬</div><h3>Al-Ghozali Messenger</h3><p style="margin-top:8px">Pilih guru atau grup untuk memulai percakapan.</p></div>';
+    return;
+  }
+
+  const title = selectedTarget.type === "group" ? selectedTarget.name : selectedTarget.nama;
+
+  if (!currentMessages.length) {
+    container.innerHTML =
+      '<div class="empty-chat"><div class="big">👋</div><h3>Belum ada percakapan</h3><p>Kirim pesan pertama kepada ' + escapeHtml(title) + '</p></div>';
+    return;
+  }
+
+  container.innerHTML = "";
+  currentMessages.forEach(function(message) {
+    const mine = String(message.sender) === String(currentUser.id);
+    const wrapper = document.createElement("div");
+    wrapper.className = "message " + (mine ? "me" : "other");
+    wrapper.id = "msg_" + message.id;
+
+    let html = "";
+    const type = message.messageType || "TEXT";
+    const attachment = message.attachment || "";
+
+    if (!mine && selectedTarget.type === "group") {
+      const senderUser = teachers.find(function(t) { return String(t.id) === String(message.sender); });
+      const senderName = senderUser ? senderUser.nama : "Guru";
+      html += '<span class="msg-sender-name">' + escapeHtml(senderName) + '</span>';
+    }
+
+    if (mine) {
+      html +=
+        '<button type="button" class="msg-action-trigger" onclick="toggleMsgMenu(event, \'' + message.id + '\')">⋮</button>' +
+        '<div class="msg-menu" id="menu_' + message.id + '">' +
+          (type === "TEXT" ? '<button type="button" class="msg-menu-item" onclick="startEditMessage(\'' + message.id + '\')">✏️ Edit Pesan</button>' : '') +
+          '<button type="button" class="msg-menu-item danger" onclick="deleteMessage(\'' + message.id + '\')">🗑️ Hapus Pesan</button>' +
+        '</div>';
+    }
+
+    if (type === "IMAGE" && attachment) {
+      html += '<img src="' + escapeAttribute(attachment) + '" alt="foto" onclick="openLightbox(\'' + escapeAttribute(attachment) + '\')">';
+    }
+
+    if (message.messageText) {
+      html += '<span id="text_' + message.id + '">' + escapeHtml(message.messageText).replace(/\n/g, "<br>") + '</span>';
+    }
+
+    html +=
+      '<span class="message-meta">' +
+      formatTime(message.timestamp) +
+      (mine ? '<span class="message-status">✓✓</span>' : "") +
+      "</span>";
+
+    wrapper.innerHTML = html;
+    container.appendChild(wrapper);
+  });
+
+  scrollMessages();
+}
+
+window.toggleMsgMenu = function(e, msgId) {
+  e.stopPropagation();
+  document.querySelectorAll(".msg-menu.show").forEach(function(m) {
+    if (m.id !== "menu_" + msgId) m.classList.remove("show");
+  });
+  const menu = document.getElementById("menu_" + msgId);
+  if (menu) menu.classList.toggle("show");
+};
+
+// EDIT PESAN
+window.startEditMessage = function(msgId) {
+  const msg = currentMessages.find(function(m) { return String(m.id) === String(msgId); });
+  if (!msg) return;
+
+  editingMessageId = msgId;
+  const input = document.getElementById("messageInput");
+  input.value = msg.messageText || "";
+  input.focus();
+  autoResize(input);
+
+  document.getElementById("editingBanner").classList.add("show");
+  document.getElementById("sendMsgBtn").textContent = "✓";
+  document.getElementById("sendMsgBtn").title = "Simpan Perubahan";
+
+  const menu = document.getElementById("menu_" + msgId);
+  if (menu) menu.classList.remove("show");
+};
+
+window.cancelEditMessage = function() {
+  editingMessageId = null;
+  const input = document.getElementById("messageInput");
+  input.value = "";
+  input.style.height = "40px";
+  document.getElementById("editingBanner").classList.remove("show");
+  document.getElementById("sendMsgBtn").textContent = "➤";
+  document.getElementById("sendMsgBtn").title = "Kirim";
+};
+
+// HAPUS PESAN
+window.deleteMessage = async function(msgId) {
+  if (!confirm("Apakah Anda yakin ingin menghapus pesan ini?")) return;
+
+  const menu = document.getElementById("menu_" + msgId);
+  if (menu) menu.classList.remove("show");
+
+  try {
+    await supabaseRest("messages?id=eq." + msgId, {
+      method: "DELETE"
+    });
+
+    currentMessages = currentMessages.filter(function(m) { return String(m.id) !== String(msgId); });
+    renderMessages();
+    toast("Pesan berhasil dihapus.");
+  } catch (err) {
+    console.error("Hapus pesan error:", err);
+    toast("Gagal menghapus pesan: " + err.message);
+  }
+};
+
+// KIRIM ATAU SIMPAN EDIT PESAN
+window.sendMessage = async function() {
+  if (!currentUser || !selectedTarget) return;
+
+  const input = document.getElementById("messageInput");
+  const text = input.value.trim();
+
+  if (editingMessageId) {
+    if (!text) {
+      toast("Pesan tidak boleh kosong.");
+      return;
+    }
+    const msgIdToUpdate = editingMessageId;
+    cancelEditMessage();
+
+    try {
+      await supabaseRest("messages?id=eq." + msgIdToUpdate, {
+        method: "PATCH",
+        body: JSON.stringify({ message_text: text })
+      });
+
+      const target = currentMessages.find(function(m) { return String(m.id) === String(msgIdToUpdate); });
+      if (target) {
+        target.messageText = text;
+        renderMessages();
+      }
+      toast("Pesan berhasil diedit.");
+    } catch (err) {
+      console.error("Edit pesan error:", err);
+      toast("Gagal mengedit pesan: " + err.message);
+    }
+    return;
+  }
+
+  if (!text && !selectedImage) return;
+
+  const isGroup = selectedTarget.type === "group";
+  const payload = {
+    sender_id: currentUser.id,
+    receiver_id: isGroup ? null : selectedTarget.id,
+    group_id: isGroup ? selectedTarget.id : null,
+    message_text: text,
+    message_type: selectedImage ? "IMAGE" : "TEXT",
+    attachment_url: selectedImage || ""
+  };
+
+  input.value = "";
+  input.style.height = "40px";
+  removeAttachment();
+  hideEmoji();
+
+  try {
+    const res = await supabaseRest("messages", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    const newMsg = Array.isArray(res) ? res[0] : res;
+    if (newMsg && newMsg.id) {
+      const exists = currentMessages.some(function(m) { return String(m.id) === String(newMsg.id); });
+      if (!exists) {
+        currentMessages.push({
+          id: newMsg.id,
+          sender: newMsg.sender_id,
+          receiver: newMsg.receiver_id,
+          groupId: newMsg.group_id,
+          messageText: newMsg.message_text,
+          messageType: newMsg.message_type,
+          attachment: newMsg.attachment_url,
+          timestamp: newMsg.created_at
+        });
+        renderMessages();
+      }
+    } else {
+      refreshMessages();
+    }
+  } catch (err) {
+    console.error("Send message error:", err);
+    toast("Gagal mengirim pesan: " + err.message);
+  }
+};
+
+// ============================================================================
+// EMOJI & ISLAMIC PICKER TABS
+// ============================================================================
+window.switchEmojiTab = function(e, tabKey) {
+  document.querySelectorAll(".emoji-tab-item").forEach(function(btn) {
+    btn.classList.remove("active");
+  });
+  if (e && e.currentTarget) e.currentTarget.classList.add("active");
+
+  document.getElementById("tabContent_islamic").style.display  = tabKey === "islamic"  ? "block" : "none";
+  document.getElementById("tabContent_dzikir").style.display   = tabKey === "dzikir"   ? "block" : "none";
+  document.getElementById("tabContent_faces").style.display    = tabKey === "faces"    ? "block" : "none";
+  document.getElementById("tabContent_gestures").style.display = tabKey === "gestures" ? "block" : "none";
+  document.getElementById("tabContent_school").style.display   = tabKey === "school"   ? "block" : "none";
+};
+
+window.toggleEmoji = function() {
+  document.getElementById("emojiPanel").classList.toggle("show");
+};
+
+window.hideEmoji = function() {
+  document.getElementById("emojiPanel").classList.remove("show");
+};
+
+window.addEmoji = function(emoji) {
+  const input = document.getElementById("messageInput");
+  const start = input.selectionStart;
+  const end = input.selectionEnd;
+  const val = input.value;
+  input.value = val.substring(0, start) + emoji + val.substring(end);
+  input.focus();
+  input.selectionStart = input.selectionEnd = start + emoji.length;
+  autoResize(input);
+};
+
+window.addText = function(text) {
+  const input = document.getElementById("messageInput");
+  input.value = (input.value ? input.value + " " : "") + text;
+  input.focus();
+  autoResize(input);
+  hideEmoji();
+};
+
+// Profile Logic
+function updateMyProfile() {
+  if (!currentUser) return;
+  document.getElementById("myName").textContent = currentUser.nama;
+  document.getElementById("mySubject").textContent = currentUser.mataPelajaran || "Belum diatur";
+  setAvatar("myAvatar", currentUser.avatar);
+}
+
+window.openProfile = function() {
+  if (!currentUser) return;
+  document.getElementById("profileModal").classList.add("show");
+  document.getElementById("profileName").value = currentUser.nama;
+  document.getElementById("profileSubject").value =
+    currentUser.mataPelajaran === "Belum diatur" ? "" : currentUser.mataPelajaran;
+  profileImage = currentUser.avatar || "";
+  setAvatar("profilePreview", profileImage);
+};
+
+window.closeProfile = function() {
+  document.getElementById("profileModal").classList.remove("show");
+};
+
+window.previewProfile = function(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  if (file.size > 3 * 1024 * 1024) {
+    toast("Ukuran foto maksimal 3 MB.");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    profileImage = e.target.result;
+    setAvatar("profilePreview", profileImage);
+  };
+  reader.readAsDataURL(file);
+};
+
+window.saveProfile = async function() {
+  if (!currentUser) return;
+
+  const subject = document.getElementById("profileSubject").value.trim();
+  showLoading();
+
+  try {
+    await supabaseRest("users?id=eq." + currentUser.id, {
+      method: "PATCH",
+      body: JSON.stringify({
+        mata_pelajaran: subject || "Belum diatur",
+        avatar: profileImage || ""
+      })
+    });
+
+    currentUser.mataPelajaran = subject || "Belum diatur";
+    currentUser.avatar = profileImage || "";
+    localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
+
+    updateMyProfile();
+    closeProfile();
+    hideLoading();
+    toast("Profil berhasil diperbarui.");
+    loadTeachers().then(renderSidebarList);
+  } catch (err) {
+    hideLoading();
+    console.error("Save profile error:", err);
+    toast("Gagal menyimpan profil: " + err.message);
+  }
+};
+
+// Utilities & UI Helpers
+function setAvatar(elementId, avatar) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+  if (avatar) {
+    element.innerHTML = '<img src="' + escapeAttribute(avatar) + '" alt="avatar">';
+  } else {
+    element.textContent = "👤";
+  }
+}
+
+function getInitial(name) {
+  const words = String(name || "").trim().split(/\s+/);
+  if (!words.length || !words[0]) return "👤";
+  if (words.length === 1) return words[0].substring(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
+
+window.handleMessageKey = function(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+};
+
+window.autoResize = function(textarea) {
+  textarea.style.height = "auto";
+  textarea.style.height = Math.min(textarea.scrollHeight, 100) + "px";
+};
+
+window.previewImage = function(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) {
+    toast("File harus berupa gambar.");
+    return;
+  }
+  if (file.size > 4 * 1024 * 1024) {
+    toast("Ukuran gambar maksimal 4 MB.");
+    input.value = "";
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    selectedImage = e.target.result;
+    document.getElementById("previewImage").src = selectedImage;
+    document.getElementById("attachmentPreview").classList.add("show");
+  };
+  reader.readAsDataURL(file);
+};
+
+window.removeAttachment = function() {
+  selectedImage = null;
+  document.getElementById("imageInput").value = "";
+  document.getElementById("attachmentPreview").classList.remove("show");
+};
+
+window.openLightbox = function(src) {
+  const lb = document.getElementById("lightbox");
+  const img = document.getElementById("lightboxImg");
+  img.src = src;
+  lb.classList.add("show");
+};
+
+window.closeLightbox = function() {
+  document.getElementById("lightbox").classList.remove("show");
+};
+
+function scrollMessages() {
+  const container = document.getElementById("messages");
+  setTimeout(function() {
+    container.scrollTop = container.scrollHeight;
+  }, 40);
+}
+
+function setupOutsideClick() {
+  document.addEventListener("click", function(e) {
+    const panel = document.getElementById("emojiPanel");
+    if (panel && !panel.contains(e.target) && !e.target.closest(".composer .icon-btn")) {
+      hideEmoji();
+    }
+    if (!e.target.closest(".msg-action-trigger") && !e.target.closest(".msg-menu")) {
+      document.querySelectorAll(".msg-menu.show").forEach(function(m) {
+        m.classList.remove("show");
+      });
+    }
+  });
+}
+
+function escapeHtml(v) {
+  return String(v == null ? "" : v)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function escapeAttribute(v) {
+  return String(v == null ? "" : v)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function formatTime(timestamp) {
+  if (!timestamp) return "";
+  const date = new Date(timestamp);
+  if (isNaN(date.getTime())) return "";
+  return date.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
+}
+
+function playNotificationSound() {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+    
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+    osc.frequency.setValueAtTime(880, ctx.currentTime + 0.08);
+    
+    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.28);
+    
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.3);
+  } catch (e) {}
+}
+
+window.addEventListener("beforeunload", function() {
+  if (currentUser) {
+    navigator.sendBeacon?.(
+      SUPABASE_URL + "/rest/v1/users?id=eq." + currentUser.id,
+      JSON.stringify({ status: "Offline" })
+    );
+  }
+});
+
+// ============================================================================
+// NOTIFICATION SYSTEM - Browser Notification + In-App Banner
+// ============================================================================
+let unreadCounts = {}; // { contactId: count }
+let msgNotifBanner = null;
+let msgNotifTimeout = null;
+
+function requestNotifPermission() {
+  if ("Notification" in window && Notification.permission === "default") {
+    Notification.requestPermission();
+  }
+}
+
+function showInAppNotif(senderName, messagePreview, senderAvatar, contactId) {
+  // Browser notification (jika permission granted dan tab tidak fokus)
+  if (!document.hasFocus() && "Notification" in window && Notification.permission === "granted") {
+    const n = new Notification("\uD83D\uDCAC " + senderName + " \u2014 Al-Ghozali Messenger", {
+      body: messagePreview || "Pesan baru",
+      icon: senderAvatar || "",
+      badge: senderAvatar || "",
+      tag: "msg-" + contactId,
+      renotify: true
+    });
+    n.onclick = function() {
+      window.focus();
+      n.close();
+    };
+  }
+
+  // In-App floating banner
+  if (!msgNotifBanner) {
+    msgNotifBanner = document.createElement("div");
+    msgNotifBanner.className = "msg-notif-banner";
+    msgNotifBanner.innerHTML =
+      '<div class="msg-notif-icon">' +
+        '<div id="notifBannerAvatar" style="width:40px;height:40px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:18px;color:white;overflow:hidden;">\uD83D\uDC64</div>' +
+      '</div>' +
+      '<div class="msg-notif-text">' +
+        '<div class="msg-notif-sender" id="notifBannerSender"></div>' +
+        '<div class="msg-notif-preview" id="notifBannerPreview"></div>' +
+      '</div>';
+    document.body.appendChild(msgNotifBanner);
+  }
+
+  document.getElementById("notifBannerSender").textContent = senderName;
+  document.getElementById("notifBannerPreview").textContent = messagePreview || "Mengirim pesan";
+
+  const avatarEl = document.getElementById("notifBannerAvatar");
+  if (senderAvatar) {
+    avatarEl.innerHTML = '<img src="' + escapeAttribute(senderAvatar) + '" style="width:100%;height:100%;object-fit:cover;">';
+  } else {
+    avatarEl.textContent = "\uD83D\uDC64";
+  }
+
+  msgNotifBanner.classList.add("show");
+  clearTimeout(msgNotifTimeout);
+  msgNotifTimeout = setTimeout(function() {
+    msgNotifBanner.classList.remove("show");
+  }, 4500);
+}
+
+function updateContactBadge(contactId, increment) {
+  if (!contactId) return;
+  if (increment) {
+    unreadCounts[contactId] = (unreadCounts[contactId] || 0) + 1;
+  } else {
+    delete unreadCounts[contactId];
+  }
+  renderSidebarList();
+}
+
+// Tambahkan badge ke contact item (dipanggil di renderSidebarList)
+function getUnreadBadgeHtml(contactId) {
+  const count = unreadCounts[contactId];
+  if (!count) return "";
+  return '<span class="notif-badge">' + (count > 99 ? "99+" : count) + '</span>';
+}
+
+// ============================================================================
+// VOICE CALL SYSTEM (WebRTC)
+// ============================================================================
+let localStream = null;
+let peerConnection = null;
+let callTimerInterval = null;
+let callTimerSeconds = 0;
+let isMuted = false;
+let isSpeakerOn = false;
+let activeCallId = null;
+let activeCallTargetId = null;
+let callPollInterval = null;
+let incomingCallData = null;
+
+// ICE Servers (STUN publik gratis)
+const iceServers = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" },
+    { urls: "stun:stun2.l.google.com:19302" }
+  ]
+};
+
+// Tampilkan tombol call ketika ada kontak yang dipilih
+function updateCallButton() {
+  const btn = document.getElementById("voiceCallBtn");
+  if (!btn) return;
+  if (selectedTarget && selectedTarget.type !== "group") {
+    btn.style.display = "flex";
+  } else {
+    btn.style.display = "none";
+  }
+}
+
+// Override selectContact untuk juga panggil updateCallButton & requestNotif
+const _origSelectTarget = window.selectTarget;
+window.selectTarget = function(item) {
+  if (typeof _origSelectTarget === "function") _origSelectTarget(item);
+  updateCallButton();
+  // Hapus badge unread saat buka chat
+  if (item && item.id) {
+    updateContactBadge(item.id, false);
+  }
+  requestNotifPermission();
+};
+
+// Mulai panggilan suara
+window.startVoiceCall = async function() {
+  if (!selectedTarget || !currentUser) return;
+  if (activeCallId) { toast("Sedang dalam panggilan."); return; }
+
+  const callId = "call_" + currentUser.id + "_" + selectedTarget.id + "_" + Date.now();
+  activeCallId = callId;
+  activeCallTargetId = selectedTarget.id;
+
+  showCallOverlay(selectedTarget, "Menghubungi...");
+  playRingbackSound();
+
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    peerConnection = new RTCPeerConnection(iceServers);
+
+    localStream.getTracks().forEach(function(track) {
+      peerConnection.addTrack(track, localStream);
+    });
+
+    peerConnection.ontrack = function(event) {
+      const remoteAudio = document.getElementById("remoteAudio");
+      if (remoteAudio && event.streams && event.streams[0]) {
+        remoteAudio.srcObject = event.streams[0];
+      }
+    };
+
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+
+    // Simpan sinyal panggilan ke Supabase melalui tabel calls
+    await supabaseRest("calls", {
+      method: "POST",
+      body: JSON.stringify({
+        id: callId,
+        caller_id: currentUser.id,
+        callee_id: selectedTarget.id,
+        status: "ringing",
+        offer: JSON.stringify(offer),
+        answer: null,
+        ice_candidates: "[]"
+      })
+    });
+
+    // Poll untuk jawaban
+    startCallAnswerPoll(callId);
+  } catch (err) {
+    console.error("Voice call error:", err);
+    if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+      toast("\uD83C\uDFA4 Izin mikrofon ditolak. Harap izinkan akses mikrofon di pengaturan browser.");
+    } else {
+      toast("Gagal memulai panggilan: " + err.message);
+    }
+    endCall();
+  }
+};
+
+// Poll untuk jawaban dari callee
+function startCallAnswerPoll(callId) {
+  let attempts = 0;
+  const maxAttempts = 40; // ~40 detik timeout
+  callPollInterval = setInterval(async function() {
+    attempts++;
+    if (attempts > maxAttempts) {
+      clearInterval(callPollInterval);
+      callPollInterval = null;
+      updateCallOverlayStatus("Tidak Dijawab");
+      setTimeout(endCall, 2000);
+      return;
+    }
+
+    try {
+      const data = await supabaseRest("calls?id=eq." + callId + "&select=status,answer,ice_candidates");
+      if (!data || !data.length) return;
+      const row = data[0];
+
+      if (row.status === "rejected") {
+        clearInterval(callPollInterval);
+        callPollInterval = null;
+        updateCallOverlayStatus("Panggilan Ditolak");
+        stopRingbackSound();
+        setTimeout(endCall, 2000);
+        return;
+      }
+
+      if (row.status === "answered" && row.answer) {
+        clearInterval(callPollInterval);
+        callPollInterval = null;
+        stopRingbackSound();
+        const answer = JSON.parse(row.answer);
+        await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+
+        // Apply ICE candidates dari callee
+        if (row.ice_candidates) {
+          const candidates = JSON.parse(row.ice_candidates);
+          if (Array.isArray(candidates)) {
+            candidates.forEach(async function(c) {
+              try { await peerConnection.addIceCandidate(new RTCIceCandidate(c)); } catch(e) {}
+            });
+          }
+        }
+
+        updateCallOverlayStatus("Terhubung");
+        startCallTimer();
+      }
+    } catch (e) {
+      console.warn("Poll answer error:", e);
+    }
+  }, 1000);
+}
+
+// Poll untuk panggilan masuk
+function startIncomingCallPoll() {
+  if (!currentUser) return;
+  setInterval(async function() {
+    if (!currentUser) return;
+    try {
+      const data = await supabaseRest(
+        "calls?callee_id=eq." + currentUser.id + "&status=eq.ringing&select=id,caller_id,offer&order=created_at.desc&limit=1"
+      );
+      if (!data || !data.length) return;
+      const call = data[0];
+      if (incomingCallData && incomingCallData.id === call.id) return; // Sudah tampil
+
+      // Cari nama pemanggil
+      const callerInfo = teachers.find(function(t) { return t.id === call.caller_id; });
+      if (!callerInfo) return;
+
+      incomingCallData = call;
+      showIncomingCallPopup(callerInfo);
+    } catch (e) {
+      console.warn("Incoming poll error:", e);
+    }
+  }, 3000);
+}
+
+function showIncomingCallPopup(callerInfo) {
+  document.getElementById("incomingCallerName").textContent = callerInfo.nama || "Guru";
+  const popup = document.getElementById("incomingCallPopup");
+  popup.style.display = "block";
+  playIncomingRingSound();
+}
+
+window.acceptIncomingCall = async function() {
+  const popup = document.getElementById("incomingCallPopup");
+  popup.style.display = "none";
+  stopIncomingRingSound();
+
+  if (!incomingCallData) return;
+  const call = incomingCallData;
+  incomingCallData = null;
+
+  const callerInfo = teachers.find(function(t) { return t.id === call.caller_id; });
+  showCallOverlay(callerInfo || { nama: "Guru", avatar: "" }, "Terhubung...");
+
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    peerConnection = new RTCPeerConnection(iceServers);
+
+    localStream.getTracks().forEach(function(track) {
+      peerConnection.addTrack(track, localStream);
+    });
+
+    peerConnection.ontrack = function(event) {
+      const remoteAudio = document.getElementById("remoteAudio");
+      if (remoteAudio && event.streams && event.streams[0]) {
+        remoteAudio.srcObject = event.streams[0];
+      }
+    };
+
+    const offer = JSON.parse(call.offer);
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+
+    await supabaseRest("calls?id=eq." + call.id, {
+      method: "PATCH",
+      body: JSON.stringify({
+        status: "answered",
+        answer: JSON.stringify(answer)
+      })
+    });
+
+    activeCallId = call.id;
+    activeCallTargetId = call.caller_id;
+    updateCallOverlayStatus("Terhubung");
+    startCallTimer();
+  } catch (err) {
+    console.error("Accept call error:", err);
+    toast("Gagal menerima panggilan.");
+    endCall();
+  }
+};
+
+window.rejectIncomingCall = async function() {
+  const popup = document.getElementById("incomingCallPopup");
+  popup.style.display = "none";
+  stopIncomingRingSound();
+
+  if (incomingCallData) {
+    try {
+      await supabaseRest("calls?id=eq." + incomingCallData.id, {
+        method: "PATCH",
+        body: JSON.stringify({ status: "rejected" })
+      });
+    } catch (e) {}
+    incomingCallData = null;
+  }
+};
+
+window.endCall = function() {
+  stopCallTimer();
+  stopRingbackSound();
+  stopIncomingRingSound();
+  clearInterval(callPollInterval);
+  callPollInterval = null;
+
+  // Update status panggilan ke ended
+  if (activeCallId) {
+    supabaseRest("calls?id=eq." + activeCallId, {
+      method: "PATCH",
+      body: JSON.stringify({ status: "ended" })
+    }).catch(function() {});
+    activeCallId = null;
+  }
+
+  if (peerConnection) {
+    peerConnection.close();
+    peerConnection = null;
+  }
+
+  if (localStream) {
+    localStream.getTracks().forEach(function(t) { t.stop(); });
+    localStream = null;
+  }
+
+  // Stop remote audio
+  const remoteAudio = document.getElementById("remoteAudio");
+  if (remoteAudio) remoteAudio.srcObject = null;
+
+  hideCallOverlay();
+  isMuted = false;
+  isSpeakerOn = false;
+  document.getElementById("muteMicBtn").classList.remove("muted");
+  document.getElementById("speakerBtn").classList.remove("speaker-on");
+};
+
+window.toggleMuteMic = function() {
+  if (!localStream) return;
+  isMuted = !isMuted;
+  localStream.getAudioTracks().forEach(function(track) { track.enabled = !isMuted; });
+  const btn = document.getElementById("muteMicBtn");
+  btn.classList.toggle("muted", isMuted);
+  btn.title = isMuted ? "Aktifkan Mikrofon" : "Matikan Mikrofon";
+  btn.querySelector("span").textContent = isMuted ? "Bisu" : "Mikrofon";
+};
+
+window.toggleSpeaker = function() {
+  isSpeakerOn = !isSpeakerOn;
+  const btn = document.getElementById("speakerBtn");
+  btn.classList.toggle("speaker-on", isSpeakerOn);
+  btn.querySelector("span").textContent = isSpeakerOn ? "Speaker On" : "Speaker";
+  // Di desktop, speaker selalu aktif; toggle ini untuk UI feedback
+};
+
+function showCallOverlay(contactOrGroup, statusText) {
+  const overlay = document.getElementById("callOverlay");
+  overlay.style.display = "flex";
+
+  const name = (contactOrGroup && (contactOrGroup.nama || contactOrGroup.name)) || "Guru";
+  const avatar = (contactOrGroup && contactOrGroup.avatar) || "";
+
+  document.getElementById("callOverlayName").textContent = name;
+  document.getElementById("callOverlayStatus").textContent = statusText || "Menghubungi...";
+  document.getElementById(\"callTimer\").style.display = \"none\";
+
+  const avatarEl = document.getElementById("callOverlayAvatar");
+  if (avatar) {
+    avatarEl.innerHTML = '<img src="' + escapeAttribute(avatar) + '" alt="avatar">';
+  } else {
+    avatarEl.textContent = "\uD83D\uDC64";
+  }
+}
+
+function hideCallOverlay() {
+  const overlay = document.getElementById("callOverlay");
+  overlay.style.display = "none";
+}
+
+function updateCallOverlayStatus(status) {
+  const el = document.getElementById("callOverlayStatus");
+  if (el) el.textContent = status;
+}
+
+function startCallTimer() {
+  callTimerSeconds = 0;
+  document.getElementById("callTimer").style.display = "block";
+  document.getElementById("callOverlayStatus").style.display = "none";
+  callTimerInterval = setInterval(function() {
+    callTimerSeconds++;
+    const m = String(Math.floor(callTimerSeconds / 60)).padStart(2, "0");
+    const s = String(callTimerSeconds % 60).padStart(2, "0");
+    document.getElementById("callTimer").textContent = m + ":" + s;
+  }, 1000);
+}
+
+function stopCallTimer() {
+  clearInterval(callTimerInterval);
+  callTimerInterval = null;
+  callTimerSeconds = 0;
+}
+
+// ============================================================================
+// RINGTONE SOUNDS (Web Audio API)
+// ============================================================================
+let ringbackAudioCtx = null;
+let ringbackOscNodes = [];
+let incomingRingCtx = null;
+let incomingRingNodes = [];
+let incomingRingTimer = null;
+
+function playRingbackSound() {
+  stopRingbackSound();
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    ringbackAudioCtx = new AC();
+    const play = function() {
+      if (!ringbackAudioCtx) return;
+      const osc = ringbackAudioCtx.createOscillator();
+      const gain = ringbackAudioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(440, ringbackAudioCtx.currentTime);
+      gain.gain.setValueAtTime(0.04, ringbackAudioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ringbackAudioCtx.currentTime + 0.5);
+      osc.connect(gain); gain.connect(ringbackAudioCtx.destination);
+      osc.start(); osc.stop(ringbackAudioCtx.currentTime + 0.5);
+      ringbackOscNodes.push(osc);
+    };
+    play();
+    const timer = setInterval(function() { if (ringbackAudioCtx) play(); else clearInterval(timer); }, 3000);
+    ringbackOscNodes._timer = timer;
+  } catch (e) {}
+}
+
+function stopRingbackSound() {
+  if (ringbackAudioCtx) {
+    clearInterval(ringbackOscNodes._timer);
+    try { ringbackAudioCtx.close(); } catch(e) {}
+    ringbackAudioCtx = null;
+    ringbackOscNodes = [];
+  }
+}
+
+function playIncomingRingSound() {
+  stopIncomingRingSound();
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const playRing = function() {
+      incomingRingCtx = new AC();
+      const freqs = [880, 1174.66];
+      freqs.forEach(function(freq, i) {
+        const osc = incomingRingCtx.createOscillator();
+        const gain = incomingRingCtx.createGain();
+        osc.type = "sine";
+        osc.frequency.value = freq;
+        const t = incomingRingCtx.currentTime + i * 0.18;
+        gain.gain.setValueAtTime(0, t);
+        gain.gain.linearRampToValueAtTime(0.12, t + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+        osc.connect(gain); gain.connect(incomingRingCtx.destination);
+        osc.start(t); osc.stop(t + 0.35);
+      });
+    };
+    playRing();
+    incomingRingTimer = setInterval(playRing, 2200);
+  } catch (e) {}
+}
+
+function stopIncomingRingSound() {
+  clearInterval(incomingRingTimer);
+  incomingRingTimer = null;
+  if (incomingRingCtx) {
+    try { incomingRingCtx.close(); } catch(e) {}
+    incomingRingCtx = null;
+  }
+}
+
+// Override startApplication untuk tambah notifikasi & call poll
+const _origStart = window.startApplication || startApplication;
+function startApplication() {
+  document.getElementById("loginScreen").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+  updateMyProfile();
+  loadAllData();
+  startPolling();
+  requestNotifPermission();
+  startIncomingCallPoll();
+  toast("Selamat datang, " + currentUser.nama);
+}
+
+// Override handleIncomingMessage untuk notifikasi & badge
+const _origHandleMsg = window.handleIncomingMessage;
+window.handleIncomingMessage = function(msg) {
+  if (!currentUser) return;
+
+  const isCurrentChat = selectedTarget &&
+    !selectedTarget.type !== "group" &&
+    ((msg.sender_id === selectedTarget.id && msg.receiver_id === currentUser.id) ||
+     (msg.sender_id === currentUser.id && msg.receiver_id === selectedTarget.id));
+
+  const isGroupChat = selectedTarget &&
+    selectedTarget.type === "group" &&
+    msg.group_id === selectedTarget.id;
+
+  const inActiveChat = isCurrentChat || isGroupChat;
+
+  const exists = currentMessages.some(function(m) { return String(m.id) === String(msg.id); });
+  if (!exists && inActiveChat) {
+    currentMessages.push({
+      id: msg.id,
+      sender: msg.sender_id,
+      receiver: msg.receiver_id,
+      groupId: msg.group_id,
+      messageText: msg.message_text,
+      messageType: msg.message_type,
+      attachment: msg.attachment_url,
+      timestamp: msg.created_at
+    });
+    renderMessages();
+    if (msg.sender_id !== currentUser.id) {
+      playNotificationSound();
+    }
+  } else if (!inActiveChat && msg.receiver_id === currentUser.id && msg.sender_id !== currentUser.id) {
+    // Pesan dari chat lain — tampilkan notifikasi
+    const sender = teachers.find(function(t) { return t.id === msg.sender_id; });
+    const senderName = sender ? sender.nama : "Guru";
+    const senderAvatar = sender ? sender.avatar : "";
+    const preview = msg.message_type === "IMAGE" ? "\uD83D\uDDBC\uFE0F Foto" : (msg.message_text || "Pesan baru");
+
+    playNotificationSound();
+    showInAppNotif(senderName, preview, senderAvatar, msg.sender_id);
+    updateContactBadge(msg.sender_id, true);
+  }
+};
+
+// Patch renderSidebarList untuk badge
+const _origRenderList = window.renderSidebarList || renderSidebarList;
+function renderSidebarListWithBadge() {
+  // Panggil fungsi asli
+  if (typeof _origRenderList === "function") _origRenderList();
+  // Tambah badge ke tiap item kontak
+  const container = document.getElementById("contacts");
+  if (!container) return;
+  container.querySelectorAll(".contact").forEach(function(el) {
+    const id = el.dataset.contactId;
+    if (!id) return;
+    // Hapus badge lama
+    const old = el.querySelector(".notif-badge");
+    if (old) old.remove();
+    // Tambah badge baru jika ada unread
+    if (unreadCounts[id]) {
+      const avatarEl = el.querySelector(".avatar");
+      if (avatarEl) {
+        avatarEl.style.position = "relative";
+        const badge = document.createElement("span");
+        badge.className = "notif-badge";
+        badge.textContent = unreadCounts[id] > 99 ? "99+" : unreadCounts[id];
+        avatarEl.appendChild(badge);
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>
