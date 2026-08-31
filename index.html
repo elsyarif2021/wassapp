@@ -87,6 +87,7 @@
     .btn-primary:hover { background: var(--green-dark); }
     .btn-secondary { background: #eee; color: #333; }
     .btn-save { background: var(--green); color: white; }
+    .btn-danger { background: var(--danger); color: white; }
     .btn-ai { background: var(--ai-gradient); color: white; }
 
     .toggle-auth { margin-top: 18px; font-size: 13.5px; color: var(--green); cursor: pointer; font-weight: 600; }
@@ -180,7 +181,7 @@
 
     .chat-header {
       height: 64px; background: var(--header-bg); border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; padding: 0 16px; gap: 10px; flex-shrink: 0;
+      display: flex; align-items: center; padding: 0 16px; gap: 8px; flex-shrink: 0;
     }
     .back-btn { display: none; font-size: 22px; font-weight: bold; }
     .chat-user { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
@@ -189,7 +190,7 @@
     .chat-status.status-online { color: var(--green); font-weight: 600; }
     .chat-status.status-ai { color: #7c3aed; font-weight: 600; }
 
-    .header-call-actions { display: flex; align-items: center; gap: 6px; }
+    .header-actions-chat { display: flex; align-items: center; gap: 4px; }
     .call-btn { color: var(--green); font-size: 20px; }
     .call-btn:hover { background: rgba(18, 140, 126, 0.12); }
 
@@ -224,8 +225,44 @@
     .message.other { align-self: flex-start; background: var(--bubble-other); border-top-left-radius: 2px; }
     .message.ai { align-self: flex-start; background: var(--bubble-ai); border-top-left-radius: 2px; border-left: 4px solid #8b5cf6; }
 
+    /* ACTION DROPDOWN PADA PESAN */
+    .msg-action-trigger {
+      position: absolute; top: 4px; right: 6px; font-size: 13px;
+      color: #777; cursor: pointer; display: none; padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .message:hover .msg-action-trigger { display: block; }
+    .msg-dropdown {
+      position: absolute; top: 24px; right: 6px; background: white;
+      border-radius: 8px; box-shadow: var(--shadow-md); border: 1px solid var(--border);
+      display: none; flex-direction: column; min-width: 100px; z-index: 100; overflow: hidden;
+    }
+    .msg-dropdown.show { display: flex; }
+    .msg-dropdown-item {
+      padding: 8px 12px; font-size: 13px; color: var(--text);
+      cursor: pointer; border: none; background: transparent; text-align: left;
+    }
+    .msg-dropdown-item:hover { background: #f0f2f5; }
+    .msg-dropdown-item.danger { color: var(--danger); }
+
+    /* FOOTER TOOLBAR BALASAN AI (COPY & EXPORT WORD) */
+    .ai-msg-tools {
+      display: flex; align-items: center; gap: 8px; margin-top: 8px; padding-top: 6px;
+      border-top: 1px dashed #ddd6fe;
+    }
+    .ai-tool-btn {
+      background: white; border: 1px solid #c4b5fd; color: #6b21a8;
+      font-size: 11.5px; font-weight: 600; padding: 3px 8px; border-radius: 6px;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 4px;
+      transition: all 0.2s ease;
+    }
+    .ai-tool-btn:hover { background: #ede9fe; border-color: #8b5cf6; }
+
     /* FORMAT TABEL MARKDOWN AI AGAR RAPI */
     .ai-content { overflow-x: auto; }
+    .ai-content p { margin: 6px 0; }
+    .ai-content p:first-child { margin-top: 0; }
+    .ai-content p:last-child { margin-bottom: 0; }
     .ai-content table {
       width: 100%; border-collapse: collapse; margin: 10px 0;
       font-size: 13px; background: white; border-radius: 8px; overflow: hidden;
@@ -238,7 +275,8 @@
     .ai-content tr:nth-child(even) { background: #f8fafc; }
     .ai-content ul, .ai-content ol { margin: 6px 0 6px 20px; }
     .ai-content li { margin-bottom: 4px; }
-    .ai-content h1, .ai-content h2, .ai-content h3 { margin: 10px 0 6px; color: #4c1d95; font-size: 15.5px; }
+    .ai-content h1, .ai-content h2, .ai-content h3 { margin: 12px 0 6px; color: #4c1d95; font-size: 15.5px; }
+    .ai-content h1:first-child, .ai-content h2:first-child, .ai-content h3:first-child { margin-top: 0; }
 
     .message pre {
       background: #1e1e1e; color: #d4d4d4; padding: 10px; border-radius: 6px;
@@ -485,13 +523,22 @@
         </div>
       </div>
 
-      <div class="header-call-actions" id="callActions" style="display:none;">
-        <button type="button" class="icon-btn call-btn" onclick="inviteViaWa()" title="Kirim Undangan WhatsApp">📲</button>
-        <button type="button" class="icon-btn call-btn" onclick="startVoiceCall()" title="Panggilan Suara">📞</button>
-        <button type="button" class="icon-btn call-btn" onclick="startVideoCall()" title="Panggilan Video">📹</button>
-      </div>
+      <!-- Action Chat Buttons (Kontak & AI Reset) -->
+      <div class="header-actions-chat">
+        <!-- AI Actions -->
+        <button type="button" class="icon-btn" id="btnResetAi" onclick="resetAiChatHistory()" title="Reset / Bersihkan Chat AI" style="display:none; color:#7c3aed;">🧹</button>
 
-      <button type="button" class="icon-btn" onclick="refreshMessages()" title="Muat Ulang Pesan">🔄</button>
+        <!-- Kontak Actions & Calls -->
+        <div id="callActions" style="display:none; align-items:center; gap:4px;">
+          <button type="button" class="icon-btn" onclick="openEditContactModal()" title="Edit Kontak">✏️</button>
+          <button type="button" class="icon-btn" onclick="deleteCurrentContact()" title="Hapus Kontak" style="color:var(--danger)">🗑️</button>
+          <button type="button" class="icon-btn call-btn" onclick="inviteViaWa()" title="Kirim Undangan WhatsApp">📲</button>
+          <button type="button" class="icon-btn call-btn" onclick="startVoiceCall()" title="Panggilan Suara">📞</button>
+          <button type="button" class="icon-btn call-btn" onclick="startVideoCall()" title="Panggilan Video">📹</button>
+        </div>
+
+        <button type="button" class="icon-btn" onclick="refreshMessages()" title="Muat Ulang Pesan">🔄</button>
+      </div>
     </header>
 
     <!-- PROMPTS BAR -->
@@ -662,6 +709,37 @@
   </div>
 </div>
 
+<!-- MODAL EDIT KONTAK -->
+<div class="modal" id="editContactModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>✏️ Edit Kontak</h2>
+      <button type="button" class="close" onclick="closeEditContactModal()">×</button>
+    </div>
+    <input id="editContactName" class="auth-input" type="text" placeholder="Nama Lengkap *" style="margin-top:12px;">
+    <input id="editContactPhone" class="auth-input" type="tel" placeholder="Nomor HP / Keterangan">
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+      <button type="button" class="btn btn-secondary" onclick="closeEditContactModal()">Batal</button>
+      <button type="button" class="btn btn-save" onclick="saveEditedContact()">Perbarui</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDIT PESAN -->
+<div class="modal" id="editMessageModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>✏️ Edit Pesan</h2>
+      <button type="button" class="close" onclick="closeEditMessageModal()">×</button>
+    </div>
+    <textarea id="editMessageText" class="auth-input" rows="4" style="height:100px; resize:vertical;"></textarea>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+      <button type="button" class="btn btn-secondary" onclick="closeEditMessageModal()">Batal</button>
+      <button type="button" class="btn btn-save" onclick="saveEditedMessage()">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <!-- ========================================================================
@@ -693,6 +771,7 @@ let currentMessages = [];
 let selectedImage = null;
 let activeSidebarTab = "all";
 let realtimeChannel = null;
+let editingMessageId = null;
 
 // Voice & WebRTC State
 let voiceMediaRecorder = null;
@@ -730,17 +809,21 @@ function toast(msg) {
 }
 
 // ============================================================================
-// FORMATTER MARKDOWN & TABEL AI AGAR RAPI & INDAH
+// FORMATTER MARKDOWN & TABEL AI AGAR RAPI & INDAH (BERSIH DARI <BR>)
 // ============================================================================
 function formatAiContent(text) {
   if (!text) return "";
   let s = escapeHtml(text);
 
-  // 1. Format Code Blocks ```code```
-  s = s.replace(/```([\w]*)\n([\s\S]*?)```/g, "<pre><code>$2</code></pre>");
+  const codeBlocks = [];
+  s = s.replace(/```([\w]*)\n([\s\S]*?)```/g, function(match, lang, code) {
+    const placeholder = `__CODE_BLOCK_${codeBlocks.length}__`;
+    codeBlocks.push(`<pre><code>${code.trim()}</code></pre>`);
+    return `\n\n${placeholder}\n\n`;
+  });
+
   s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
 
-  // 2. Format Tabel Markdown (| Header 1 | Header 2 | ...)
   s = s.replace(/((?:\|[^\n]+\|\r?\n)+)/g, function(tableBlock) {
     const lines = tableBlock.trim().split("\n");
     if (lines.length < 2) return tableBlock;
@@ -749,7 +832,6 @@ function formatAiContent(text) {
     let isHeader = true;
 
     lines.forEach((line) => {
-      // Abaikan separator |---|---|
       if (line.includes("---") || line.includes("===")) {
         isHeader = false;
         return;
@@ -766,23 +848,41 @@ function formatAiContent(text) {
     });
 
     html += "</table>";
-    return html;
+    return `\n\n${html}\n\n`;
   });
 
-  // 3. Format Headings & Bold/Italic
   s = s.replace(/^### (.*$)/gim, "<h3>$1</h3>");
   s = s.replace(/^## (.*$)/gim, "<h2>$1</h2>");
   s = s.replace(/^# (.*$)/gim, "<h1>$1</h1>");
   s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   s = s.replace(/\*([^*]+)\*/g, "<em>$1</em>");
 
-  // 4. Format Bullet List (- item atau * item)
   s = s.replace(/^\s*[-•]\s+(.*)$/gim, "<li>$1</li>");
-  s = s.replace(/(<li>.*<\/li>)/gims, "<ul>$1</ul>");
+  s = s.replace(/^\s*\d+\.\s+(.*)$/gim, "<li>$1</li>");
 
-  // 5. Ganti baris baru
-  s = s.replace(/\n/g, "<br>");
-  return `<div class="ai-content">${s}</div>`;
+  s = s.replace(/((?:<li>.*?<\/li>\s*)+)/gis, function(listBlock) {
+    const cleanList = listBlock.replace(/\n+/g, "");
+    return `\n\n<ul>${cleanList}</ul>\n\n`;
+  });
+
+  const rawBlocks = s.split(/\n\s*\n/);
+  const formattedBlocks = rawBlocks.map(block => {
+    let b = block.trim();
+    if (!b) return "";
+    if (/^<(h[1-6]|table|ul|ol|pre|div|p)/i.test(b) || b.startsWith("__CODE_BLOCK_")) {
+      return b;
+    }
+    b = b.replace(/\n/g, " ");
+    return `<p>${b}</p>`;
+  }).filter(Boolean);
+
+  let outputHtml = formattedBlocks.join("");
+
+  codeBlocks.forEach((codeHtml, idx) => {
+    outputHtml = outputHtml.replace(`__CODE_BLOCK_${idx}__`, codeHtml);
+  });
+
+  return `<div class="ai-content">${outputHtml}</div>`;
 }
 
 // ============================================================================
@@ -936,6 +1036,19 @@ function setupRealtime() {
           renderMessages();
         }
       }
+    })
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "messages" }, (payload) => {
+      const updatedMsg = payload.new;
+      const idx = currentMessages.findIndex(m => String(m.id) === String(updatedMsg.id));
+      if (idx !== -1) {
+        currentMessages[idx].messageText = updatedMsg.message_text;
+        renderMessages();
+      }
+    })
+    .on("postgres_changes", { event: "DELETE", schema: "public", table: "messages" }, (payload) => {
+      const deletedMsg = payload.old;
+      currentMessages = currentMessages.filter(m => String(m.id) !== String(deletedMsg.id));
+      renderMessages();
     })
     .on("postgres_changes", { event: "INSERT", schema: "public", table: "calls" }, (payload) => {
       handleIncomingCallSignal(payload.new);
@@ -1152,6 +1265,7 @@ window.selectTarget = function(item) {
   document.getElementById("chatAvatar").innerHTML = isAi ? "🤖" : isGroup ? "👥" : "👤";
   
   document.getElementById("aiPromptsBar").classList.toggle("show", isAi);
+  document.getElementById("btnResetAi").style.display = isAi ? "flex" : "none";
   document.getElementById("callActions").style.display = (!isAi && !isGroup) ? "flex" : "none";
 
   renderSidebarList();
@@ -1216,6 +1330,14 @@ function loadAiMessages() {
   renderMessages();
 }
 
+// RESET CHAT AI (MENGHAPUS SEMUA CHAT AI AGAR RINGAN)
+window.resetAiChatHistory = function() {
+  if (!confirm("Hapus seluruh riwayat percakapan dengan AI ini?")) return;
+  localStorage.removeItem("alghozali_ai_history_" + currentUser.id);
+  loadAiMessages();
+  toast("Percakapan AI telah direset bersih.");
+};
+
 function renderMessages() {
   const container = document.getElementById("messages");
   if (!container) return;
@@ -1233,6 +1355,18 @@ function renderMessages() {
     el.className = "message " + (mine ? "me" : isAi ? "ai" : "other");
 
     let innerHtml = "";
+
+    // Action menu untuk pesan milik sendiri atau pesan user pada AI
+    if (mine) {
+      innerHtml += `
+        <span class="msg-action-trigger" onclick="toggleMsgDropdown(event, '${msg.id}')">⋮</span>
+        <div class="msg-dropdown" id="dropdown_${msg.id}">
+          ${msg.messageType === 'TEXT' ? `<button type="button" class="msg-dropdown-item" onclick="openEditMessageModal('${msg.id}')">✏️ Edit</button>` : ''}
+          <button type="button" class="msg-dropdown-item danger" onclick="deleteMessage('${msg.id}')">🗑️ Hapus</button>
+        </div>
+      `;
+    }
+
     if (msg.messageType === "IMAGE" && msg.attachment) {
       innerHtml += `<img src="${msg.attachment}" alt="attachment">`;
     }
@@ -1251,12 +1385,237 @@ function renderMessages() {
       innerHtml += isAi ? formatAiContent(msg.messageText) : `<span>${escapeHtml(msg.messageText)}</span>`;
     }
 
+    // Toolbar Salin & Export Word khusus pesan AI
+    if (isAi && msg.messageText && msg.id !== "ai_welcome") {
+      innerHtml += `
+        <div class="ai-msg-tools">
+          <button type="button" class="ai-tool-btn" onclick="copyAiMessage('${msg.id}')">📋 Salin</button>
+          <button type="button" class="ai-tool-btn" onclick="exportAiMessageToWord('${msg.id}')">📄 Export Word</button>
+        </div>
+      `;
+    }
+
     innerHtml += `<span class="message-meta">${formatTime(msg.timestamp)} ${mine ? '<span class="message-status">✓✓</span>' : ''}</span>`;
     el.innerHTML = innerHtml;
     container.appendChild(el);
   });
   container.scrollTop = container.scrollHeight;
 }
+
+// ============================================================================
+// FITUR SALIN (COPY) & EXPORT WORD PERCAKAPAN AI
+// ============================================================================
+window.copyAiMessage = function(msgId) {
+  const msg = currentMessages.find(m => String(m.id) === String(msgId));
+  if (!msg || !msg.messageText) return;
+  navigator.clipboard.writeText(msg.messageText).then(() => {
+    toast("Teks berhasil disalin ke clipboard!");
+  }).catch(() => {
+    toast("Gagal menyalin teks.");
+  });
+};
+
+window.exportAiMessageToWord = function(msgId) {
+  const msg = currentMessages.find(m => String(m.id) === String(msgId));
+  if (!msg || !msg.messageText) return;
+
+  const contentHtml = formatAiContent(msg.messageText);
+
+  // Standar HTML template untuk diekspor ke Microsoft Word (.doc)
+  const header = `
+    <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+          xmlns:w='urn:schemas-microsoft-com:office:word' 
+          xmlns='http://www.w3.org/TR/REC-html40'>
+    <head>
+      <meta charset="utf-8">
+      <title>Dokumen Al-Ghozali AI</title>
+      <style>
+        body { font-family: 'Calibri', 'Arial', sans-serif; font-size: 11pt; line-height: 1.5; color: #000; }
+        h1, h2, h3 { color: #2E4053; margin-top: 14pt; margin-bottom: 6pt; }
+        h1 { font-size: 16pt; font-weight: bold; }
+        h2 { font-size: 13pt; font-weight: bold; }
+        h3 { font-size: 11pt; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
+        th, td { border: 1px solid #333333; padding: 6pt 8pt; text-align: left; font-size: 10pt; }
+        th { background-color: #EAECEE; font-weight: bold; }
+        ul, ol { margin-left: 20pt; margin-top: 4pt; margin-bottom: 4pt; }
+        li { margin-bottom: 3pt; }
+        p { margin-bottom: 6pt; }
+      </style>
+    </head>
+    <body>
+  `;
+  const footer = `</body></html>`;
+  const fullHtml = header + contentHtml + footer;
+
+  const blob = new Blob(['\ufeff' + fullHtml], { type: 'application/msword' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `Dokumen_AI_${Date.now()}.doc`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast("Dokumen Word (.doc) berhasil diunduh!");
+};
+
+// ============================================================================
+// CRUD PESAN (EDIT & HAPUS)
+// ============================================================================
+window.toggleMsgDropdown = function(e, msgId) {
+  e.stopPropagation();
+  document.querySelectorAll(".msg-dropdown").forEach(el => {
+    if (el.id !== "dropdown_" + msgId) el.classList.remove("show");
+  });
+  const dd = document.getElementById("dropdown_" + msgId);
+  if (dd) dd.classList.toggle("show");
+};
+
+window.openEditMessageModal = function(msgId) {
+  const msg = currentMessages.find(m => String(m.id) === String(msgId));
+  if (!msg) return;
+  editingMessageId = msgId;
+  document.getElementById("editMessageText").value = msg.messageText || "";
+  document.getElementById("editMessageModal").classList.add("show");
+  document.querySelectorAll(".msg-dropdown").forEach(el => el.classList.remove("show"));
+};
+
+window.closeEditMessageModal = function() {
+  editingMessageId = null;
+  document.getElementById("editMessageModal").classList.remove("show");
+};
+
+window.saveEditedMessage = async function() {
+  const newText = document.getElementById("editMessageText").value.trim();
+  if (!newText || !editingMessageId) return;
+
+  if (selectedTarget && selectedTarget.type === "ai") {
+    const msg = currentMessages.find(m => String(m.id) === String(editingMessageId));
+    if (msg) msg.messageText = newText;
+    localStorage.setItem("alghozali_ai_history_" + currentUser.id, JSON.stringify(currentMessages));
+    renderMessages();
+    closeEditMessageModal();
+    toast("Pesan berhasil diubah.");
+    return;
+  }
+
+  showLoading();
+  try {
+    if (supabaseClient) {
+      const { error } = await supabaseClient.from("messages").update({ message_text: newText }).eq("id", editingMessageId);
+      if (error) throw error;
+    }
+    const msg = currentMessages.find(m => String(m.id) === String(editingMessageId));
+    if (msg) msg.messageText = newText;
+    renderMessages();
+    closeEditMessageModal();
+    toast("Pesan berhasil diubah.");
+  } catch (err) {
+    toast("Gagal mengubah pesan: " + err.message);
+  } finally {
+    hideLoading();
+  }
+};
+
+window.deleteMessage = async function(msgId) {
+  if (!confirm("Hapus pesan ini?")) return;
+  document.querySelectorAll(".msg-dropdown").forEach(el => el.classList.remove("show"));
+
+  if (selectedTarget && selectedTarget.type === "ai") {
+    currentMessages = currentMessages.filter(m => String(m.id) !== String(msgId));
+    localStorage.setItem("alghozali_ai_history_" + currentUser.id, JSON.stringify(currentMessages));
+    renderMessages();
+    toast("Pesan dihapus.");
+    return;
+  }
+
+  showLoading();
+  try {
+    if (supabaseClient) {
+      const { error } = await supabaseClient.from("messages").delete().eq("id", msgId);
+      if (error) throw error;
+    }
+    currentMessages = currentMessages.filter(m => String(m.id) !== String(msgId));
+    renderMessages();
+    toast("Pesan dihapus.");
+  } catch (err) {
+    toast("Gagal menghapus pesan: " + err.message);
+  } finally {
+    hideLoading();
+  }
+};
+
+// ============================================================================
+// CRUD KONTAK (EDIT & HAPUS)
+// ============================================================================
+window.openEditContactModal = function() {
+  if (!selectedTarget || selectedTarget.type !== "user") return;
+  document.getElementById("editContactName").value = selectedTarget.nama || "";
+  document.getElementById("editContactPhone").value = selectedTarget.mataPelajaran || "";
+  document.getElementById("editContactModal").classList.add("show");
+};
+
+window.closeEditContactModal = function() {
+  document.getElementById("editContactModal").classList.remove("show");
+};
+
+window.saveEditedContact = async function() {
+  if (!selectedTarget || selectedTarget.type !== "user") return;
+  const newName = document.getElementById("editContactName").value.trim();
+  const newPhone = document.getElementById("editContactPhone").value.trim();
+  if (!newName) { toast("Nama kontak tidak boleh kosong."); return; }
+
+  showLoading();
+  try {
+    if (supabaseClient) {
+      const { error } = await supabaseClient.from("users").update({
+        nama: newName,
+        mata_pelajaran: newPhone || "Pengguna"
+      }).eq("id", selectedTarget.id);
+      if (error) throw error;
+    }
+    selectedTarget.nama = newName;
+    selectedTarget.mataPelajaran = newPhone;
+    document.getElementById("chatName").textContent = newName;
+    document.getElementById("chatStatus").textContent = newPhone || "Online";
+    closeEditContactModal();
+    toast("Kontak berhasil diperbarui.");
+    await loadAllData();
+  } catch (err) {
+    toast("Gagal memperbarui kontak: " + err.message);
+  } finally {
+    hideLoading();
+  }
+};
+
+window.deleteCurrentContact = async function() {
+  if (!selectedTarget || selectedTarget.type !== "user") return;
+  if (!confirm(`Hapus kontak "${selectedTarget.nama}" beserta histori percakapan?`)) return;
+
+  showLoading();
+  try {
+    if (supabaseClient) {
+      const myId = String(currentUser.id);
+      const targetId = String(selectedTarget.id);
+      await supabaseClient.from("messages").delete().or(`and(sender_id.eq.${myId},receiver_id.eq.${targetId}),and(sender_id.eq.${targetId},receiver_id.eq.${myId})`);
+      await supabaseClient.from("users").delete().eq("id", selectedTarget.id);
+    }
+    toast("Kontak berhasil dihapus.");
+    selectedTarget = null;
+    document.getElementById("chatName").textContent = "Pilih kontak atau AI";
+    document.getElementById("chatStatus").textContent = "Pilih kontak untuk memulai percakapan";
+    document.getElementById("chatAvatar").innerHTML = "👤";
+    document.getElementById("callActions").style.display = "none";
+    document.getElementById("btnResetAi").style.display = "none";
+    document.getElementById("messages").innerHTML = '<div class="empty-chat"><div class="big">💬</div><h3>WassApp</h3><p>Kontak telah dihapus.</p></div>';
+    await loadAllData();
+  } catch (err) {
+    toast("Gagal menghapus kontak: " + err.message);
+  } finally {
+    hideLoading();
+  }
+};
 
 // ============================================================================
 // PENGIRIMAN PESAN
@@ -1271,7 +1630,7 @@ window.sendMessage = async function() {
   removeAttachment();
   hideEmoji();
 
-  // CHAT KE GROQ AI
+  // CHAT KE GROQ AI VIA BACKEND VERCEL SERVERLESS (/api/chat)
   if (selectedTarget.type === "ai") {
     currentMessages.push({ id: "usr_" + Date.now(), sender: currentUser.id, messageText: text, messageType: "TEXT", timestamp: new Date().toISOString() });
     renderMessages();
@@ -1458,6 +1817,9 @@ function setupOutsideClick() {
     if (panel && !panel.contains(e.target) && !e.target.closest(".composer .icon-btn")) {
       hideEmoji();
     }
+    if (!e.target.closest(".msg-action-trigger") && !e.target.closest(".msg-dropdown")) {
+      document.querySelectorAll(".msg-dropdown").forEach(el => el.classList.remove("show"));
+    }
   });
 }
 
@@ -1471,41 +1833,22 @@ window.inviteViaWa = function() {
 };
 
 // ============================================================================
-// GROQ AI HANDLER DENGAN SYSTEM PROMPT CERDAS & LENGKAP
+// GROQ AI HANDLER VIA BACKEND VERCEL SERVERLESS (/api/chat)
 // ============================================================================
 async function queryGroqAi(promptText) {
-  let key = localStorage.getItem("alghozali_groq_key");
-  if (!key) {
-    key = prompt("🔐 Masukkan GROQ API Key Anda (gsk_...):\n(Disimpan aman di browser lokal Anda)");
-    if (key && key.trim().startsWith("gsk_")) localStorage.setItem("alghozali_groq_key", key.trim());
-    else throw new Error("GROQ API Key tidak valid.");
-  }
-
-  const systemInstruction = `Anda adalah Al-Ghozali AI Assistant, asisten cerdas untuk guru dan profesional.
-ATURAN MUTLAK JAWABAN:
-1. JANGAN PERNAH balik bertanya atau meminta klarifikasi dengan tabel kosong. Jika topik kurang detail, asumsikan standar terbaik kurikulum guru (Kurikulum Merdeka / Nasional) dan langsung buatkan secara LENGKAP.
-2. Jika diminta MODUL AJAR / RPP: Langsung buatkan dokumen lengkap berisi: Identitas Modul, Tujuan Pembelajaran, Profil Pelajar Pancasila, Materi Pokok, Model Pembelajaran, Langkah-Langkah Kegiatan (Pendahuluan, Inti, Penutup), dan Asesmen/Penilaian.
-3. Jika diminta KHUTBAH JUMAT: Buatkan teks lengkap Khutbah Pertama (pembukaan bahasa Arab, wasiat taqwa, materi berdalil Quran/Hadits, penutup), Khutbah Kedua, dan Doa.
-4. Gunakan format tabel yang rapi jika menyajikan data berkolom.
-5. Berikan jawaban dalam bahasa Indonesia yang sangat rapi, santun, dan siap pakai.`;
-
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+  const res = await fetch("/api/chat", {
     method: "POST",
-    headers: { "Authorization": "Bearer " + key.trim(), "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "openai/gpt-oss-120b",
-      messages: [
-        { role: "system", content: systemInstruction },
-        { role: "user", content: promptText }
-      ],
-      temperature: 0.6,
-      max_tokens: 3000
-    })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt: promptText })
   });
 
-  if (!res.ok) throw new Error("Groq API Error: " + (await res.text()));
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    throw new Error(errData.error || `Server Error (${res.status})`);
+  }
+
   const json = await res.json();
-  return json?.choices?.[0]?.message?.content || "Tidak ada respon.";
+  return json.reply || "Tidak ada respon.";
 }
 
 function handleMessageKey(e) {
