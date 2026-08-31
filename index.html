@@ -2452,44 +2452,109 @@
         <input type="color" class="rte-color" onchange="execCmd('foreColor', this.value)" title="Warna Huruf">
       </div>
       <div class="composer">
+        <button type="button" class="icon-btn" onclick="toggleEmoji()" title="Emoji & Pesan Cepat">😀</button>
+        <button type="button" class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Lampirkan Gambar">📎</button>
+        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFileUpload(event)">
 
-        <!-- Tab 4: Sekolah & Pembelajaran -->
-        <div class="emoji-tab-content" id="tabContent_school" style="display:none;">
-          <div class="emoji-grid">
-            <span class="emoji" onclick="addEmoji('📚')">📚</span>
-            <span class="emoji" onclick="addEmoji('📖')">📖</span>
-            <span class="emoji" onclick="addEmoji('📝')">📝</span>
-            <span class="emoji" onclick="addEmoji('🎓')">🎓</span>
-            <span class="emoji" onclick="addEmoji('🏫')">🏫</span>
-            <span class="emoji" onclick="addEmoji('🎒')">🎒</span>
-            <span class="emoji" onclick="addEmoji('🖊️')">🖊️</span>
-            <span class="emoji" onclick="addEmoji('✏️')">✏️</span>
-            <span class="emoji" onclick="addEmoji('📌')">📌</span>
-            <span class="emoji" onclick="addEmoji('📍')">📍</span>
-            <span class="emoji" onclick="addEmoji('💡')">💡</span>
-            <span class="emoji" onclick="addEmoji('⏰')">⏰</span>
-            <span class="emoji" onclick="addEmoji('🗓️')">🗓️</span>
-            <span class="emoji" onclick="addEmoji('📊')">📊</span>
-            <span class="emoji" onclick="addEmoji('🏆')">🏆</span>
-            <span class="emoji" onclick="addEmoji('🥇')">🥇</span>
-            <span class="emoji" onclick="addEmoji('☕')">☕</span>
-            <span class="emoji" onclick="addEmoji('✅')">✅</span>
-            <span class="emoji" onclick="addEmoji('🎉')">🎉</span>
-            <span class="emoji" onclick="addEmoji('💐')">💐</span>
+        <div class="emoji-panel" id="emojiPanel">
+          <div class="emoji-tabs">
+            <button type="button" class="emoji-tab-item active" onclick="switchEmojiTab(event, 'islamic')">Islami</button>
+            <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'dzikir')">Dzikir</button>
+            <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'faces')">Wajah</button>
+            <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'gestures')">Gestur</button>
+            <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'school')">Sekolah</button>
+          </div>
+
+          <div class="emoji-tab-content" id="tabContent_islamic">
+            <div class="emoji-grid">
+              <span class="emoji" onclick="addText('Assalamu\'alaikum')">Assalamu'alaikum</span>
+              <span class="emoji" onclick="addText('Wa\'alaikumussalam')">Wa'alaikumussalam</span>
+              <span class="emoji" onclick="addText('Bismillah')">Bismillah</span>
+              <span class="emoji" onclick="addText('Alhamdulillah')">Alhamdulillah</span>
+              <span class="emoji" onclick="addText('Allahu Akbar')">Allahu Akbar</span>
+              <span class="emoji" onclick="addText('Insya Allah')">Insya Allah</span>
+              <span class="emoji" onclick="addText('Barakallah')">Barakallah</span>
+              <span class="emoji" onclick="addEmoji('🕌')">🕌</span>
+              <span class="emoji" onclick="addEmoji('🕋')">🕋</span>
+              <span class="emoji" onclick="addEmoji('📿')">📿</span>
+              <span class="emoji" onclick="addEmoji('🤲')">🤲</span>
+            </div>
+          </div>
+          
+          <div class="emoji-tab-content" id="tabContent_dzikir" style="display:none;">
+            <div class="emoji-grid">
+              <span class="emoji" onclick="addText('Subhanallah')">Subhanallah</span>
+              <span class="emoji" onclick="addText('Masya Allah')">Masya Allah</span>
+              <span class="emoji" onclick="addText('Astaghfirullah')">Astaghfirullah</span>
+              <span class="emoji" onclick="addText('Jazakallah Khairan')">Jazakallah Khairan</span>
+              <span class="emoji" onclick="addText('Syafakallah')">Syafakallah</span>
+            </div>
+          </div>
+          
+          <div class="emoji-tab-content" id="tabContent_faces" style="display:none;">
+            <div class="emoji-grid">
+              <span class="emoji" onclick="addEmoji('😀')">😀</span>
+              <span class="emoji" onclick="addEmoji('😂')">😂</span>
+              <span class="emoji" onclick="addEmoji('😊')">😊</span>
+              <span class="emoji" onclick="addEmoji('🥰')">🥰</span>
+              <span class="emoji" onclick="addEmoji('😎')">😎</span>
+              <span class="emoji" onclick="addEmoji('😭')">😭</span>
+              <span class="emoji" onclick="addEmoji('😡')">😡</span>
+              <span class="emoji" onclick="addEmoji('🥺')">🥺</span>
+            </div>
+          </div>
+          
+          <div class="emoji-tab-content" id="tabContent_gestures" style="display:none;">
+            <div class="emoji-grid">
+              <span class="emoji" onclick="addEmoji('👍')">👍</span>
+              <span class="emoji" onclick="addEmoji('👎')">👎</span>
+              <span class="emoji" onclick="addEmoji('👌')">👌</span>
+              <span class="emoji" onclick="addEmoji('✌️')">✌️</span>
+              <span class="emoji" onclick="addEmoji('🤞')">🤞</span>
+              <span class="emoji" onclick="addEmoji('🤝')">🤝</span>
+              <span class="emoji" onclick="addEmoji('👏')">👏</span>
+              <span class="emoji" onclick="addEmoji('🙌')">🙌</span>
+            </div>
+          </div>
+
+          <!-- Tab 4: Sekolah & Pembelajaran -->
+          <div class="emoji-tab-content" id="tabContent_school" style="display:none;">
+            <div class="emoji-grid">
+              <span class="emoji" onclick="addEmoji('📚')">📚</span>
+              <span class="emoji" onclick="addEmoji('📖')">📖</span>
+              <span class="emoji" onclick="addEmoji('📝')">📝</span>
+              <span class="emoji" onclick="addEmoji('🎓')">🎓</span>
+              <span class="emoji" onclick="addEmoji('🏫')">🏫</span>
+              <span class="emoji" onclick="addEmoji('🎒')">🎒</span>
+              <span class="emoji" onclick="addEmoji('🖊️')">🖊️</span>
+              <span class="emoji" onclick="addEmoji('✏️')">✏️</span>
+              <span class="emoji" onclick="addEmoji('📌')">📌</span>
+              <span class="emoji" onclick="addEmoji('📍')">📍</span>
+              <span class="emoji" onclick="addEmoji('💡')">💡</span>
+              <span class="emoji" onclick="addEmoji('⏰')">⏰</span>
+              <span class="emoji" onclick="addEmoji('🗓️')">🗓️</span>
+              <span class="emoji" onclick="addEmoji('📊')">📊</span>
+              <span class="emoji" onclick="addEmoji('🏆')">🏆</span>
+              <span class="emoji" onclick="addEmoji('🥇')">🥇</span>
+              <span class="emoji" onclick="addEmoji('☕')">☕</span>
+              <span class="emoji" onclick="addEmoji('✅')">✅</span>
+              <span class="emoji" onclick="addEmoji('🎉')">🎉</span>
+              <span class="emoji" onclick="addEmoji('💐')">💐</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Attachment Preview -->
-      <div class="attachment-preview" id="attachmentPreview">
-        <button type="button" class="remove-attachment" onclick="removeAttachment()">×</button>
-        <img id="previewImage" alt="Preview attachment">
-      </div>
+        <!-- Attachment Preview -->
+        <div class="attachment-preview" id="attachmentPreview">
+          <button type="button" class="remove-attachment" onclick="removeAttachment()">×</button>
+          <img id="previewImage" alt="Preview attachment">
+        </div>
 
-      <div id="messageInput" class="message-input" contenteditable="true" placeholder="Ketik pesan..." onkeydown="handleMessageKey(event)" oninput="handleTypingActivity()"></div>
+        <div id="messageInput" class="message-input" contenteditable="true" placeholder="Ketik pesan..." onkeydown="handleMessageKey(event)" oninput="handleTypingActivity()"></div>
       <button type="button" class="icon-btn record-vn-btn" id="recordVnBtn" onclick="toggleVoiceRecording()" title="Rekam Voice Note (Pesan Suara)">🎙️</button>
       <button type="button" class="send-btn" id="sendMsgBtn" onclick="sendMessage()" title="Kirim">➤</button>
     </div>
+  </div>
   </main>
 </div>
 
@@ -4215,6 +4280,12 @@ window.toggleMsgMenu = function(e, msgId) {
   if (menu) menu.classList.toggle("show");
 };
 
+// RICH TEXT FORMATTING
+window.execCmd = function(command, value = null) {
+  document.execCommand(command, false, value);
+  document.getElementById("messageInput").focus();
+};
+
 // EDIT PESAN
 window.startEditMessage = function(msgId) {
   const msg = currentMessages.find(function(m) { return String(m.id) === String(msgId); });
@@ -4222,7 +4293,7 @@ window.startEditMessage = function(msgId) {
 
   editingMessageId = msgId;
   const input = document.getElementById("messageInput");
-  input.value = msg.messageText || "";
+  input.innerHTML = msg.messageText || "";
   input.focus();
   autoResize(input);
 
@@ -4237,7 +4308,7 @@ window.startEditMessage = function(msgId) {
 window.cancelEditMessage = function() {
   editingMessageId = null;
   const input = document.getElementById("messageInput");
-  input.value = "";
+  input.innerHTML = "";
   input.style.height = "40px";
   document.getElementById("editingBanner").classList.remove("show");
   document.getElementById("sendMsgBtn").textContent = "➤";
@@ -4283,10 +4354,10 @@ window.sendMessage = async function() {
   }
 
   const input = document.getElementById("messageInput");
-  const text = input.value.trim();
+  const text = input.innerHTML;
 
   if (editingMessageId) {
-    if (!text) {
+    if (!text.replace(/<[^>]*>?/gm, '').trim()) {
       toast("Pesan tidak boleh kosong.");
       return;
     }
@@ -4312,7 +4383,7 @@ window.sendMessage = async function() {
     return;
   }
 
-  if (!text && !selectedImage) return;
+  if (!text.replace(/<[^>]*>?/gm, '').trim() && !selectedImage) return;
 
   const isGroup = selectedTarget.type === "group";
   const payload = {
@@ -4324,7 +4395,7 @@ window.sendMessage = async function() {
     attachment_url: selectedImage || ""
   };
 
-  input.value = "";
+  input.innerHTML = "";
   input.style.height = "40px";
   removeAttachment();
   hideEmoji();
@@ -4675,18 +4746,14 @@ window.hideEmoji = function() {
 
 window.addEmoji = function(emoji) {
   const input = document.getElementById("messageInput");
-  const start = input.selectionStart;
-  const end = input.selectionEnd;
-  const val = input.value;
-  input.value = val.substring(0, start) + emoji + val.substring(end);
+  input.innerHTML += emoji;
   input.focus();
-  input.selectionStart = input.selectionEnd = start + emoji.length;
   autoResize(input);
 };
 
 window.addText = function(text) {
   const input = document.getElementById("messageInput");
-  input.value = (input.value ? input.value + " " : "") + text;
+  input.innerHTML = (input.innerHTML ? input.innerHTML + " " : "") + text;
   input.focus();
   autoResize(input);
   hideEmoji();

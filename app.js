@@ -568,9 +568,9 @@ async function sendMessage() {
   if (!currentUser || !selectedContact || !ensureSupabaseReady()) return;
 
   const input = document.getElementById("messageInput");
-  const text = input.value.trim();
+  const text = input.innerHTML;
 
-  if (!text && !selectedImage) return;
+  if (!text.replace(/<[^>]*>?/gm, '').trim() && !selectedImage) return;
 
   const payload = {
     sender_id: currentUser.id,
@@ -580,7 +580,7 @@ async function sendMessage() {
     attachment_url: selectedImage || ""
   };
 
-  input.value = "";
+  input.innerHTML = "";
   input.style.height = "42px";
   removeAttachment();
   hideEmoji();
@@ -747,12 +747,8 @@ function hideEmoji() {
 
 function addEmoji(emoji) {
   const input = document.getElementById("messageInput");
-  const start = input.selectionStart;
-  const end = input.selectionEnd;
-  const val = input.value;
-  input.value = val.substring(0, start) + emoji + val.substring(end);
+  input.innerHTML += emoji;
   input.focus();
-  input.selectionStart = input.selectionEnd = start + emoji.length;
   autoResize(input);
 }
 

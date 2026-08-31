@@ -1,25 +1,36 @@
 -- ============================================================================
--- WASSAPP - SUPABASE DATABASE SCHEMA (LENGKAP DENGAN GRUP CHAT)
--- Jalankan skrip ini di Supabase SQL Editor
+-- WASSAPP - SUPABASE DATABASE SCHEMA (BERSIH & LENGKAP)
+-- ============================================================================
+-- CATATAN PENTING:
+-- Anda HANYA perlu menjalankan skrip ini jika:
+-- 1. Membuat project database Supabase baru dari nol, ATAU
+-- 2. Ingin mereset total seluruh database aplikasi.
+--
+-- Jika database Anda saat ini sudah berjalan dan login/chat sudah bisa,
+-- Anda TIDAK PERLU menjalankan ulang skrip ini.
 -- ============================================================================
 
--- Ekstensi UUID
+-- LANGKAH 1: EKSTENSI UUID & CRYPTO
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- 1. TABEL USERS (Jika belum ada)
+-- ============================================================================
+-- LANGKAH 2: TABEL USERS (Guru & Pengguna)
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.users (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   nama TEXT NOT NULL,
-  mata_pelajaran TEXT DEFAULT 'Belum diatur',
+  mata_pelajaran TEXT DEFAULT 'Belum diatur', -- Menyimpan Nomor HP / Mata Pelajaran
   email TEXT UNIQUE NOT NULL,
-  password TEXT NOT NULL,
+  password TEXT NOT NULL DEFAULT '',           -- SHA-256 Hashed Password
   avatar TEXT DEFAULT '',
   status TEXT DEFAULT 'Offline',
   last_seen TIMESTAMPTZ DEFAULT NOW(),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. TABEL GROUPS (Grup Chat Guru)
+-- ============================================================================
+-- LANGKAH 3: TABEL GROUPS (Grup Diskusi Guru)
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.groups (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   name TEXT NOT NULL,
@@ -29,47 +40,43 @@ CREATE TABLE IF NOT EXISTS public.groups (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. TABEL GROUP_MEMBERS (Anggota Grup)
+-- ============================================================================
+-- LANGKAH 4: TABEL GROUP_MEMBERS (Anggota Grup)
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.group_members (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-  group_id UUID REFERENCES public.groups(id) ON DELETE CASCADE,
-  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
+  group_id UUID NOT NULL REFERENCES public.groups(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   joined_at TIMESTAMPTZ DEFAULT NOW(),
   UNIQUE(group_id, user_id)
 );
 
--- 4. TABEL MESSAGES (Pesan Pribadi & Grup)
+-- ============================================================================
+-- LANGKAH 5: TABEL MESSAGES (Pesan Pribadi, Grup, Gambar, & Audio)
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.messages (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   sender_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   receiver_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
   group_id UUID REFERENCES public.groups(id) ON DELETE CASCADE,
   message_text TEXT DEFAULT '',
-  message_type TEXT DEFAULT 'TEXT',
+  message_type TEXT DEFAULT 'TEXT',             -- 'TEXT' | 'IMAGE' | 'AUDIO'
   attachment_url TEXT DEFAULT '',
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  is_read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  edited_at TIMESTAMPTZ,
+  is_deleted BOOLEAN DEFAULT FALSE
 );
 
--- Tambahkan kolom group_id dan ubah receiver_id nullable jika messages sudah ada
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns 
-    WHERE table_schema = 'public' AND table_name = 'messages' AND column_name = 'group_id'
-  ) THEN
-    ALTER TABLE public.messages ADD COLUMN group_id UUID REFERENCES public.groups(id) ON DELETE CASCADE;
-  END IF;
-
-  ALTER TABLE public.messages ALTER COLUMN receiver_id DROP NOT NULL;
-END $$;
-
--- 5. TABEL CALLS (Sinyal WebRTC untuk Panggilan Suara)
--- Tabel ini menyimpan WebRTC offer/answer/ICE candidates untuk voice call peer-to-peer
+-- ============================================================================
+-- LANGKAH 6: TABEL CALLS (Sinyal WebRTC Voice Call & Video Call)
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.calls (
   id TEXT PRIMARY KEY,
   caller_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
   callee_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
-  status TEXT NOT NULL DEFAULT 'ringing',
+  call_type TEXT NOT NULL DEFAULT 'voice',     -- 'voice' | 'video'
+  status TEXT NOT NULL DEFAULT 'ringing',      -- 'ringing' | 'answered' | 'rejected' | 'ended'
   offer TEXT,
   answer TEXT,
   ice_candidates TEXT DEFAULT '[]',
@@ -77,51 +84,74 @@ CREATE TABLE IF NOT EXISTS public.calls (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Index performa untuk panggilan masuk
-CREATE INDEX IF NOT EXISTS idx_calls_callee_status ON public.calls(callee_id, status, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_calls_caller ON public.calls(caller_id, created_at DESC);
+-- ============================================================================
+-- LANGKAH 7: TABEL STATUSES (Update Status / Stories)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS public.statuses (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  content_type TEXT NOT NULL DEFAULT 'text',     -- 'text' | 'image'
+  content_text TEXT,
+  media_url TEXT,
+  audio_url TEXT,
+  privacy TEXT NOT NULL DEFAULT 'all',           -- 'all' | 'selected'
+  allowed_users TEXT DEFAULT '[]',               -- JSON array of user IDs stringified
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  expires_at TIMESTAMPTZ DEFAULT NOW() + INTERVAL '24 hours'
+);
 
--- 6. INDEX PERFORMA PESAN
+-- ============================================================================
+-- LANGKAH 8: INDEX PERFORMA TINGGI
+-- ============================================================================
 CREATE INDEX IF NOT EXISTS idx_users_email ON public.users(email);
-CREATE INDEX IF NOT EXISTS idx_messages_direct ON public.messages(sender_id, receiver_id, created_at);
-CREATE INDEX IF NOT EXISTS idx_messages_group ON public.messages(group_id, created_at);
-CREATE INDEX IF NOT EXISTS idx_group_members ON public.group_members(group_id, user_id);
+CREATE INDEX IF NOT EXISTS idx_users_phone ON public.users(mata_pelajaran);
+CREATE INDEX IF NOT EXISTS idx_messages_direct ON public.messages(sender_id, receiver_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_messages_group ON public.messages(group_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_group_members_group ON public.group_members(group_id);
+CREATE INDEX IF NOT EXISTS idx_group_members_user ON public.group_members(user_id);
+CREATE INDEX IF NOT EXISTS idx_calls_callee ON public.calls(callee_id, status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_calls_caller ON public.calls(caller_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_statuses_user ON public.statuses(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_statuses_expires ON public.statuses(expires_at);
 
--- 7. NONAKTIFKAN RLS (Akses Aman Langsung)
+-- ============================================================================
+-- LANGKAH 9: NONAKTIFKAN ROW LEVEL SECURITY (RLS)
+-- Akses REST API langsung menggunakan anon key
+-- ============================================================================
 ALTER TABLE public.users DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.groups DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.group_members DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.messages DISABLE ROW LEVEL SECURITY;
 ALTER TABLE public.calls DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.statuses DISABLE ROW LEVEL SECURITY;
 
--- 8. HAK AKSES PERMISSIONS
-GRANT ALL ON TABLE public.users TO anon, authenticated;
-GRANT ALL ON TABLE public.groups TO anon, authenticated;
-GRANT ALL ON TABLE public.group_members TO anon, authenticated;
-GRANT ALL ON TABLE public.messages TO anon, authenticated;
-GRANT ALL ON TABLE public.calls TO anon, authenticated;
+-- ============================================================================
+-- LANGKAH 10: HAK AKSES PERMISSION (GRANT)
+-- ============================================================================
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO anon, authenticated;
 
--- 9. PUBLIKASI SUPABASE REALTIME
+-- ============================================================================
+-- LANGKAH 11: AKTIFKAN SUPABASE REALTIME
+-- ============================================================================
 DO $$
 BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_publication_tables 
-    WHERE pubname = 'supabase_realtime' AND tablename = 'messages'
-  ) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'messages') THEN
     ALTER PUBLICATION supabase_realtime ADD TABLE public.messages;
   END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_publication_tables 
-    WHERE pubname = 'supabase_realtime' AND tablename = 'users'
-  ) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'users') THEN
     ALTER PUBLICATION supabase_realtime ADD TABLE public.users;
   END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM pg_publication_tables 
-    WHERE pubname = 'supabase_realtime' AND tablename = 'groups'
-  ) THEN
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'groups') THEN
     ALTER PUBLICATION supabase_realtime ADD TABLE public.groups;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'calls') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.calls;
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_publication_tables WHERE pubname = 'supabase_realtime' AND tablename = 'statuses') THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.statuses;
   END IF;
 END $$;
