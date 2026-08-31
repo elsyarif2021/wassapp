@@ -10,7 +10,7 @@
 
   <style>
     /* ==========================================================================
-       WASSAPP MASTER STYLES - CLEAN CHAT & PRO AI DOCUMENT EXPORTER
+       WASSAPP MASTER STYLES - WITH AI COPY & WORD EXPORTER BUTTONS
        ========================================================================== */
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -205,7 +205,7 @@
 
     .messages {
       flex: 1; overflow-y: auto; padding: 16px 5%;
-      display: flex; flex-direction: column; gap: 12px;
+      display: flex; flex-direction: column; gap: 14px;
       background-color: var(--bg);
       background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
       background-size: 22px 22px;
@@ -222,41 +222,42 @@
     .message.me { align-self: flex-end; background: var(--bubble-me); border-top-right-radius: 2px; }
     .message.other { align-self: flex-start; background: var(--bubble-other); border-top-left-radius: 2px; }
     
-    /* PRO AI DOCUMENT CARD */
+    /* PRO AI DOCUMENT CARD DENGAN TOMBOL COPY & EXPORT WORD */
     .message.ai {
       align-self: flex-start; background: var(--bubble-ai);
-      border-radius: 12px; border: 1px solid #e0e7ff;
-      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
-      width: 100%; max-width: 92%; padding: 0; overflow: hidden;
+      border-radius: 14px; border: 1.5px solid #d8b4fe;
+      box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+      width: 100%; max-width: 95%; padding: 0; overflow: hidden;
     }
 
     .ai-doc-header {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
       color: white; padding: 10px 16px; display: flex;
       justify-content: space-between; align-items: center;
     }
     .ai-doc-title { font-weight: 700; font-size: 13.5px; display: flex; align-items: center; gap: 6px; }
-    .ai-doc-actions { display: flex; gap: 6px; }
+    .ai-doc-actions { display: flex; gap: 8px; }
     
     .btn-doc-action {
-      background: rgba(255, 255, 255, 0.2); color: white;
-      border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 6px;
-      padding: 4px 10px; font-size: 11.5px; font-weight: 600;
-      cursor: pointer; display: flex; align-items: center; gap: 4px;
-      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.25); color: white;
+      border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 8px;
+      padding: 5px 12px; font-size: 12px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; gap: 5px;
+      transition: all 0.2s ease;
     }
-    .btn-doc-action:hover { background: white; color: #4f46e5; }
+    .btn-doc-action:hover { background: white; color: #6366f1; transform: translateY(-1px); }
+    .btn-doc-action:active { transform: scale(0.96); }
 
     .ai-doc-body {
-      padding: 18px 20px; font-family: "Segoe UI", Arial, sans-serif;
+      padding: 20px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
       color: #1e293b; line-height: 1.65; font-size: 14.5px;
     }
 
     .ai-doc-body h1, .ai-doc-body h2, .ai-doc-body h3 {
-      color: #1e1b4b; margin: 16px 0 8px; font-weight: 700;
+      color: #1e1b4b; margin: 14px 0 8px; font-weight: 700;
     }
-    .ai-doc-body h1 { font-size: 18px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
-    .ai-doc-body h2 { font-size: 16px; color: #4338ca; }
+    .ai-doc-body h1 { font-size: 17.5px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
+    .ai-doc-body h2 { font-size: 15.5px; color: #4338ca; }
     .ai-doc-body h3 { font-size: 14.5px; color: #4f46e5; }
     
     .ai-doc-body p { margin-bottom: 10px; }
@@ -320,33 +321,6 @@
     .attachment-preview img { max-width: 140px; max-height: 100px; border-radius: 6px; display: block; }
     .remove-attachment { position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border: none; border-radius: 50%; background: #333; color: white; cursor: pointer; }
 
-    /* CALL OVERLAY */
-    .call-overlay {
-      position: fixed; inset: 0; background: #111b21;
-      z-index: 9999998; display: none; flex-direction: column;
-      align-items: center; justify-content: space-between;
-      color: white; overflow: hidden;
-    }
-    .video-viewport { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; display: none; z-index: 1; }
-    .video-viewport.show { display: block; }
-    .remote-video { width: 100%; height: 100%; object-fit: cover; }
-    .local-video-pip {
-      position: absolute; top: 20px; right: 20px; width: 120px; height: 160px;
-      border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      border: 2px solid white; z-index: 10; background: #222;
-    }
-    .local-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
-
-    .call-info-area { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; margin-top: 40px; text-align: center; }
-    .call-avatar { width: 100px; height: 100px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 44px; margin-bottom: 14px; }
-    .call-name { font-size: 22px; font-weight: 700; }
-    .call-status { font-size: 14px; opacity: 0.9; margin-top: 4px; }
-
-    .call-controls { position: relative; z-index: 5; display: flex; gap: 20px; margin-bottom: 40px; }
-    .call-btn-circle { width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 22px; color: white; background: rgba(255, 255, 255, 0.25); }
-    .call-btn-circle.muted { background: rgba(234, 67, 53, 0.8); }
-    .call-btn-circle.end { background: #ea4335; transform: rotate(135deg); }
-
     .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(2px); }
     .modal.show { display: flex; }
     .modal-card { width: calc(100% - 32px); max-width: 460px; background: white; border-radius: 18px; padding: 22px; max-height: 90vh; overflow-y: auto; }
@@ -364,7 +338,8 @@
       .chat { position: absolute; inset: 0; width: 100%; transform: translateX(100%); transition: transform 0.25s ease; z-index: 30; }
       #app.mobile-chat-open .chat { transform: translateX(0); }
       .back-btn { display: flex; }
-      .messages { padding: 12px 10px; }
+      .messages { padding: 12px 8px; }
+      .ai-doc-actions { flex-direction: column; gap: 4px; }
     }
     @media (min-width: 821px) { #app { display: flex; } }
   </style>
@@ -372,25 +347,6 @@
 <body>
 
 <div id="loading"><div class="loader"></div></div>
-
-<!-- ACTIVE CALL OVERLAY -->
-<div class="call-overlay" id="callOverlay">
-  <div class="video-viewport" id="videoViewport">
-    <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
-    <div class="local-video-pip">
-      <video id="localVideo" class="local-video" autoplay playsinline muted></video>
-    </div>
-  </div>
-  <div class="call-info-area">
-    <div class="call-avatar" id="callAvatar">👤</div>
-    <div class="call-name" id="callName">Kontak</div>
-    <div class="call-status" id="callStatusText">Menghubungi...</div>
-  </div>
-  <div class="call-controls">
-    <button type="button" class="call-btn-circle" id="muteMicBtn" onclick="toggleMuteMic()" title="Mute Mic">🎤</button>
-    <button type="button" class="call-btn-circle end" onclick="endCall()" title="Akhiri">📞</button>
-  </div>
-</div>
 
 <!-- LOGIN SCREEN -->
 <div id="loginScreen">
@@ -471,8 +427,7 @@
 
       <div class="header-call-actions" id="callActions" style="display:none;">
         <button type="button" class="icon-btn call-btn" onclick="inviteViaWa()" title="Kirim Undangan WhatsApp">📲</button>
-        <button type="button" class="icon-btn call-btn" onclick="startVoiceCall()" title="Panggilan Suara">📞</button>
-        <button type="button" class="icon-btn call-btn" onclick="startVideoCall()" title="Panggilan Video">📹</button>
+        <button type="button" class="icon-btn call-btn" onclick="toast('Fitur telepon')" title="Panggilan Suara">📞</button>
       </div>
 
       <button type="button" class="icon-btn" onclick="refreshMessages()" title="Muat Ulang Pesan">🔄</button>
@@ -644,13 +599,6 @@ let selectedTarget = null;
 let currentMessages = [];
 let selectedImage = null;
 let activeSidebarTab = "all";
-let realtimeChannel = null;
-
-let localStream = null;
-let peerConnection = null;
-let activeCallId = null;
-let activeCallType = "voice";
-let isMuted = false;
 
 document.addEventListener("DOMContentLoaded", () => {
   restoreSession();
@@ -668,17 +616,24 @@ function toast(msg) {
 }
 
 // ============================================================================
-// FORMATTER MARKDOWN AI KE DOKUMEN HTML BERSIH
+// FORMATTER BERSIH & RAPI (BEBAS DARI KEBOCORAN TAG <br>)
 // ============================================================================
-function convertMarkdownToHtml(text) {
-  if (!text) return "";
+function convertMarkdownToHtml(rawText) {
+  if (!rawText) return "";
+
+  // 1. Bersihkan dan normalisasi semua variasi tag <br> yang dikirim AI menjadi newline
+  let text = String(rawText)
+    .replace(/&lt;br\s*\/?&gt;/gi, "\n")
+    .replace(/<br\s*\/?>/gi, "\n");
+
+  // 2. Escape karakter HTML agar aman
   let s = escapeHtml(text);
 
-  // Code blocks
+  // 3. Render Code Blocks ```code```
   s = s.replace(/```([\w]*)\n([\s\S]*?)```/g, "<pre><code>$2</code></pre>");
   s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
 
-  // Tables
+  // 4. Render Tabel Markdown (| Header 1 | Header 2 |)
   s = s.replace(/((?:\|[^\n]+\|\r?\n)+)/g, function(tableBlock) {
     const lines = tableBlock.trim().split("\n");
     if (lines.length < 2) return tableBlock;
@@ -700,15 +655,22 @@ function convertMarkdownToHtml(text) {
     return html;
   });
 
-  // Headings & text formatting
+  // 5. Render Headings (#, ##, ###)
   s = s.replace(/^### (.*$)/gim, "<h3>$1</h3>");
   s = s.replace(/^## (.*$)/gim, "<h2>$1</h2>");
   s = s.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+
+  // 6. Render Bold & Italic
   s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   s = s.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+  // 7. Render Numbered List & Bullet List
+  s = s.replace(/^\s*(\d+)\.\s+(.*)$/gim, "<li><strong>$1.</strong> $2</li>");
   s = s.replace(/^\s*[-•]\s+(.*)$/gim, "<li>$1</li>");
-  s = s.replace(/(<li>.*<\/li>)/gims, "<ul>$1</ul>");
-  s = s.replace(/\n/g, "<br>");
+
+  // 8. Render baris baru menjadi <br> HTML yang sah
+  s = s.replace(/\r\n/g, "\n").replace(/\n/g, "<br>");
+
   return s;
 }
 
@@ -718,7 +680,12 @@ function convertMarkdownToHtml(text) {
 window.copyAiMessage = function(msgId) {
   const msg = currentMessages.find((m) => m.id === msgId);
   if (!msg) return;
-  navigator.clipboard.writeText(msg.messageText).then(() => {
+  
+  const cleanPlainText = String(msg.messageText)
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/&lt;br\s*\/?&gt;/gi, "\n");
+
+  navigator.clipboard.writeText(cleanPlainText).then(() => {
     toast("📋 Dokumen berhasil disalin ke clipboard!");
   }).catch(() => {
     toast("Gagal menyalin teks.");
@@ -1024,14 +991,14 @@ function renderMessages() {
           <div class="ai-doc-title"><span>📄</span> Dokumen Al-Ghozali AI</div>
           <div class="ai-doc-actions">
             <button type="button" class="btn-doc-action" onclick="copyAiMessage('${msg.id}')" title="Salin Teks">📋 Salin</button>
-            <button type="button" class="btn-doc-action" onclick="exportToWord('${msg.id}')" title="Download Word">📥 Export Word</button>
+            <button type="button" class="btn-doc-action" onclick="exportToWord('${msg.id}')" title="Download File Word">📥 Export Word</button>
           </div>
         </div>
         <div class="ai-doc-body">
           ${convertMarkdownToHtml(msg.messageText)}
         </div>
         <div class="ai-doc-footer">
-          <span>Siap cetak & edit</span>
+          <span>Format: Siap Cetak & Edit</span>
           <span>${formatTime(msg.timestamp)}</span>
         </div>
       `;
@@ -1199,6 +1166,15 @@ function setupOutsideClick() {
     if (panel && !panel.contains(e.target) && !e.target.closest(".composer .icon-btn")) hideEmoji();
   });
 }
+
+// WhatsApp Invite
+window.inviteViaWa = function() {
+  if (!selectedTarget || selectedTarget.type === "ai") return;
+  const phone = (selectedTarget.mataPelajaran || "").replace(/\D/g, "");
+  let waPhone = phone.startsWith("0") ? "62" + phone.substring(1) : phone;
+  const text = encodeURIComponent(`Assalamu'alaikum ${selectedTarget.nama}, mari bergabung di WassApp: ${window.location.href}`);
+  window.open(`https://api.whatsapp.com/send?phone=${waPhone}&text=${text}`, "_blank");
+};
 
 // Modals
 window.openSettingsModal = function() { document.getElementById("settingsModal").classList.add("show"); };
