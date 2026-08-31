@@ -10,7 +10,7 @@
 
   <style>
     /* ==========================================================================
-       WASSAPP MASTER STYLES - CLEAN CHAT & PRO AI DOCUMENT EXPORTER
+       WASSAPP MASTER STYLES - TIDY CHAT & BEAUTIFUL AI MARKDOWN
        ========================================================================== */
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -30,7 +30,7 @@
       --white: #ffffff;
       --bubble-me: #d9fdd3;
       --bubble-other: #ffffff;
-      --bubble-ai: #ffffff;
+      --bubble-ai: #f5f3ff;
       --danger: #ea4335;
       --shadow-sm: 0 1px 2px rgba(11, 20, 26, 0.08);
       --shadow-md: 0 4px 16px rgba(11, 20, 26, 0.12);
@@ -186,6 +186,7 @@
     .chat-user { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
     .chat-user-name { font-weight: 600; font-size: 15px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .chat-status { font-size: 12px; color: var(--muted); }
+    .chat-status.status-online { color: var(--green); font-weight: 600; }
     .chat-status.status-ai { color: #7c3aed; font-weight: 600; }
 
     .header-call-actions { display: flex; align-items: center; gap: 6px; }
@@ -204,8 +205,8 @@
     }
 
     .messages {
-      flex: 1; overflow-y: auto; padding: 16px 5%;
-      display: flex; flex-direction: column; gap: 12px;
+      flex: 1; overflow-y: auto; padding: 16px 6%;
+      display: flex; flex-direction: column; gap: 10px;
       background-color: var(--bg);
       background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
       background-size: 22px 22px;
@@ -215,72 +216,47 @@
     .empty-chat .big { font-size: 52px; margin-bottom: 12px; }
 
     .message {
-      max-width: 86%; padding: 10px 14px 8px; border-radius: 10px;
+      max-width: 82%; padding: 10px 14px 8px; border-radius: 10px;
       box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); position: relative;
       word-break: break-word; font-size: 14.5px; line-height: 1.55;
     }
     .message.me { align-self: flex-end; background: var(--bubble-me); border-top-right-radius: 2px; }
     .message.other { align-self: flex-start; background: var(--bubble-other); border-top-left-radius: 2px; }
-    
-    /* PRO AI DOCUMENT CARD */
-    .message.ai {
-      align-self: flex-start; background: var(--bubble-ai);
-      border-radius: 12px; border: 1px solid #e0e7ff;
-      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.1);
-      width: 100%; max-width: 92%; padding: 0; overflow: hidden;
-    }
+    .message.ai { align-self: flex-start; background: var(--bubble-ai); border-top-left-radius: 2px; border-left: 4px solid #8b5cf6; }
 
-    .ai-doc-header {
-      background: linear-gradient(135deg, #4f46e5, #7c3aed);
-      color: white; padding: 10px 16px; display: flex;
-      justify-content: space-between; align-items: center;
+    /* FORMAT TABEL MARKDOWN AI AGAR RAPI */
+    .ai-content { overflow-x: auto; }
+    .ai-content table {
+      width: 100%; border-collapse: collapse; margin: 10px 0;
+      font-size: 13px; background: white; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
     }
-    .ai-doc-title { font-weight: 700; font-size: 13.5px; display: flex; align-items: center; gap: 6px; }
-    .ai-doc-actions { display: flex; gap: 6px; }
-    
-    .btn-doc-action {
-      background: rgba(255, 255, 255, 0.2); color: white;
-      border: 1px solid rgba(255, 255, 255, 0.4); border-radius: 6px;
-      padding: 4px 10px; font-size: 11.5px; font-weight: 600;
-      cursor: pointer; display: flex; align-items: center; gap: 4px;
-      transition: all 0.2s;
+    .ai-content th, .ai-content td {
+      border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left;
     }
-    .btn-doc-action:hover { background: white; color: #4f46e5; }
+    .ai-content th { background: #ede9fe; color: #5b21b6; font-weight: 700; }
+    .ai-content tr:nth-child(even) { background: #f8fafc; }
+    .ai-content ul, .ai-content ol { margin: 6px 0 6px 20px; }
+    .ai-content li { margin-bottom: 4px; }
+    .ai-content h1, .ai-content h2, .ai-content h3 { margin: 10px 0 6px; color: #4c1d95; font-size: 15.5px; }
 
-    .ai-doc-body {
-      padding: 18px 20px; font-family: "Segoe UI", Arial, sans-serif;
-      color: #1e293b; line-height: 1.65; font-size: 14.5px;
+    .message pre {
+      background: #1e1e1e; color: #d4d4d4; padding: 10px; border-radius: 6px;
+      overflow-x: auto; font-size: 12.5px; margin: 6px 0; font-family: Consolas, monospace;
     }
-
-    .ai-doc-body h1, .ai-doc-body h2, .ai-doc-body h3 {
-      color: #1e1b4b; margin: 16px 0 8px; font-weight: 700;
-    }
-    .ai-doc-body h1 { font-size: 18px; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; }
-    .ai-doc-body h2 { font-size: 16px; color: #4338ca; }
-    .ai-doc-body h3 { font-size: 14.5px; color: #4f46e5; }
-    
-    .ai-doc-body p { margin-bottom: 10px; }
-    .ai-doc-body ul, .ai-doc-body ol { margin: 8px 0 12px 22px; }
-    .ai-doc-body li { margin-bottom: 5px; }
-
-    .ai-doc-body table {
-      width: 100%; border-collapse: collapse; margin: 14px 0;
-      font-size: 13.5px; background: white; border: 1px solid #cbd5e1;
-    }
-    .ai-doc-body th, .ai-doc-body td {
-      border: 1px solid #cbd5e1; padding: 9px 12px; text-align: left;
-    }
-    .ai-doc-body th { background: #f1f5f9; color: #0f172a; font-weight: 700; }
-    .ai-doc-body tr:nth-child(even) { background: #f8fafc; }
-
-    .ai-doc-footer {
-      background: #f8fafc; border-top: 1px solid #f1f5f9;
-      padding: 8px 16px; font-size: 11.5px; color: #64748b;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-
+    .message code { background: rgba(0,0,0,0.06); padding: 2px 4px; border-radius: 4px; font-size: 13px; font-family: Consolas, monospace; }
+    .message img { max-width: 280px; max-height: 320px; border-radius: 6px; display: block; margin-bottom: 6px; cursor: pointer; }
     .message-meta { float: right; margin-left: 10px; margin-top: 6px; font-size: 10.5px; color: #667781; display: inline-flex; align-items: center; gap: 4px; }
     .message-status { font-size: 11.5px; font-weight: 700; color: #25d366; }
+
+    /* VOICE NOTE PLAYER */
+    .vn-container { display: flex; align-items: center; gap: 10px; min-width: 200px; padding: 4px 2px; }
+    .vn-play-btn { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--green); color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+    .vn-play-btn:hover { background: var(--green-dark); }
+    .vn-body { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .vn-waveform { display: flex; align-items: center; gap: 2px; height: 16px; }
+    .vn-bar { flex: 1; height: 10px; background: #b0bec5; border-radius: 2px; }
+    .vn-time { font-size: 11px; color: var(--muted); }
 
     /* COMPOSER */
     .composer {
@@ -298,6 +274,15 @@
     .send-btn { background: var(--green); color: white; width: 42px; height: 42px; border: none; border-radius: 50%; cursor: pointer; font-size: 19px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .send-btn:hover { background: var(--green-dark); }
 
+    /* RECORDING BAR */
+    .recording-bar { position: absolute; inset: 0; background: var(--header-bg); display: none; align-items: center; justify-content: space-between; padding: 8px 14px; z-index: 50; }
+    .recording-bar.show { display: flex; }
+    .recording-left { display: flex; align-items: center; gap: 12px; }
+    .recording-dot { width: 14px; height: 14px; background: #ea4335; border-radius: 50%; animation: recordPulse 1s infinite; }
+    @keyframes recordPulse { 0%, 100% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.2); opacity: 1; } }
+    .recording-timer { font-size: 15px; font-weight: 700; color: #ea4335; }
+    .recording-actions { display: flex; gap: 8px; }
+
     /* EMOJI & ISLAMIC ARABIC PANEL */
     .emoji-panel { position: absolute; bottom: 66px; left: 10px; width: 380px; max-width: calc(100vw - 20px); height: 320px; background: white; border-radius: 14px; box-shadow: var(--shadow-lg); display: none; flex-direction: column; z-index: 60; border: 1px solid var(--border); overflow: hidden; }
     .emoji-panel.show { display: flex; }
@@ -305,6 +290,7 @@
     .emoji-tab-item { padding: 8px 12px; font-size: 13px; font-weight: 600; background: transparent; border: none; color: #54656f; cursor: pointer; white-space: nowrap; }
     .emoji-tab-item.active { background: white; color: var(--green-dark); border-bottom: 2.5px solid var(--green); }
     .emoji-tab-content { flex: 1; overflow-y: auto; padding: 10px; }
+    .emoji-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(36px, 1fr)); gap: 4px; }
     .emoji-chip-grid { display: flex; flex-direction: column; gap: 6px; }
 
     .arabic-chip {
@@ -347,6 +333,22 @@
     .call-btn-circle.muted { background: rgba(234, 67, 53, 0.8); }
     .call-btn-circle.end { background: #ea4335; transform: rotate(135deg); }
 
+    .incoming-call-popup {
+      position: fixed; top: 20px; right: 20px; z-index: 9999999;
+      background: white; border-radius: 18px; padding: 16px 20px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.25); display: none;
+      align-items: center; gap: 16px; min-width: 300px;
+      animation: slideDown 0.3s ease; border: 1.5px solid var(--green);
+    }
+    @keyframes slideDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .incoming-info { flex: 1; min-width: 0; }
+    .incoming-name { font-weight: 700; font-size: 15px; color: var(--text); }
+    .incoming-type { font-size: 12px; color: var(--muted); }
+    .incoming-actions { display: flex; gap: 10px; }
+    .incoming-btn { width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; }
+    .incoming-btn.accept { background: #25d366; }
+    .incoming-btn.reject { background: #ea4335; transform: rotate(135deg); }
+
     .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(2px); }
     .modal.show { display: flex; }
     .modal-card { width: calc(100% - 32px); max-width: 460px; background: white; border-radius: 18px; padding: 22px; max-height: 90vh; overflow-y: auto; }
@@ -364,7 +366,8 @@
       .chat { position: absolute; inset: 0; width: 100%; transform: translateX(100%); transition: transform 0.25s ease; z-index: 30; }
       #app.mobile-chat-open .chat { transform: translateX(0); }
       .back-btn { display: flex; }
-      .messages { padding: 12px 10px; }
+      .messages { padding: 12px 14px; }
+      .emoji-panel { width: calc(100vw - 20px); }
     }
     @media (min-width: 821px) { #app { display: flex; } }
   </style>
@@ -372,6 +375,19 @@
 <body>
 
 <div id="loading"><div class="loader"></div></div>
+
+<!-- POPUP PANGGILAN MASUK -->
+<div class="incoming-call-popup" id="incomingCallPopup">
+  <div style="font-size:32px;">📞</div>
+  <div class="incoming-info">
+    <div class="incoming-name" id="incomingCallerName">Guru</div>
+    <div class="incoming-type" id="incomingCallType">Panggilan Masuk...</div>
+  </div>
+  <div class="incoming-actions">
+    <button type="button" class="incoming-btn reject" onclick="rejectIncomingCall()" title="Tolak">📞</button>
+    <button type="button" class="incoming-btn accept" onclick="acceptIncomingCall()" title="Terima">📞</button>
+  </div>
+</div>
 
 <!-- ACTIVE CALL OVERLAY -->
 <div class="call-overlay" id="callOverlay">
@@ -480,12 +496,12 @@
 
     <!-- PROMPTS BAR -->
     <div class="ai-prompts-bar" id="aiPromptsBar">
-      <span class="ai-chip" onclick="applyAiPrompt('Buatkan Modul Ajar / RPP lengkap Kurikulum Merdeka untuk mata pelajaran: ')">📚 Modul Ajar / RPP</span>
-      <span class="ai-chip" onclick="applyAiPrompt('Tuliskan naskah teks Khutbah Jumat berdalil shahih tentang: ')">🕌 Khutbah Jumat</span>
+      <span class="ai-chip" onclick="applyAiPrompt('Tolong buatkan Modul Ajar / RPP lengkap Kurikulum Merdeka untuk mata pelajaran: ')">📚 Modul Ajar / RPP</span>
+      <span class="ai-chip" onclick="applyAiPrompt('Buatkan naskah teks Khutbah Jumat berdalil shahih tentang: ')">🕌 Khutbah Jumat</span>
       <span class="ai-chip" onclick="applyAiPrompt('Tuliskan 5 ide judul artikel menarik dan konsepnya tentang: ')">💡 Ide Artikel</span>
       <span class="ai-chip" onclick="applyAiPrompt('Buatkan puisi indah dan penuh makna tentang: ')">📜 Tulis Puisi</span>
       <span class="ai-chip" onclick="applyAiPrompt('Tuliskan lirik lagu lengkap (Verse, Chorus, Bridge) tentang: ')">🎵 Lirik Lagu</span>
-      <span class="ai-chip" onclick="applyAiPrompt('Tuliskan script kode program bersih menggunakan bahasa: ')">💻 Coding</span>
+      <span class="ai-chip" onclick="applyAiPrompt('Tuliskan script kode program lengkap dan bersih menggunakan bahasa: ')">💻 Coding</span>
     </div>
 
     <div class="messages" id="messages">
@@ -498,6 +514,18 @@
 
     <!-- COMPOSER -->
     <div class="composer">
+      <div class="recording-bar" id="recordingBar">
+        <div class="recording-left">
+          <div class="recording-dot"></div>
+          <span class="recording-timer" id="recordingTimer">00:00</span>
+          <span>Merekam pesan suara...</span>
+        </div>
+        <div class="recording-actions">
+          <button type="button" class="btn btn-secondary" onclick="cancelVoiceRecording()">Batal</button>
+          <button type="button" class="btn btn-save" onclick="sendVoiceRecording()">Kirim VN ➤</button>
+        </div>
+      </div>
+
       <button type="button" class="icon-btn" onclick="toggleEmoji()" title="Emoji & Kaligrafi Islami">😀</button>
       <button type="button" class="icon-btn" onclick="document.getElementById('fileInput').click()" title="Lampirkan Gambar">📎</button>
       <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="previewImage(this)">
@@ -508,6 +536,7 @@
           <button type="button" class="emoji-tab-item active" onclick="switchEmojiTab(event, 'arabic')">Stiker Arab</button>
           <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'islamic')">Islami</button>
           <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'faces')">Wajah</button>
+          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'school')">Sekolah</button>
         </div>
 
         <div class="emoji-tab-content" id="tabContent_arabic">
@@ -532,6 +561,10 @@
               <span class="arabic-text">جَزَاكَ اللَّهُ خَيْرًا</span>
               <span class="arabic-sub">Jazakallahu Khairan</span>
             </div>
+            <div class="arabic-chip" onclick="addText('بَارَكَ اللَّهُ فِيكَ')">
+              <span class="arabic-text">بَارَكَ اللَّهُ فِيكَ</span>
+              <span class="arabic-sub">Barakallahu Feek</span>
+            </div>
           </div>
         </div>
 
@@ -540,16 +573,29 @@
             <div class="arabic-chip" onclick="addText('Assalamu\'alaikum')"><span class="arabic-sub">Assalamu'alaikum</span></div>
             <div class="arabic-chip" onclick="addText('Bismillah')"><span class="arabic-sub">Bismillah</span></div>
             <div class="arabic-chip" onclick="addText('Alhamdulillah')"><span class="arabic-sub">Alhamdulillah</span></div>
+            <div class="arabic-chip" onclick="addText('Subhanallah')"><span class="arabic-sub">Subhanallah</span></div>
           </div>
         </div>
 
         <div class="emoji-tab-content" id="tabContent_faces" style="display:none;">
-          <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:8px;">
+          <div class="emoji-grid">
             <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('😀')">😀</span>
             <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('😂')">😂</span>
             <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('😊')">😊</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('🥰')">🥰</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('😎')">😎</span>
             <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('🤲')">🤲</span>
             <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('👍')">👍</span>
+          </div>
+        </div>
+
+        <div class="emoji-tab-content" id="tabContent_school" style="display:none;">
+          <div class="emoji-grid">
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('📚')">📚</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('📖')">📖</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('📝')">📝</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('🎓')">🎓</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('🏫')">🏫</span>
           </div>
         </div>
       </div>
@@ -560,6 +606,7 @@
       </div>
 
       <div id="messageInput" class="message-input" contenteditable="true" placeholder="Ketik pesan atau minta bantuan AI..." onkeydown="handleMessageKey(event)"></div>
+      <button type="button" class="icon-btn" onclick="toggleVoiceRecording()" title="Rekam Voice Note">🎙️</button>
       <button type="button" class="send-btn" id="sendBtn" onclick="sendMessage()" title="Kirim Pesan">➤</button>
     </div>
   </main>
@@ -578,6 +625,7 @@
       <select id="settingMsgTone" class="auth-input" style="background:#fff; margin-bottom:8px;">
         <option value="chime">Chime Harmoni (Default)</option>
         <option value="ding">Ding Lembut</option>
+        <option value="pop">Pop Modern</option>
         <option value="mute">Bisukan / Hening</option>
       </select>
     </div>
@@ -617,7 +665,7 @@
 <div id="toast"></div>
 
 <!-- ========================================================================
-     JAVASCRIPT LOGIKA LENGKAP & EXPORT WORD / COPY
+     JAVASCRIPT LOGIKA LENGKAP MANDIRI
      ======================================================================== -->
 <script>
 const SUPABASE_URL = "https://yvvrdadchgvlpdpdlyyg.supabase.co";
@@ -646,11 +694,25 @@ let selectedImage = null;
 let activeSidebarTab = "all";
 let realtimeChannel = null;
 
+// Voice & WebRTC State
+let voiceMediaRecorder = null;
+let voiceAudioChunks = [];
+let voiceTimerInterval = null;
+let voiceDuration = 0;
+
 let localStream = null;
 let peerConnection = null;
 let activeCallId = null;
 let activeCallType = "voice";
 let isMuted = false;
+let incomingCallData = null;
+
+const iceServers = {
+  iceServers: [
+    { urls: "stun:stun.l.google.com:19302" },
+    { urls: "stun:stun1.l.google.com:19302" }
+  ]
+};
 
 document.addEventListener("DOMContentLoaded", () => {
   restoreSession();
@@ -668,24 +730,30 @@ function toast(msg) {
 }
 
 // ============================================================================
-// FORMATTER MARKDOWN AI KE DOKUMEN HTML BERSIH
+// FORMATTER MARKDOWN & TABEL AI AGAR RAPI & INDAH
 // ============================================================================
-function convertMarkdownToHtml(text) {
+function formatAiContent(text) {
   if (!text) return "";
   let s = escapeHtml(text);
 
-  // Code blocks
+  // 1. Format Code Blocks ```code```
   s = s.replace(/```([\w]*)\n([\s\S]*?)```/g, "<pre><code>$2</code></pre>");
   s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
 
-  // Tables
+  // 2. Format Tabel Markdown (| Header 1 | Header 2 | ...)
   s = s.replace(/((?:\|[^\n]+\|\r?\n)+)/g, function(tableBlock) {
     const lines = tableBlock.trim().split("\n");
     if (lines.length < 2) return tableBlock;
+
     let html = "<table>";
     let isHeader = true;
+
     lines.forEach((line) => {
-      if (line.includes("---") || line.includes("===")) { isHeader = false; return; }
+      // Abaikan separator |---|---|
+      if (line.includes("---") || line.includes("===")) {
+        isHeader = false;
+        return;
+      }
       const cells = line.split("|").filter((c, i, a) => i > 0 && i < a.length - 1);
       if (cells.length > 0) {
         html += "<tr>";
@@ -696,77 +764,29 @@ function convertMarkdownToHtml(text) {
         html += "</tr>";
       }
     });
+
     html += "</table>";
     return html;
   });
 
-  // Headings & text formatting
+  // 3. Format Headings & Bold/Italic
   s = s.replace(/^### (.*$)/gim, "<h3>$1</h3>");
   s = s.replace(/^## (.*$)/gim, "<h2>$1</h2>");
   s = s.replace(/^# (.*$)/gim, "<h1>$1</h1>");
   s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
   s = s.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+  // 4. Format Bullet List (- item atau * item)
   s = s.replace(/^\s*[-•]\s+(.*)$/gim, "<li>$1</li>");
   s = s.replace(/(<li>.*<\/li>)/gims, "<ul>$1</ul>");
+
+  // 5. Ganti baris baru
   s = s.replace(/\n/g, "<br>");
-  return s;
+  return `<div class="ai-content">${s}</div>`;
 }
 
 // ============================================================================
-// FITUR COPY & EXPORT KE MICROSOFT WORD (.DOC)
-// ============================================================================
-window.copyAiMessage = function(msgId) {
-  const msg = currentMessages.find((m) => m.id === msgId);
-  if (!msg) return;
-  navigator.clipboard.writeText(msg.messageText).then(() => {
-    toast("📋 Dokumen berhasil disalin ke clipboard!");
-  }).catch(() => {
-    toast("Gagal menyalin teks.");
-  });
-};
-
-window.exportToWord = function(msgId) {
-  const msg = currentMessages.find((m) => m.id === msgId);
-  if (!msg) return;
-
-  const contentHtml = convertMarkdownToHtml(msg.messageText);
-  const wordDocumentHtml = `
-    <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-    <head>
-      <meta charset="utf-8">
-      <title>Dokumen Al-Ghozali AI</title>
-      <style>
-        body { font-family: "Calibri", "Arial", sans-serif; font-size: 11pt; line-height: 1.5; color: #000; }
-        h1 { font-size: 16pt; color: #1f497d; border-bottom: 1.5pt solid #1f497d; padding-bottom: 4pt; }
-        h2 { font-size: 13pt; color: #2e75b6; margin-top: 12pt; }
-        h3 { font-size: 12pt; color: #1f497d; margin-top: 10pt; }
-        table { border-collapse: collapse; width: 100%; margin: 12pt 0; }
-        th, td { border: 1pt solid #bfbfbf; padding: 6pt 8pt; text-align: left; font-size: 10.5pt; }
-        th { background-color: #f2f2f2; font-weight: bold; }
-        ul, ol { margin-left: 18pt; }
-        li { margin-bottom: 4pt; }
-      </style>
-    </head>
-    <body>
-      ${contentHtml}
-    </body>
-    </html>
-  `;
-
-  const blob = new Blob(['\ufeff' + wordDocumentHtml], { type: 'application/msword' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `Dokumen_AlGhozali_${Date.now()}.doc`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  toast("📥 Dokumen Word (.doc) berhasil diunduh!");
-};
-
-// ============================================================================
-// AUTHENTIKASI & DATA
+// AUTHENTIKASI
 // ============================================================================
 window.toggleAuthView = function(view) {
   document.getElementById("formLoginView").style.display = view === "register" ? "none" : "block";
@@ -861,6 +881,7 @@ function startApplication() {
   document.getElementById("myName").textContent = currentUser.nama;
   document.getElementById("mySubject").textContent = currentUser.mataPelajaran || "Pengguna";
   loadAllData();
+  setupRealtime();
 }
 
 async function loadAllData() {
@@ -875,6 +896,199 @@ async function loadAllData() {
   }
   renderSidebarList();
 }
+
+// ============================================================================
+// REALTIME LISTENER (PESAN & WEBRTC CALLS)
+// ============================================================================
+function setupRealtime() {
+  if (!supabaseClient) return;
+  if (realtimeChannel) supabaseClient.removeChannel(realtimeChannel);
+
+  realtimeChannel = supabaseClient
+    .channel("wassapp-realtime-full")
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => {
+      const msg = payload.new;
+      if (!currentUser || !msg) return;
+      const myId = String(currentUser.id);
+      const targetId = selectedTarget ? String(selectedTarget.id) : "";
+
+      const isCurrent = selectedTarget && (
+        (selectedTarget.type === "group" && String(selectedTarget.id) === String(msg.group_id)) ||
+        (selectedTarget.type !== "group" && (
+          (String(msg.sender_id) === targetId && String(msg.receiver_id) === myId) ||
+          (String(msg.sender_id) === myId && String(msg.receiver_id) === targetId)
+        ))
+      );
+
+      if (isCurrent) {
+        const exists = currentMessages.some((m) => String(m.id) === String(msg.id));
+        if (!exists) {
+          currentMessages.push({
+            id: String(msg.id),
+            sender: String(msg.sender_id),
+            receiver: String(msg.receiver_id),
+            groupId: msg.group_id,
+            messageText: msg.message_text,
+            messageType: msg.message_type || "TEXT",
+            attachment: msg.attachment_url,
+            timestamp: msg.created_at
+          });
+          renderMessages();
+        }
+      }
+    })
+    .on("postgres_changes", { event: "INSERT", schema: "public", table: "calls" }, (payload) => {
+      handleIncomingCallSignal(payload.new);
+    })
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "calls" }, (payload) => {
+      handleCallUpdateSignal(payload.new);
+    })
+    .subscribe();
+}
+
+// ============================================================================
+// WEBRTC CALL ENGINE (VOICE & VIDEO)
+// ============================================================================
+window.startVoiceCall = function() { initiateCall("voice"); };
+window.startVideoCall = function() { initiateCall("video"); };
+
+async function initiateCall(type) {
+  if (!selectedTarget || selectedTarget.type === "group" || selectedTarget.type === "ai") {
+    toast("Panggilan hanya bisa dilakukan ke kontak pribadi.");
+    return;
+  }
+
+  activeCallType = type;
+  const isVideo = type === "video";
+  const callId = "call_" + currentUser.id + "_" + selectedTarget.id + "_" + Date.now();
+  activeCallId = callId;
+
+  document.getElementById("callName").textContent = selectedTarget.nama;
+  document.getElementById("callStatusText").textContent = "Menghubungi...";
+  document.getElementById("callOverlay").style.display = "flex";
+  document.getElementById("videoViewport").classList.toggle("show", isVideo);
+
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo ? { facingMode: "user" } : false });
+    if (isVideo && document.getElementById("localVideo")) document.getElementById("localVideo").srcObject = localStream;
+
+    peerConnection = new RTCPeerConnection(iceServers);
+    localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
+
+    peerConnection.ontrack = (event) => {
+      if (event.streams && event.streams[0]) {
+        document.getElementById("remoteVideo").srcObject = event.streams[0];
+      }
+    };
+
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+
+    if (supabaseClient) {
+      await supabaseClient.from("calls").insert([{
+        id: callId,
+        caller_id: currentUser.id,
+        callee_id: selectedTarget.id,
+        call_type: activeCallType,
+        status: "ringing",
+        offer: JSON.stringify(offer)
+      }]);
+    }
+  } catch(err) {
+    toast("Akses mic/kamera ditolak: " + err.message);
+    endCall();
+  }
+}
+
+function handleIncomingCallSignal(call) {
+  if (!currentUser || String(call.callee_id) !== String(currentUser.id) || call.status !== "ringing") return;
+  incomingCallData = call;
+  const isVideo = call.call_type === "video";
+
+  document.getElementById("incomingCallerName").textContent = "Panggilan Masuk";
+  document.getElementById("incomingCallType").textContent = isVideo ? "📹 Panggilan Video Masuk..." : "📞 Panggilan Suara Masuk...";
+  document.getElementById("incomingCallPopup").style.display = "flex";
+}
+
+window.acceptIncomingCall = async function() {
+  document.getElementById("incomingCallPopup").style.display = "none";
+  if (!incomingCallData) return;
+
+  const call = incomingCallData;
+  activeCallId = call.id;
+  activeCallType = call.call_type || "voice";
+  const isVideo = activeCallType === "video";
+
+  document.getElementById("callName").textContent = "Panggilan";
+  document.getElementById("callStatusText").textContent = "Menghubungkan...";
+  document.getElementById("callOverlay").style.display = "flex";
+  document.getElementById("videoViewport").classList.toggle("show", isVideo);
+
+  try {
+    localStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: isVideo ? { facingMode: "user" } : false });
+    if (isVideo && document.getElementById("localVideo")) document.getElementById("localVideo").srcObject = localStream;
+
+    peerConnection = new RTCPeerConnection(iceServers);
+    localStream.getTracks().forEach((track) => peerConnection.addTrack(track, localStream));
+
+    peerConnection.ontrack = (event) => {
+      if (event.streams && event.streams[0]) {
+        document.getElementById("remoteVideo").srcObject = event.streams[0];
+      }
+    };
+
+    const offer = JSON.parse(call.offer);
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+
+    if (supabaseClient) {
+      await supabaseClient.from("calls").update({ status: "answered", answer: JSON.stringify(answer) }).eq("id", call.id);
+    }
+  } catch(err) {
+    toast("Gagal terima panggilan: " + err.message);
+    endCall();
+  }
+};
+
+window.rejectIncomingCall = async function() {
+  document.getElementById("incomingCallPopup").style.display = "none";
+  if (incomingCallData && supabaseClient) {
+    await supabaseClient.from("calls").update({ status: "rejected" }).eq("id", incomingCallData.id);
+    incomingCallData = null;
+  }
+};
+
+async function handleCallUpdateSignal(call) {
+  if (!activeCallId || call.id !== activeCallId) return;
+  if (call.status === "rejected" || call.status === "ended") {
+    toast("Panggilan berakhir.");
+    endCall();
+  } else if (call.status === "answered" && call.answer && peerConnection) {
+    const answer = JSON.parse(call.answer);
+    await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
+    document.getElementById("callStatusText").textContent = "Terhubung";
+  }
+}
+
+window.endCall = function() {
+  if (activeCallId && supabaseClient) {
+    supabaseClient.from("calls").update({ status: "ended" }).eq("id", activeCallId).then(() => {});
+    activeCallId = null;
+  }
+  if (peerConnection) { peerConnection.close(); peerConnection = null; }
+  if (localStream) { localStream.getTracks().forEach((t) => t.stop()); localStream = null; }
+  document.getElementById("callOverlay").style.display = "none";
+};
+
+window.toggleMuteMic = function() {
+  if (!localStream) return;
+  isMuted = !isMuted;
+  localStream.getAudioTracks().forEach((t) => { t.enabled = !isMuted; });
+  document.getElementById("muteMicBtn").classList.toggle("muted", isMuted);
+  toast(isMuted ? "Mikrofon Mati" : "Mikrofon Aktif");
+};
 
 // ============================================================================
 // SIDEBAR & CHAT SELECTION
@@ -994,7 +1208,7 @@ function loadAiMessages() {
     currentMessages = [{
       id: "ai_welcome",
       sender: "ai_bot",
-      messageText: "Assalamu'alaikum! Saya **Al-Ghozali AI Assistant**.\n\nSilakan pilih menu di atas atau ketik permintaan Anda untuk membuat **Modul Ajar / RPP lengkap**, **Naskah Khutbah Jumat**, **Ide Artikel**, **Puisi**, maupun **Script Coding**.",
+      messageText: "Assalamu'alaikum! Saya **Al-Ghozali AI Assistant**.\n\nSaya siap membantu Anda menyusun **Modul Ajar / RPP lengkap**, **Naskah Khutbah Jumat**, **Ide Artikel**, **Puisi & Pantun**, **Lirik Lagu**, dan **Coding Program**. Silakan ketik permintaan Anda!",
       messageType: "TEXT",
       timestamp: new Date().toISOString()
     }];
@@ -1018,38 +1232,34 @@ function renderMessages() {
     const el = document.createElement("div");
     el.className = "message " + (mine ? "me" : isAi ? "ai" : "other");
 
-    if (isAi) {
-      el.innerHTML = `
-        <div class="ai-doc-header">
-          <div class="ai-doc-title"><span>📄</span> Dokumen Al-Ghozali AI</div>
-          <div class="ai-doc-actions">
-            <button type="button" class="btn-doc-action" onclick="copyAiMessage('${msg.id}')" title="Salin Teks">📋 Salin</button>
-            <button type="button" class="btn-doc-action" onclick="exportToWord('${msg.id}')" title="Download Word">📥 Export Word</button>
-          </div>
-        </div>
-        <div class="ai-doc-body">
-          ${convertMarkdownToHtml(msg.messageText)}
-        </div>
-        <div class="ai-doc-footer">
-          <span>Siap cetak & edit</span>
-          <span>${formatTime(msg.timestamp)}</span>
-        </div>
-      `;
-    } else {
-      let innerHtml = "";
-      if (msg.messageType === "IMAGE" && msg.attachment) innerHtml += `<img src="${msg.attachment}" alt="attachment">`;
-      if (msg.messageText) innerHtml += `<span>${escapeHtml(msg.messageText)}</span>`;
-      innerHtml += `<span class="message-meta">${formatTime(msg.timestamp)} ${mine ? '<span class="message-status">✓✓</span>' : ''}</span>`;
-      el.innerHTML = innerHtml;
+    let innerHtml = "";
+    if (msg.messageType === "IMAGE" && msg.attachment) {
+      innerHtml += `<img src="${msg.attachment}" alt="attachment">`;
     }
 
+    if (msg.messageType === "AUDIO" && msg.attachment) {
+      innerHtml += `
+        <div class="vn-container">
+          <button type="button" class="vn-play-btn" onclick="playAudio('${msg.attachment}', this)">▶</button>
+          <div class="vn-body">
+            <div class="vn-waveform"><span class="vn-bar"></span><span class="vn-bar" style="height:14px;"></span><span class="vn-bar" style="height:8px;"></span><span class="vn-bar"></span></div>
+            <span class="vn-time">${msg.messageText || 'Pesan Suara'}</span>
+          </div>
+        </div>
+      `;
+    } else if (msg.messageText) {
+      innerHtml += isAi ? formatAiContent(msg.messageText) : `<span>${escapeHtml(msg.messageText)}</span>`;
+    }
+
+    innerHtml += `<span class="message-meta">${formatTime(msg.timestamp)} ${mine ? '<span class="message-status">✓✓</span>' : ''}</span>`;
+    el.innerHTML = innerHtml;
     container.appendChild(el);
   });
   container.scrollTop = container.scrollHeight;
 }
 
 // ============================================================================
-// PENGIRIMAN PESAN KE GROQ / SUPABASE
+// PENGIRIMAN PESAN
 // ============================================================================
 window.sendMessage = async function() {
   if (!currentUser || !selectedTarget) return;
@@ -1083,7 +1293,7 @@ window.sendMessage = async function() {
     return;
   }
 
-  // PENGIRIMAN KE SUPABASE
+  // PENGIRIMAN NORMAL KE SUPABASE
   const isGroup = selectedTarget.type === "group";
   const payload = {
     sender_id: String(currentUser.id),
@@ -1117,56 +1327,105 @@ window.sendMessage = async function() {
 };
 
 // ============================================================================
-// GROQ AI CALL ENGINE
+// VOICE NOTE RECORDING & PLAYBACK
 // ============================================================================
-async function queryGroqAi(promptText) {
-  let key = localStorage.getItem("alghozali_groq_key");
-  if (!key) {
-    key = prompt("🔐 Masukkan GROQ API Key Anda (gsk_...):\n(Disimpan aman di browser lokal Anda)");
-    if (key && key.trim().startsWith("gsk_")) localStorage.setItem("alghozali_groq_key", key.trim());
-    else throw new Error("GROQ API Key tidak valid.");
-  }
+window.toggleVoiceRecording = function() {
+  const bar = document.getElementById("recordingBar");
+  if (bar.classList.contains("show")) sendVoiceRecording();
+  else startVoiceRecording();
+};
 
-  const systemInstruction = `Anda adalah Al-Ghozali AI Assistant, asisten profesional untuk guru dan akademisi.
-ATURAN UTAMA:
-1. JANGAN PERNAH balik bertanya atau meminta tabel kosong. Jika informasi kurang lengkap, gunakan standar kurikulum terbaik (Kurikulum Merdeka / Nasional) dan langsung buatkan dokumen LENGKAP & UTUH.
-2. Jika diminta MODUL AJAR / RPP: Langsung buatkan dokumen resmi terstruktur (Identitas Modul, Capaian Pembelajaran, Profil Pancasila, Materi Pokok, Model Pembelajaran, Kegiatan Pembelajaran Berurutan, dan Instrumen Asesmen/Penilaian).
-3. Jika diminta KHUTBAH JUMAT: Tuliskan teks Khutbah 1 lengkap (Mukaddimah Arab, Wasiat Taqwa, Materi Dalil Quran/Hadits), Khutbah 2, dan Doa penutup.
-4. Gunakan heading jelas (#, ##, ###) dan tabel rapi agar siap dicetak atau diexport ke Word.`;
+async function startVoiceRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    voiceAudioChunks = [];
+    voiceDuration = 0;
+    voiceMediaRecorder = new MediaRecorder(stream);
+    voiceMediaRecorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) voiceAudioChunks.push(e.data); };
+    voiceMediaRecorder.start();
+    document.getElementById("recordingBar").classList.add("show");
 
-  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: "POST",
-    headers: { "Authorization": "Bearer " + key.trim(), "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "openai/gpt-oss-120b",
-      messages: [
-        { role: "system", content: systemInstruction },
-        { role: "user", content: promptText }
-      ],
-      temperature: 0.6,
-      max_tokens: 3500
-    })
-  });
-
-  if (!res.ok) throw new Error("Groq API Error: " + (await res.text()));
-  const json = await res.json();
-  return json?.choices?.[0]?.message?.content || "Tidak ada respon.";
+    clearInterval(voiceTimerInterval);
+    voiceTimerInterval = setInterval(() => {
+      voiceDuration++;
+      const m = String(Math.floor(voiceDuration / 60)).padStart(2, "0");
+      const s = String(voiceDuration % 60).padStart(2, "0");
+      document.getElementById("recordingTimer").textContent = `${m}:${s}`;
+    }, 1000);
+  } catch(err) { toast("Akses mikrofon ditolak."); }
 }
 
-function handleMessageKey(e) {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-}
+window.cancelVoiceRecording = function() {
+  if (voiceMediaRecorder) voiceMediaRecorder.stop();
+  clearInterval(voiceTimerInterval);
+  document.getElementById("recordingBar").classList.remove("show");
+};
 
-// Emojis & UI
+window.sendVoiceRecording = function() {
+  if (!voiceMediaRecorder) return;
+  const m = Math.floor(voiceDuration / 60);
+  const s = String(voiceDuration % 60).padStart(2, "0");
+  const timeLabel = `${m}:${s}`;
+
+  voiceMediaRecorder.onstop = async () => {
+    const audioBlob = new Blob(voiceAudioChunks, { type: "audio/webm" });
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64Audio = reader.result;
+      if (!currentUser || !selectedTarget) return;
+
+      const isGroup = selectedTarget.type === "group";
+      const payload = {
+        sender_id: String(currentUser.id),
+        receiver_id: isGroup ? null : String(selectedTarget.id),
+        group_id: isGroup ? selectedTarget.id : null,
+        message_text: `🎙️ ${timeLabel}`,
+        message_type: "AUDIO",
+        attachment_url: base64Audio
+      };
+
+      if (supabaseClient) {
+        const { data } = await supabaseClient.from("messages").insert([payload]).select().single();
+        if (data) {
+          currentMessages.push({
+            id: String(data.id),
+            sender: String(data.sender_id),
+            receiver: String(data.receiver_id),
+            messageText: data.message_text,
+            messageType: "AUDIO",
+            attachment: data.attachment_url,
+            timestamp: data.created_at
+          });
+          renderMessages();
+        }
+      }
+    };
+    reader.readAsDataURL(audioBlob);
+  };
+
+  voiceMediaRecorder.stop();
+  clearInterval(voiceTimerInterval);
+  document.getElementById("recordingBar").classList.remove("show");
+};
+
+window.playAudio = function(src, btn) {
+  const audio = new Audio(src);
+  btn.textContent = "⏸";
+  audio.play();
+  audio.onended = () => { btn.textContent = "▶"; };
+};
+
+// ============================================================================
+// STIKER ARAB, EMOJI & ATTACHMENT
+// ============================================================================
 window.switchEmojiTab = function(e, tabKey) {
   document.querySelectorAll(".emoji-tab-item").forEach((b) => b.classList.remove("active"));
   if (e && e.currentTarget) e.currentTarget.classList.add("active");
+
   document.getElementById("tabContent_arabic").style.display = tabKey === "arabic" ? "block" : "none";
   document.getElementById("tabContent_islamic").style.display = tabKey === "islamic" ? "block" : "none";
   document.getElementById("tabContent_faces").style.display = tabKey === "faces" ? "block" : "none";
+  document.getElementById("tabContent_school").style.display = tabKey === "school" ? "block" : "none";
 };
 
 window.toggleEmoji = function() { document.getElementById("emojiPanel").classList.toggle("show"); };
@@ -1196,8 +1455,64 @@ window.removeAttachment = function() {
 function setupOutsideClick() {
   document.addEventListener("click", (e) => {
     const panel = document.getElementById("emojiPanel");
-    if (panel && !panel.contains(e.target) && !e.target.closest(".composer .icon-btn")) hideEmoji();
+    if (panel && !panel.contains(e.target) && !e.target.closest(".composer .icon-btn")) {
+      hideEmoji();
+    }
   });
+}
+
+// WhatsApp Invite
+window.inviteViaWa = function() {
+  if (!selectedTarget || selectedTarget.type === "ai") return;
+  const phone = (selectedTarget.mataPelajaran || "").replace(/\D/g, "");
+  let waPhone = phone.startsWith("0") ? "62" + phone.substring(1) : phone;
+  const text = encodeURIComponent(`Assalamu'alaikum ${selectedTarget.nama}, mari bergabung di WassApp: ${window.location.href}`);
+  window.open(`https://api.whatsapp.com/send?phone=${waPhone}&text=${text}`, "_blank");
+};
+
+// ============================================================================
+// GROQ AI HANDLER DENGAN SYSTEM PROMPT CERDAS & LENGKAP
+// ============================================================================
+async function queryGroqAi(promptText) {
+  let key = localStorage.getItem("alghozali_groq_key");
+  if (!key) {
+    key = prompt("🔐 Masukkan GROQ API Key Anda (gsk_...):\n(Disimpan aman di browser lokal Anda)");
+    if (key && key.trim().startsWith("gsk_")) localStorage.setItem("alghozali_groq_key", key.trim());
+    else throw new Error("GROQ API Key tidak valid.");
+  }
+
+  const systemInstruction = `Anda adalah Al-Ghozali AI Assistant, asisten cerdas untuk guru dan profesional.
+ATURAN MUTLAK JAWABAN:
+1. JANGAN PERNAH balik bertanya atau meminta klarifikasi dengan tabel kosong. Jika topik kurang detail, asumsikan standar terbaik kurikulum guru (Kurikulum Merdeka / Nasional) dan langsung buatkan secara LENGKAP.
+2. Jika diminta MODUL AJAR / RPP: Langsung buatkan dokumen lengkap berisi: Identitas Modul, Tujuan Pembelajaran, Profil Pelajar Pancasila, Materi Pokok, Model Pembelajaran, Langkah-Langkah Kegiatan (Pendahuluan, Inti, Penutup), dan Asesmen/Penilaian.
+3. Jika diminta KHUTBAH JUMAT: Buatkan teks lengkap Khutbah Pertama (pembukaan bahasa Arab, wasiat taqwa, materi berdalil Quran/Hadits, penutup), Khutbah Kedua, dan Doa.
+4. Gunakan format tabel yang rapi jika menyajikan data berkolom.
+5. Berikan jawaban dalam bahasa Indonesia yang sangat rapi, santun, dan siap pakai.`;
+
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: { "Authorization": "Bearer " + key.trim(), "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "openai/gpt-oss-120b",
+      messages: [
+        { role: "system", content: systemInstruction },
+        { role: "user", content: promptText }
+      ],
+      temperature: 0.6,
+      max_tokens: 3000
+    })
+  });
+
+  if (!res.ok) throw new Error("Groq API Error: " + (await res.text()));
+  const json = await res.json();
+  return json?.choices?.[0]?.message?.content || "Tidak ada respon.";
+}
+
+function handleMessageKey(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
 }
 
 // Modals
