@@ -936,20 +936,80 @@
       padding: 0 4px;
     }
 
-    /* ==========================================
-       COMPOSER & RICH ISLAMIC EMOJI PANEL
-       ========================================== */
+    .composer-wrapper {
+      display: flex;
+      flex-direction: column;
+      z-index: 40;
+      background: var(--header-bg);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .rte-toolbar {
+      display: flex;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #f0f2f5;
+      border-bottom: 1px solid #d1d7db;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .rte-btn {
+      background: white;
+      border: 1px solid #d1d7db;
+      border-radius: 4px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #54656f;
+      transition: background 0.15s;
+    }
+
+    .rte-btn:hover { background: #e9edef; }
+
+    .rte-select {
+      border: 1px solid #d1d7db;
+      border-radius: 4px;
+      padding: 4px;
+      font-size: 13px;
+      color: #54656f;
+      outline: none;
+      background: white;
+    }
+
+    .rte-color {
+      border: 1px solid #d1d7db;
+      border-radius: 4px;
+      padding: 0;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      background: white;
+    }
+
+    .message-input[contenteditable]:empty::before {
+      content: attr(placeholder);
+      color: #999;
+      pointer-events: none;
+    }
+
+    .message-input[contenteditable] {
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
     .composer {
       min-height: 60px;
-      background: var(--header-bg);
+      background: transparent;
       display: flex;
       align-items: center;
       padding: 8px 12px;
       gap: 8px;
       position: relative;
-      border-top: 1px solid var(--border);
       flex-shrink: 0;
-      z-index: 40;
     }
 
     .message-input {
@@ -2302,6 +2362,7 @@
         </div>
       </div>
       <div class="header-actions">
+        <button type="button" class="icon-btn" title="Update Status" onclick="openStatusModal()">⭕</button>
         <button type="button" class="icon-btn" title="Pengaturan Nada & Notifikasi" onclick="openSettingsModal()">⚙️</button>
         <button type="button" class="icon-btn" title="Buat Grup Chat" onclick="openCreateGroupModal()">👥</button>
         <button type="button" class="icon-btn" title="Tambah Kontak Guru" onclick="openAddContactModal()">➕</button>
@@ -2368,257 +2429,29 @@
     </div>
 
     <!-- Message Composer -->
-    <div class="composer">
-      <!-- Voice Note Recording Overlay Bar -->
-      <div class="recording-bar" id="recordingBar">
-        <div class="recording-left">
-          <span class="recording-dot"></span>
-          <span class="recording-timer" id="recordingTimer">00:00</span>
-          <div class="recording-waves">
-            <span class="wave"></span>
-            <span class="wave"></span>
-            <span class="wave"></span>
-            <span class="wave"></span>
-            <span class="wave"></span>
-          </div>
-        </div>
-        <div class="recording-actions">
-          <button type="button" class="recording-btn cancel" onclick="cancelVoiceRecording()" title="Batal & Hapus Rekaman">🗑️</button>
-          <button type="button" class="recording-btn send" onclick="sendVoiceRecording()" title="Kirim Voice Note">➤</button>
-        </div>
+    <div class="composer-wrapper">
+      <div class="rte-toolbar">
+        <button type="button" class="rte-btn" onclick="execCmd('bold')" title="Tebal (B)"><b>B</b></button>
+        <button type="button" class="rte-btn" onclick="execCmd('italic')" title="Miring (I)"><i>I</i></button>
+        <button type="button" class="rte-btn" onclick="execCmd('underline')" title="Garis Bawah (U)"><u>U</u></button>
+        <div style="width: 1px; height: 16px; background: #d1d7db; margin: 0 4px;"></div>
+        <select class="rte-select" onchange="execCmd('fontSize', this.value); this.selectedIndex=0;" title="Ukuran Font">
+          <option value="">Ukuran</option>
+          <option value="2">Kecil</option>
+          <option value="3">Normal</option>
+          <option value="5">Sedang</option>
+          <option value="6">Besar</option>
+        </select>
+        <select class="rte-select" onchange="execCmd('fontName', this.value); this.selectedIndex=0;" title="Gaya Font">
+          <option value="">Gaya / Font</option>
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="'Times New Roman', serif">Times New Roman</option>
+          <option value="'Courier New', monospace">Courier (Kode)</option>
+          <option value="Comic Sans MS, cursive">Santai</option>
+        </select>
+        <input type="color" class="rte-color" onchange="execCmd('foreColor', this.value)" title="Warna Huruf">
       </div>
-
-      <button type="button" class="icon-btn" onclick="toggleEmoji()" title="Emoji & Kaligrafi Islami">😊</button>
-      <button type="button" class="icon-btn" onclick="document.getElementById('imageInput').click()" title="Kirim Foto">📎</button>
-      <input id="imageInput" class="attachment-input" type="file" accept="image/*" onchange="previewImage(this)">
-      
-      <!-- Rich Emoji & Islamic Arabic Phrases Panel -->
-      <div class="emoji-panel" id="emojiPanel">
-        <div class="emoji-tabs">
-          <button type="button" class="emoji-tab-item active" onclick="switchEmojiTab(event, 'islamic')">🕌 Islami</button>
-          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'dzikir')">📿 Dzikir</button>
-          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'faces')">😊 Ekspresi</button>
-          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'gestures')">🤲 Tangan</button>
-          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'school')">📚 Sekolah</button>
-        </div>
-
-        <!-- Tab 1: Islami & Simbol Arab -->
-        <div class="emoji-tab-content" id="tabContent_islamic">
-          <div style="font-size:12px; font-weight:700; color:#075e54; margin-bottom:8px;">🕌 Simbol & Alam Islami</div>
-          <div class="emoji-grid" style="margin-bottom:12px;">
-            <span class="emoji" onclick="addEmoji('🕌')">🕌</span>
-            <span class="emoji" onclick="addEmoji('🕋')">🕋</span>
-            <span class="emoji" onclick="addEmoji('📿')">📿</span>
-            <span class="emoji" onclick="addEmoji('🌙')">🌙</span>
-            <span class="emoji" onclick="addEmoji('⭐')">⭐</span>
-            <span class="emoji" onclick="addEmoji('✨')">✨</span>
-            <span class="emoji" onclick="addEmoji('🤲')">🤲</span>
-            <span class="emoji" onclick="addEmoji('📖')">📖</span>
-            <span class="emoji" onclick="addEmoji('🕯️')">🕯️</span>
-            <span class="emoji" onclick="addEmoji('🕊️')">🕊️</span>
-            <span class="emoji" onclick="addEmoji('🌴')">🌴</span>
-            <span class="emoji" onclick="addEmoji('🌿')">🌿</span>
-            <span class="emoji" onclick="addEmoji('🌺')">🌺</span>
-            <span class="emoji" onclick="addEmoji('🌸')">🌸</span>
-            <span class="emoji" onclick="addEmoji('☪️')">☪️</span>
-            <span class="emoji" onclick="addEmoji('🌠')">🌠</span>
-            <span class="emoji" onclick="addEmoji('🌟')">🌟</span>
-            <span class="emoji" onclick="addEmoji('💫')">💫</span>
-            <span class="emoji" onclick="addEmoji('🏮')">🏮</span>
-            <span class="emoji" onclick="addEmoji('🎋')">🎋</span>
-            <span class="emoji" onclick="addEmoji('🌄')">🌄</span>
-            <span class="emoji" onclick="addEmoji('🌅')">🌅</span>
-            <span class="emoji" onclick="addEmoji('🌊')">🌊</span>
-            <span class="emoji" onclick="addEmoji('🏔️')">🏔️</span>
-          </div>
-
-          <div style="font-size:12px; font-weight:700; color:#075e54; margin-bottom:8px;">📜 Kalimat Islami (Klik untuk kirim)</div>
-          <div class="arabic-list">
-            <div class="arabic-chip" onclick="addText('السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ')">
-              <span class="arabic-text">السَّلاَمُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</span>
-              <span class="arabic-latin">Assalamu'alaikum Warahmatullahi Wabarakatuh</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('وَعَلَيْكُمُ السَّلاَمُ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ')">
-              <span class="arabic-text">وَعَلَيْكُمُ السَّلاَمُ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ</span>
-              <span class="arabic-latin">Wa'alaikumussalam Warahmatullahi Wabarakatuh</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ')">
-              <span class="arabic-text">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
-              <span class="arabic-latin">Bismillahirrahmanirrahim</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ')">
-              <span class="arabic-text">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</span>
-              <span class="arabic-latin">Alhamdulillahirabbil 'Alamin</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('إِنْ شَاءَ اللَّهُ')">
-              <span class="arabic-text">إِنْ شَاءَ اللَّهُ</span>
-              <span class="arabic-latin">Insya Allah</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('مَا شَاءَ اللَّهُ تَبَارَكَ اللَّهُ')">
-              <span class="arabic-text">مَا شَاءَ اللَّهُ تَبَارَكَ اللَّهُ</span>
-              <span class="arabic-latin">Masya Allah Tabarakallah</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('جَزَاكُمُ اللَّهُ خَيْرًا كَثِيرًا')">
-              <span class="arabic-text">جَزَاكُمُ اللَّهُ خَيْرًا كَثِيرًا</span>
-              <span class="arabic-latin">Jazakumullahu Khairan Katsiran</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('بَارَكَ اللَّهُ فِيكُمْ')">
-              <span class="arabic-text">بَارَكَ اللَّهُ فِيكُمْ</span>
-              <span class="arabic-latin">Barakallahu Fiikum</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('آمِيْن يَا رَبَّ العَالَمِيْنَ')">
-              <span class="arabic-text">آمِيْن يَا رَبَّ العَالَمِيْنَ</span>
-              <span class="arabic-latin">Aamiin Ya Rabbal 'Alamin</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ')">
-              <span class="arabic-text">أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ</span>
-              <span class="arabic-latin">Astaghfirullahal 'Azhim</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('لاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللَّهِ')">
-              <span class="arabic-text">لاَ حَوْلَ وَلاَ قُوَّةَ إِلاَّ بِاللَّهِ</span>
-              <span class="arabic-latin">Laa Hawla Wa Laa Quwwata Illa Billah</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('سُبْحَانَ اللَّهِ وَبِحَمْدِهِ')">
-              <span class="arabic-text">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ</span>
-              <span class="arabic-latin">Subhanallahi Wa Bihamdihi</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي')">
-              <span class="arabic-text">رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي</span>
-              <span class="arabic-latin">Rabbisyrohlii Shadrii Wayassirlii Amrii</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا')">
-              <span class="arabic-text">اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا</span>
-              <span class="arabic-latin">Allahumma Baarik Lanaa Fiimaa Rozaqtanaa</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ')">
-              <span class="arabic-text">حَسْبُنَا اللَّهُ وَنِعْمَ الْوَكِيلُ</span>
-              <span class="arabic-latin">Hasbunallahu Wa Ni'mal Wakiil</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab Baru: Dzikir & Doa Harian -->
-        <div class="emoji-tab-content" id="tabContent_dzikir" style="display:none;">
-          <div style="font-size:12px; font-weight:700; color:#075e54; margin-bottom:8px;">📿 Dzikir Harian (Klik untuk kirim)</div>
-          <div class="arabic-list">
-            <div class="arabic-chip" onclick="addText('سُبْحَانَ اللهِ')">
-              <span class="arabic-text">سُبْحَانَ اللهِ</span>
-              <span class="arabic-latin">Subhanallah (33×)</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('الْحَمْدُ لِلَّهِ')">
-              <span class="arabic-text">الْحَمْدُ لِلَّهِ</span>
-              <span class="arabic-latin">Alhamdulillah (33×)</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('اللَّهُ أَكْبَرُ')">
-              <span class="arabic-text">اللَّهُ أَكْبَرُ</span>
-              <span class="arabic-latin">Allahu Akbar (33×)</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ')">
-              <span class="arabic-text">لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ</span>
-              <span class="arabic-latin">Laa ilaaha illallahu wahdahu laa syariika lahu</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ')">
-              <span class="arabic-text">اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ</span>
-              <span class="arabic-latin">Sholawat Nabi Muhammad SAW</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ')">
-              <span class="arabic-text">أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ</span>
-              <span class="arabic-latin">A'uudzu billahi minasy syaithoonir rojiim</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('لاَ إِلَهَ إِلاَّ أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ')">
-              <span class="arabic-text">لاَ إِلَهَ إِلاَّ أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ</span>
-              <span class="arabic-latin">Doa Nabi Yunus (Doa Mustajab)</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ')">
-              <span class="arabic-text">اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ</span>
-              <span class="arabic-latin">Doa Mohon Kesehatan & Keselamatan</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ')">
-              <span class="arabic-text">رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ</span>
-              <span class="arabic-latin">Rabbanaa Aatinaa Fid Dunyaa Hasanah (Doa Sapu Jagad)</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ')">
-              <span class="arabic-text">اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ</span>
-              <span class="arabic-latin">Doa Mohon Pertolongan Ibadah (HR. Abu Dawud)</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('رَبِّ زِدْنِي عِلْمًا')">
-              <span class="arabic-text">رَبِّ زِدْنِي عِلْمًا</span>
-              <span class="arabic-latin">Rabbii Zidnii 'Ilmaa — Doa Mohon Tambah Ilmu</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ')">
-              <span class="arabic-text">اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ</span>
-              <span class="arabic-latin">Doa Mohon Dijauhkan dari Kesedihan & Kegelisahan</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tab 2: Ekspresi & Wajah -->
-        <div class="emoji-tab-content" id="tabContent_faces" style="display:none;">
-          <div class="emoji-grid">
-            <span class="emoji" onclick="addEmoji('😊')">😊</span>
-            <span class="emoji" onclick="addEmoji('😀')">😀</span>
-            <span class="emoji" onclick="addEmoji('😃')">😃</span>
-            <span class="emoji" onclick="addEmoji('😄')">😄</span>
-            <span class="emoji" onclick="addEmoji('😁')">😁</span>
-            <span class="emoji" onclick="addEmoji('😆')">😆</span>
-            <span class="emoji" onclick="addEmoji('😅')">😅</span>
-            <span class="emoji" onclick="addEmoji('😂')">😂</span>
-            <span class="emoji" onclick="addEmoji('🤣')">🤣</span>
-            <span class="emoji" onclick="addEmoji('😇')">😇</span>
-            <span class="emoji" onclick="addEmoji('🥰')">🥰</span>
-            <span class="emoji" onclick="addEmoji('😍')">😍</span>
-            <span class="emoji" onclick="addEmoji('🤩')">🤩</span>
-            <span class="emoji" onclick="addEmoji('😘')">😘</span>
-            <span class="emoji" onclick="addEmoji('😗')">😗</span>
-            <span class="emoji" onclick="addEmoji('😚')">😚</span>
-            <span class="emoji" onclick="addEmoji('😋')">😋</span>
-            <span class="emoji" onclick="addEmoji('😛')">😛</span>
-            <span class="emoji" onclick="addEmoji('😜')">😜</span>
-            <span class="emoji" onclick="addEmoji('🤪')">🤪</span>
-            <span class="emoji" onclick="addEmoji('🤗')">🤗</span>
-            <span class="emoji" onclick="addEmoji('🤭')">🤭</span>
-            <span class="emoji" onclick="addEmoji('🤫')">🤫</span>
-            <span class="emoji" onclick="addEmoji('🤔')">🤔</span>
-            <span class="emoji" onclick="addEmoji('😐')">😐</span>
-            <span class="emoji" onclick="addEmoji('😑')">😑</span>
-            <span class="emoji" onclick="addEmoji('😶')">😶</span>
-            <span class="emoji" onclick="addEmoji('😏')">😏</span>
-            <span class="emoji" onclick="addEmoji('😌')">😌</span>
-            <span class="emoji" onclick="addEmoji('😴')">😴</span>
-            <span class="emoji" onclick="addEmoji('😷')">😷</span>
-            <span class="emoji" onclick="addEmoji('🤒')">🤒</span>
-            <span class="emoji" onclick="addEmoji('🥺')">🥺</span>
-            <span class="emoji" onclick="addEmoji('😢')">😢</span>
-            <span class="emoji" onclick="addEmoji('😭')">😭</span>
-            <span class="emoji" onclick="addEmoji('😎')">😎</span>
-          </div>
-        </div>
-
-        <!-- Tab 3: Tangan & Gestur -->
-        <div class="emoji-tab-content" id="tabContent_gestures" style="display:none;">
-          <div class="emoji-grid">
-            <span class="emoji" onclick="addEmoji('🤲')">🤲</span>
-            <span class="emoji" onclick="addEmoji('🙏')">🙏</span>
-            <span class="emoji" onclick="addEmoji('🤝')">🤝</span>
-            <span class="emoji" onclick="addEmoji('👍')">👍</span>
-            <span class="emoji" onclick="addEmoji('👎')">👎</span>
-            <span class="emoji" onclick="addEmoji('👌')">👌</span>
-            <span class="emoji" onclick="addEmoji('✌️')">✌️</span>
-            <span class="emoji" onclick="addEmoji('🤞')">🤞</span>
-            <span class="emoji" onclick="addEmoji('🤟')">🤟</span>
-            <span class="emoji" onclick="addEmoji('👏')">👏</span>
-            <span class="emoji" onclick="addEmoji('🙌')">🙌</span>
-            <span class="emoji" onclick="addEmoji('👐')">👐</span>
-            <span class="emoji" onclick="addEmoji('👋')">👋</span>
-            <span class="emoji" onclick="addEmoji('✍️')">✍️</span>
-            <span class="emoji" onclick="addEmoji('💪')">💪</span>
-            <span class="emoji" onclick="addEmoji('💖')">💖</span>
-            <span class="emoji" onclick="addEmoji('❤️')">❤️</span>
-            <span class="emoji" onclick="addEmoji('💚')">💚</span>
-            <span class="emoji" onclick="addEmoji('🤍')">🤍</span>
-            <span class="emoji" onclick="addEmoji('🌸')">🌸</span>
-          </div>
-        </div>
+      <div class="composer">
 
         <!-- Tab 4: Sekolah & Pembelajaran -->
         <div class="emoji-tab-content" id="tabContent_school" style="display:none;">
@@ -2653,7 +2486,7 @@
         <img id="previewImage" alt="Preview attachment">
       </div>
 
-      <textarea id="messageInput" class="message-input" placeholder="Ketik pesan..." rows="1" onkeydown="handleMessageKey(event)" oninput="autoResize(this); handleTypingActivity();"></textarea>
+      <div id="messageInput" class="message-input" contenteditable="true" placeholder="Ketik pesan..." onkeydown="handleMessageKey(event)" oninput="handleTypingActivity()"></div>
       <button type="button" class="icon-btn record-vn-btn" id="recordVnBtn" onclick="toggleVoiceRecording()" title="Rekam Voice Note (Pesan Suara)">🎙️</button>
       <button type="button" class="send-btn" id="sendMsgBtn" onclick="sendMessage()" title="Kirim">➤</button>
     </div>
@@ -2830,6 +2663,105 @@
 
 <!-- Toast Alert -->
 <div id="toast"></div>
+
+<!-- Modal Daftar Status -->
+<div class="modal" id="statusListModal">
+  <div class="modal-card" style="max-width: 400px;">
+    <div class="modal-header">
+      <h2>⭕ Update Status</h2>
+      <button type="button" class="close" onclick="closeStatusModal()">×</button>
+    </div>
+    <div style="padding: 14px 0; border-bottom: 1px solid #e1e6e8; margin-bottom: 10px;">
+      <div style="display: flex; align-items: center; gap: 14px; cursor: pointer;" onclick="openCreateStatusModal()">
+        <div class="avatar" style="background: #25d366; color: white; width: 48px; height: 48px; font-size: 24px; position: relative;">
+          +
+        </div>
+        <div>
+          <strong style="display: block; font-size: 15.5px; color: var(--text);">Status Saya</strong>
+          <span style="font-size: 13px; color: var(--muted);">Ketuk untuk menambahkan pembaruan status</span>
+        </div>
+      </div>
+    </div>
+    <div style="font-size: 12.5px; font-weight: 700; color: var(--green-dark); margin-bottom: 12px;">PEMBARUAN TERKINI</div>
+    <div id="statusListContainer" style="max-height: 380px; overflow-y: auto;">
+      <div style="text-align:center; padding: 20px; color:#777; font-size:13.5px;">Belum ada status baru.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Buat Status -->
+<div class="modal" id="createStatusModal" style="z-index: 1000000;">
+  <div class="modal-card" style="max-width: 420px;">
+    <div class="modal-header">
+      <h2>📝 Buat Status Baru</h2>
+      <button type="button" class="close" onclick="closeCreateStatusModal()">×</button>
+    </div>
+    <div class="form-group">
+      <textarea id="statusText" class="message-input" placeholder="Ketik status Anda..." rows="3" style="width: 100%; margin-bottom: 8px; padding: 12px; border-radius: 10px; border: 1.5px solid #e1e6e8; outline:none; resize:none; font-family:inherit;"></textarea>
+    </div>
+    <div class="form-group" style="margin-bottom: 14px;">
+      <label class="file-label" style="display: block; background: #f8fafb; color: #54656f; text-align: center; border: 1.5px dashed #cfd9df; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s;">
+        📷 Sisipkan Gambar (Opsional)
+        <input type="file" id="statusImageInput" accept="image/*" style="display:none" onchange="previewStatusImage(this)">
+      </label>
+      <div id="statusImagePreviewContainer" style="display:none; text-align: center; margin-top: 10px; position: relative;">
+        <img id="statusImagePreview" style="max-width: 100%; max-height: 180px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <button type="button" style="position: absolute; top: -8px; right: -8px; background: #ea4335; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" onclick="removeStatusImage()">×</button>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 16px;">
+      <label class="file-label" style="display: block; background: #e7fce3; color: #166534; text-align: center; border: 1.5px dashed #25d366; padding: 12px; border-radius: 8px; cursor: pointer; transition: 0.2s;">
+        🎵 Tambahkan Musik (Maks 60 Detik)
+        <input type="file" id="statusAudioInput" accept="audio/*" style="display:none" onchange="handleStatusAudio(this)">
+      </label>
+      <div id="statusAudioInfo" style="font-size: 12.5px; color: #ea4335; text-align: center; margin-top: 6px; font-weight: 500;"></div>
+    </div>
+    <div class="form-group" style="margin-bottom: 18px;">
+      <label style="font-weight: 700; font-size: 13.5px; color: var(--text); margin-bottom: 6px; display: block;">Privasi Status</label>
+      <select id="statusPrivacy" class="auth-input" style="width: 100%; padding: 12px; background: white; font-size: 14px;" onchange="toggleStatusPrivacyOptions()">
+        <option value="all">Semua Orang</option>
+        <option value="selected">Hanya Kontak yang Dipilih</option>
+      </select>
+    </div>
+    <div id="statusAllowedUsersContainer" style="display:none; max-height: 160px; overflow-y: auto; border: 1.5px solid #e1e6e8; padding: 12px; margin-bottom: 16px; border-radius: 10px; background: #fafafa;">
+      <div style="font-size: 12px; color:#777; text-align:center;">Memuat daftar kontak...</div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeCreateStatusModal()">Batal</button>
+      <button type="button" id="btnSendStatus" class="btn btn-save" onclick="submitStatus()">Kirim Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fullscreen Status Viewer -->
+<div id="statusViewer" style="display:none; position: fixed; inset: 0; background: #0b141a; z-index: 9999999; color: white; flex-direction: column;">
+  <div style="padding: 14px 10px 8px; display: flex; gap: 6px;" id="statusProgressContainer">
+    <!-- Progress bars (dynamically injected if viewing multiple statuses) -->
+    <div style="flex: 1; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden;">
+      <div id="statusProgressBar" style="width: 0%; height: 100%; background: white; transition: width 0.1s linear;"></div>
+    </div>
+  </div>
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 6px 16px;">
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div class="avatar" id="viewerAvatar" style="width: 44px; height: 44px; background: #fff; color: #000; font-size: 20px;">👤</div>
+      <div>
+        <strong id="viewerName" style="font-size: 15.5px; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">Nama</strong>
+        <div id="viewerTime" style="font-size: 12.5px; color: rgba(255,255,255,0.8); text-shadow: 0 1px 2px rgba(0,0,0,0.4);">Waktu</div>
+      </div>
+    </div>
+    <button type="button" style="background: none; border: none; color: white; font-size: 32px; cursor: pointer; text-shadow: 0 1px 4px rgba(0,0,0,0.5);" onclick="closeStatusViewer()">×</button>
+  </div>
+  
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; position: relative; padding: 20px;" onclick="nextStatus()">
+    <div id="viewerContentArea" style="text-align: center; max-width: 100%; max-height: 100%; display:flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;">
+      <img id="viewerImage" style="display:none; max-width: 100%; max-height: 70vh; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.4);">
+      <div id="viewerText" style="font-size: 28px; font-weight: 500; text-align: center; max-width: 85vw; word-wrap: break-word; line-height: 1.4; text-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>
+    </div>
+  </div>
+  
+  <!-- Audio Player for Music -->
+  <audio id="viewerAudio" style="display:none;"></audio>
+</div>
 
 <!-- ========================================================================
      INCOMING CALL POPUP (Notifikasi Panggilan Masuk Suara & Video)
@@ -5890,6 +5822,377 @@ window.handleIncomingMessage = function(msg) {
     showInAppNotif(senderName, preview, senderAvatar, msg.sender_id);
     updateContactBadge(msg.sender_id, true);
   }
+};
+/* ============================================================================
+   STATUS / STORY FEATURE
+   ============================================================================ */
+let activeStatuses = [];
+let currentViewingStatusIndex = 0;
+let statusAudioElement = null;
+let statusPollingInterval = null;
+
+window.openStatusModal = function() {
+  document.getElementById("statusListModal").style.display = "flex";
+  fetchStatuses();
+};
+
+window.closeStatusModal = function() {
+  document.getElementById("statusListModal").style.display = "none";
+};
+
+window.openCreateStatusModal = function() {
+  closeStatusModal();
+  document.getElementById("createStatusModal").style.display = "flex";
+  document.getElementById("statusText").value = "";
+  removeStatusImage();
+  document.getElementById("statusAudioInput").value = "";
+  document.getElementById("statusAudioInfo").innerHTML = "";
+  document.getElementById("statusPrivacy").value = "all";
+  toggleStatusPrivacyOptions();
+};
+
+window.closeCreateStatusModal = function() {
+  document.getElementById("createStatusModal").style.display = "none";
+};
+
+window.toggleStatusPrivacyOptions = function() {
+  const priv = document.getElementById("statusPrivacy").value;
+  const container = document.getElementById("statusAllowedUsersContainer");
+  if (priv === "selected") {
+    container.style.display = "block";
+    renderStatusContacts();
+  } else {
+    container.style.display = "none";
+  }
+};
+
+window.renderStatusContacts = function() {
+  const container = document.getElementById("statusAllowedUsersContainer");
+  container.innerHTML = "";
+  if (!teachers || teachers.length === 0) {
+    container.innerHTML = "<div style='text-align:center; color:#777; font-size:13px;'>Belum ada kontak.</div>";
+    return;
+  }
+  teachers.forEach(function(t) {
+    if (String(t.id) === String(currentUser.id)) return;
+    const div = document.createElement("div");
+    div.style.cssText = "display:flex; align-items:center; gap:10px; margin-bottom:8px;";
+    div.innerHTML = `
+      <input type="checkbox" class="status-contact-checkbox" value="${t.id}" style="width:16px; height:16px; cursor:pointer;">
+      <span style="font-size:13.5px;">${t.nama} (${t.mata_pelajaran || '-'})</span>
+    `;
+    container.appendChild(div);
+  });
+};
+
+window.previewStatusImage = function(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    if (file.size > 5 * 1024 * 1024) {
+      showToast("Maksimal ukuran gambar 5MB", "error");
+      input.value = "";
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      document.getElementById("statusImagePreview").src = e.target.result;
+      document.getElementById("statusImagePreviewContainer").style.display = "block";
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+window.removeStatusImage = function() {
+  document.getElementById("statusImageInput").value = "";
+  document.getElementById("statusImagePreview").src = "";
+  document.getElementById("statusImagePreviewContainer").style.display = "none";
+};
+
+window.handleStatusAudio = function(input) {
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    if (file.size > 10 * 1024 * 1024) {
+      showToast("Maksimal ukuran audio 10MB", "error");
+      input.value = "";
+      return;
+    }
+    
+    const audioObj = new Audio(URL.createObjectURL(file));
+    audioObj.onloadedmetadata = function() {
+      if (audioObj.duration > 60) {
+        showToast("Durasi musik maksimal 60 detik!", "error");
+        input.value = "";
+        document.getElementById("statusAudioInfo").innerHTML = "";
+      } else {
+        document.getElementById("statusAudioInfo").innerHTML = "🎵 " + file.name + " (" + Math.round(audioObj.duration) + " detik)";
+      }
+    };
+  }
+};
+
+window.submitStatus = async function() {
+  const btn = document.getElementById("btnSendStatus");
+  btn.disabled = true;
+  btn.innerText = "Mengunggah...";
+
+  try {
+    const text = document.getElementById("statusText").value.trim();
+    const imgInput = document.getElementById("statusImageInput");
+    const audioInput = document.getElementById("statusAudioInput");
+    const privacy = document.getElementById("statusPrivacy").value;
+    
+    let allowedUsers = [];
+    if (privacy === "selected") {
+      const checkboxes = document.querySelectorAll(".status-contact-checkbox:checked");
+      checkboxes.forEach(cb => allowedUsers.push(cb.value));
+      if (allowedUsers.length === 0) {
+        showToast("Pilih setidaknya satu kontak", "error");
+        btn.disabled = false;
+        btn.innerText = "Kirim Status";
+        return;
+      }
+    }
+
+    if (!text && (!imgInput.files || !imgInput.files[0])) {
+      showToast("Teks atau gambar tidak boleh kosong", "error");
+      btn.disabled = false;
+      btn.innerText = "Kirim Status";
+      return;
+    }
+
+    let mediaUrl = "";
+    if (imgInput.files && imgInput.files[0]) {
+      mediaUrl = await toBase64(imgInput.files[0]);
+    }
+
+    let audioUrl = "";
+    if (audioInput.files && audioInput.files[0]) {
+      audioUrl = await toBase64(audioInput.files[0]);
+    }
+
+    const payload = {
+      user_id: currentUser.id,
+      content_type: mediaUrl ? "image" : "text",
+      content_text: text,
+      media_url: mediaUrl,
+      audio_url: audioUrl,
+      privacy: privacy,
+      allowed_users: JSON.stringify(allowedUsers)
+    };
+
+    const res = await supabaseRest("/statuses", "POST", payload);
+    if (!res || res.error) {
+      throw new Error(res?.error?.message || "Gagal membuat status");
+    }
+
+    showToast("Status berhasil diunggah", "success");
+    closeCreateStatusModal();
+  } catch (e) {
+    showToast(e.message, "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerText = "Kirim Status";
+  }
+};
+
+window.fetchStatuses = async function() {
+  const container = document.getElementById("statusListContainer");
+  container.innerHTML = "<div style='text-align:center; padding: 20px; color:#777;'>Memuat...</div>";
+  
+  try {
+    const res = await supabaseRest("/statuses?select=*,users(id,nama,avatar)&order=created_at.desc");
+    if (res && Array.isArray(res)) {
+      const now = new Date();
+      activeStatuses = res.filter(s => {
+        if (s.expires_at && new Date(s.expires_at) < now) return false;
+        
+        if (s.user_id === currentUser.id) return true;
+        if (s.privacy === 'all') return true;
+        try {
+          const allowed = JSON.parse(s.allowed_users || "[]");
+          return allowed.includes(currentUser.id);
+        } catch(e) { return false; }
+      });
+
+      const userStatuses = {};
+      activeStatuses.forEach(s => {
+        if (!userStatuses[s.user_id]) {
+          userStatuses[s.user_id] = {
+            user_id: s.user_id,
+            nama: s.users?.nama || "Guru",
+            avatar: s.users?.avatar || "👤",
+            statuses: [],
+            latestTime: s.created_at
+          };
+        }
+        userStatuses[s.user_id].statuses.unshift(s);
+      });
+
+      container.innerHTML = "";
+      const grouped = Object.values(userStatuses).sort((a,b) => new Date(b.latestTime) - new Date(a.latestTime));
+      
+      if (grouped.length === 0) {
+        container.innerHTML = "<div style='text-align:center; padding: 20px; color:#777;'>Belum ada status baru.</div>";
+        return;
+      }
+
+      grouped.forEach(g => {
+        const timeStr = formatTimeCustom(g.latestTime);
+        const div = document.createElement("div");
+        div.style.cssText = "display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid #e1e6e8; cursor: pointer;";
+        div.onclick = function() {
+          openStatusViewer(g.statuses);
+        };
+        const ringColor = g.statuses.length > 0 ? "#25d366" : "#ccc";
+        
+        let avatarHtml = g.avatar;
+        if (g.avatar && g.avatar.length > 10 && (g.avatar.startsWith('data:') || g.avatar.startsWith('http'))) {
+          avatarHtml = `<img src="${escapeAttribute(g.avatar)}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
+        }
+
+        div.innerHTML = `
+          <div class="avatar" style="border: 2.5px solid ${ringColor}; padding: 2px;">${avatarHtml}</div>
+          <div style="flex:1; min-width:0;">
+            <strong style="display: block; font-size: 15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${g.user_id === currentUser.id ? 'Status Saya' : g.nama}</strong>
+            <span style="font-size: 12.5px; color: #667781;">${timeStr}</span>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+  } catch (e) {
+    container.innerHTML = "<div style='text-align:center; padding: 20px; color:#ea4335;'>Gagal memuat status</div>";
+  }
+};
+
+window.formatTimeCustom = function(isoStr) {
+  const d = new Date(isoStr);
+  let h = d.getHours();
+  let m = d.getMinutes();
+  return (h < 10 ? '0'+h : h) + ':' + (m < 10 ? '0'+m : m);
+};
+
+window.toBase64 = function(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
+};
+
+let viewingStatusList = [];
+let statusTimeout = null;
+let statusProgressInterval = null;
+
+window.openStatusViewer = function(statuses) {
+  viewingStatusList = statuses;
+  currentViewingStatusIndex = 0;
+  closeStatusModal();
+  document.getElementById("statusViewer").style.display = "flex";
+  
+  const progressContainer = document.getElementById("statusProgressContainer");
+  progressContainer.innerHTML = "";
+  statuses.forEach((_, i) => {
+    progressContainer.innerHTML += `
+      <div style="flex: 1; height: 3px; background: rgba(255,255,255,0.3); border-radius: 2px; overflow: hidden;">
+        <div id="statusProgressBar_${i}" style="width: 0%; height: 100%; background: white; transition: width 0.1s linear;"></div>
+      </div>
+    `;
+  });
+
+  showStatusAtIndex(0);
+};
+
+window.showStatusAtIndex = function(index) {
+  if (index >= viewingStatusList.length) {
+    closeStatusViewer();
+    return;
+  }
+  
+  if (statusTimeout) clearTimeout(statusTimeout);
+  if (statusProgressInterval) clearInterval(statusProgressInterval);
+  
+  currentViewingStatusIndex = index;
+  const s = viewingStatusList[index];
+  
+  for (let i = 0; i < index; i++) {
+    document.getElementById("statusProgressBar_" + i).style.width = "100%";
+  }
+  for (let i = index + 1; i < viewingStatusList.length; i++) {
+    document.getElementById("statusProgressBar_" + i).style.width = "0%";
+  }
+  
+  document.getElementById("viewerName").innerText = (s.user_id === currentUser.id) ? "Status Saya" : (s.users?.nama || "Guru");
+  document.getElementById("viewerAvatar").innerText = s.users?.avatar || "👤";
+  document.getElementById("viewerTime").innerText = formatTimeCustom(s.created_at);
+  
+  const imgEl = document.getElementById("viewerImage");
+  const txtEl = document.getElementById("viewerText");
+  const audioEl = document.getElementById("viewerAudio");
+  
+  audioEl.pause();
+  audioEl.src = "";
+  
+  if (s.content_type === "image") {
+    imgEl.src = s.media_url;
+    imgEl.style.display = "block";
+    if (s.content_text) {
+      txtEl.innerText = s.content_text;
+      txtEl.style.display = "block";
+      txtEl.style.marginTop = "15px";
+      txtEl.style.fontSize = "18px";
+    } else {
+      txtEl.style.display = "none";
+    }
+  } else {
+    imgEl.style.display = "none";
+    txtEl.innerText = s.content_text || "";
+    txtEl.style.display = "block";
+    txtEl.style.fontSize = "32px";
+  }
+  
+  let duration = 5000; 
+  
+  if (s.audio_url) {
+    audioEl.src = s.audio_url;
+    audioEl.play().catch(e => console.warn("Audio play blocked", e));
+    audioEl.onloadedmetadata = function() {
+      duration = Math.max(audioEl.duration * 1000, 5000);
+      startStatusProgress(index, duration);
+    };
+  } else {
+    startStatusProgress(index, duration);
+  }
+};
+
+window.startStatusProgress = function(index, duration) {
+  const bar = document.getElementById("statusProgressBar_" + index);
+  let start = Date.now();
+  
+  statusProgressInterval = setInterval(() => {
+    let elapsed = Date.now() - start;
+    let pct = (elapsed / duration) * 100;
+    if (pct >= 100) {
+      pct = 100;
+      clearInterval(statusProgressInterval);
+      nextStatus();
+    }
+    bar.style.width = pct + "%";
+  }, 50);
+};
+
+window.nextStatus = function() {
+  showStatusAtIndex(currentViewingStatusIndex + 1);
+};
+
+window.closeStatusViewer = function() {
+  document.getElementById("statusViewer").style.display = "none";
+  const audioEl = document.getElementById("viewerAudio");
+  audioEl.pause();
+  audioEl.src = "";
+  if (statusTimeout) clearTimeout(statusTimeout);
+  if (statusProgressInterval) clearInterval(statusProgressInterval);
 };
 </script>
 </body>

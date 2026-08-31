@@ -47,9 +47,11 @@ Aplikasi pesan instan (messenger) modern bernuansa Islami untuk guru & staf **Al
 ## 🔑 Langkah 2: Hubungkan Kredensial Supabase
 
 ### Cara A: Melalui Kode File (Direkomendasikan Sebelum Deploy)
+
 1. Di Supabase Dashboard, buka **Project Settings** > **API**.
 2. Salin **Project URL** dan **anon / public key**.
 3. Buka file **[`js/supabase-config.js`](file:///d:/AlGhozali_Messenger/js/supabase-config.js)**:
+
    ```javascript
    const DEFAULT_SUPABASE_CONFIG = {
      url: "https://your-project-id.supabase.co",
@@ -58,6 +60,7 @@ Aplikasi pesan instan (messenger) modern bernuansa Islami untuk guru & staf **Al
    ```
 
 ### Cara B: Melalui Antarmuka Web Langsung
+
 - Buka web aplikasi di browser.
 - Klik tombol **⚙️ Pengaturan Supabase** di pojok atas atau halaman login.
 - Masukkan URL dan Anon Key Anda, lalu klik **Simpan & Hubungkan**.
@@ -67,6 +70,7 @@ Aplikasi pesan instan (messenger) modern bernuansa Islami untuk guru & staf **Al
 ## ☁️ Langkah 3: Hosting ke Vercel
 
 ### Deploy via GitHub (Paling Praktis)
+
 1. Buat repository baru di [GitHub](https://github.com/new).
 2. Push / upload semua file proyek ini ke repository Anda.
 3. Buka [https://vercel.com](https://vercel.com) > Klik **Add New...** > **Project** > Import repo GitHub Anda.
@@ -75,7 +79,8 @@ Aplikasi pesan instan (messenger) modern bernuansa Islami untuk guru & staf **Al
 ---
 
 ## 📁 Struktur Folder Proyek
-```
+
+```text
 AlGhozali_Messenger/
 ├── index.html            # Halaman utama & aplikasi lengkap standalone
 ├── vercel.json           # Konfigurasi deployment Vercel
@@ -87,4 +92,3 @@ AlGhozali_Messenger/
     ├── supabase-config.js # Konfigurasi default Supabase
     └── app.js            # Modul logika aplikasi
 ```
-
