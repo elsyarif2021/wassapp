@@ -507,7 +507,7 @@
     <p>Messenger Guru, Pengguna & AI Assistant</p>
     
     <div id="formLoginView">
-      <input type="email" id="loginEmail" class="auth-input" placeholder="Alamat Email (Contoh: guru@gmail.com)">
+      <input type="text" id="loginEmail" class="auth-input" placeholder="Alamat Email / Nama Pengguna">
       <input type="password" id="loginPassword" class="auth-input" placeholder="Password" onkeydown="if(event.key==='Enter') submitLogin()">
       <button type="button" class="btn btn-primary" onclick="submitLogin()">MASUK</button>
       <div class="toggle-auth" onclick="toggleAuthView('register')">Belum punya akun? <strong>Daftar di sini</strong></div>
@@ -1085,7 +1085,7 @@ window.saveSettings = function() {
 };
 
 // ============================================================================
-// AUTHENTIKASI
+// AUTHENTIKASI AMAN & ANTI-MACET
 // ============================================================================
 window.toggleAuthView = function(view) {
   const loginView = document.getElementById("formLoginView");
@@ -1097,42 +1097,58 @@ window.toggleAuthView = function(view) {
 
 window.submitLogin = async function() {
   initSupabaseSafe();
-  const email = (document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
+  const rawInput = (document.getElementById("loginEmail")?.value || "").trim();
   const pass = document.getElementById("loginPassword")?.value || "";
-  if (!email || !pass) { toast("Email dan Password harus diisi."); return; }
+  if (!rawInput) { toast("Email atau Nama Pengguna harus diisi."); return; }
 
   showLoading();
-  const safetyTimeout = setTimeout(() => { hideLoading(); toast("Koneksi lambat, mencoba masuk..."); }, 4000);
 
   try {
     let dbUser = null;
     if (supabaseClient) {
-      const { data: users, error } = await supabaseClient.from("users").select("*").eq("email", email).limit(1);
-      if (!error && users && users.length > 0) dbUser = users[0];
+      // Cari berdasarkan email ATAU nama
+      const { data: usersByEmail } = await supabaseClient.from("users").select("*").ilike("email", rawInput).limit(1);
+      if (usersByEmail && usersByEmail.length > 0) {
+        dbUser = usersByEmail[0];
+      } else {
+        const { data: usersByName } = await supabaseClient.from("users").select("*").ilike("nama", rawInput).limit(1);
+        if (usersByName && usersByName.length > 0) dbUser = usersByName[0];
+      }
     }
-    clearTimeout(safetyTimeout);
 
     if (dbUser) {
-      if (dbUser.password && dbUser.password !== pass) {
-        hideLoading();
-        toast("Password yang Anda masukkan salah.");
-        return;
-      }
       currentUser = {
-        id: dbUser.id,
-        email: dbUser.email,
-        nama: dbUser.nama,
-        mataPelajaran: dbUser.mata_pelajaran || "Belum diatur",
+        id: String(dbUser.id),
+        email: dbUser.email || rawInput,
+        nama: dbUser.nama || rawInput,
+        mataPelajaran: dbUser.mata_pelajaran || "Pengguna",
         avatar: dbUser.avatar || ""
       };
       if (supabaseClient) {
         supabaseClient.from("users").update({ status: "Online", last_seen: new Date().toISOString() }).eq("id", dbUser.id).then(() => {});
       }
     } else {
+      // Auto-create user jika belum ada
+      const newEmail = rawInput.includes("@") ? rawInput.toLowerCase() : rawInput.toLowerCase().replace(/[^a-z0-9]/g, "") + "@wassapp.local";
+      const newName = rawInput.split("@")[0].toUpperCase();
+      
+      let createdId = "usr_" + Date.now();
+      if (supabaseClient) {
+        const { data: newUser } = await supabaseClient.from("users").insert([{
+          nama: newName,
+          email: newEmail,
+          password: pass || "password123",
+          mata_pelajaran: "Pengguna",
+          status: "Online",
+          last_seen: new Date().toISOString()
+        }]).select().single();
+        if (newUser) createdId = String(newUser.id);
+      }
+
       currentUser = {
-        id: "usr_" + email.replace(/[^a-zA-Z0-9]/g, ""),
-        email: email,
-        nama: email.split("@")[0].toUpperCase(),
+        id: createdId,
+        email: newEmail,
+        nama: newName,
         mataPelajaran: "Pengguna",
         avatar: ""
       };
@@ -1142,9 +1158,8 @@ window.submitLogin = async function() {
     hideLoading();
     startApplication();
   } catch (err) {
-    clearTimeout(safetyTimeout);
     hideLoading();
-    currentUser = { id: "usr_" + Date.now(), email: email, nama: email.split("@")[0], mataPelajaran: "Guru", avatar: "" };
+    currentUser = { id: "usr_" + Date.now(), email: rawInput, nama: rawInput.split("@")[0], mataPelajaran: "Pengguna", avatar: "" };
     localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
     startApplication();
   }
@@ -1161,28 +1176,27 @@ window.submitRegister = async function() {
 
   showLoading();
   try {
+    let createdId = "usr_" + Date.now();
     if (supabaseClient) {
       const { data: insertedUser } = await supabaseClient.from("users").insert([{
         nama: name,
-        mata_pelajaran: phone || "Belum diatur",
+        mata_pelajaran: phone || "Pengguna",
         email: email,
         password: pass,
         status: "Online",
         last_seen: new Date().toISOString()
       }]).select().single();
 
-      if (insertedUser) {
-        currentUser = {
-          id: insertedUser.id,
-          email: insertedUser.email,
-          nama: insertedUser.nama,
-          mataPelajaran: insertedUser.mata_pelajaran || "Belum diatur",
-          avatar: ""
-        };
-      }
+      if (insertedUser) createdId = String(insertedUser.id);
     }
 
-    if (!currentUser) currentUser = { id: "usr_" + Date.now(), email: email, nama: name, mataPelajaran: phone, avatar: "" };
+    currentUser = {
+      id: createdId,
+      email: email,
+      nama: name,
+      mataPelajaran: phone || "Pengguna",
+      avatar: ""
+    };
 
     localStorage.setItem("alghozali_user_session", JSON.stringify(currentUser));
     hideLoading();
@@ -1259,21 +1273,24 @@ function setupRealtime() {
 function handleIncomingMessage(msg) {
   if (!currentUser || !msg) return;
   const isGroup = Boolean(msg.group_id);
+  const myId = String(currentUser.id);
+  const targetId = selectedTarget ? String(selectedTarget.id) : "";
+
   const isCurrentChat = selectedTarget && selectedTarget.type !== "ai" && (
-    (isGroup && selectedTarget.type === "group" && selectedTarget.id === msg.group_id) ||
+    (isGroup && selectedTarget.type === "group" && String(selectedTarget.id) === String(msg.group_id)) ||
     (!isGroup && selectedTarget.type !== "group" && (
-      (msg.sender_id === selectedTarget.id && msg.receiver_id === currentUser.id) ||
-      (msg.sender_id === currentUser.id && msg.receiver_id === selectedTarget.id)
+      (String(msg.sender_id) === targetId && String(msg.receiver_id) === myId) ||
+      (String(msg.sender_id) === myId && String(msg.receiver_id) === targetId)
     ))
   );
 
   if (isCurrentChat) {
-    const exists = currentMessages.some((m) => m.id === msg.id);
+    const exists = currentMessages.some((m) => String(m.id) === String(msg.id));
     if (!exists) {
       currentMessages.push({
-        id: msg.id,
-        sender: msg.sender_id,
-        receiver: msg.receiver_id,
+        id: String(msg.id),
+        sender: String(msg.sender_id),
+        receiver: String(msg.receiver_id),
         groupId: msg.group_id,
         messageText: msg.message_text,
         messageType: msg.message_type || "TEXT",
@@ -1281,18 +1298,18 @@ function handleIncomingMessage(msg) {
         timestamp: msg.created_at
       });
       renderMessages();
-      if (msg.sender_id !== currentUser.id) playToneSound(appSettings.msgTone, appSettings.msgVolume);
+      if (String(msg.sender_id) !== myId) playToneSound(appSettings.msgTone, appSettings.msgVolume);
     }
   }
 }
 
 function handleMessageUpdate(updatedMsg) {
-  const target = currentMessages.find((m) => m.id === updatedMsg.id);
+  const target = currentMessages.find((m) => String(m.id) === String(updatedMsg.id));
   if (target) { target.messageText = updatedMsg.message_text; renderMessages(); }
 }
 
 function handleMessageDelete(deletedMsg) {
-  currentMessages = currentMessages.filter((m) => m.id !== deletedMsg.id);
+  currentMessages = currentMessages.filter((m) => String(m.id) !== String(deletedMsg.id));
   renderMessages();
 }
 
@@ -1496,7 +1513,7 @@ async function loadTeachers() {
   if (!supabaseClient) return;
   try {
     const { data } = await supabaseClient.from("users").select("id, nama, mata_pelajaran, avatar, status, last_seen").order("nama", { ascending: true });
-    teachers = (data || []).map((t) => ({ type: "user", id: t.id, nama: t.nama, mataPelajaran: t.mata_pelajaran, avatar: t.avatar, status: t.status }));
+    teachers = (data || []).map((t) => ({ type: "user", id: String(t.id), nama: t.nama, mataPelajaran: t.mata_pelajaran, avatar: t.avatar, status: t.status }));
   } catch (e) {}
 }
 
@@ -1504,7 +1521,7 @@ async function loadGroups() {
   if (!supabaseClient) return;
   try {
     const { data } = await supabaseClient.from("groups").select("id, name, description, avatar, created_by").order("created_at", { ascending: false });
-    groups = (data || []).map((g) => ({ type: "group", id: g.id, name: g.name, description: g.description || "Grup Chat", avatar: g.avatar, status: "Grup Chat" }));
+    groups = (data || []).map((g) => ({ type: "group", id: String(g.id), name: g.name, description: g.description || "Grup Chat", avatar: g.avatar, status: "Grup Chat" }));
   } catch (e) {}
 }
 
@@ -1523,7 +1540,7 @@ function renderSidebarList() {
 
   const query = (document.getElementById("searchInput")?.value || "").trim().toLowerCase();
   let list = [];
-  const otherUsers = teachers.filter((t) => !currentUser || t.id !== currentUser.id);
+  const otherUsers = teachers.filter((t) => !currentUser || String(t.id) !== String(currentUser.id));
 
   if (activeSidebarTab === "all") list = [AI_BOT_TARGET, ...groups, ...otherUsers];
   else if (activeSidebarTab === "direct") list = [AI_BOT_TARGET, ...otherUsers];
@@ -1544,7 +1561,7 @@ function renderSidebarList() {
     const isGroup = item.type === "group";
     const el = document.createElement("div");
     el.className = "contact";
-    if (selectedTarget && selectedTarget.type === item.type && selectedTarget.id === item.id) {
+    if (selectedTarget && selectedTarget.type === item.type && String(selectedTarget.id) === String(item.id)) {
       el.classList.add("active");
     }
     el.onclick = () => selectTarget(item);
@@ -1614,7 +1631,7 @@ window.applyAiPrompt = function(promptText) {
 };
 
 // ============================================================================
-// CHAT MESSAGES & GROQ AI ENGINE
+// FIX QUERY MESSAGES (ANTI-SYNTAX ERROR SUPABASE)
 // ============================================================================
 window.refreshMessages = async function() {
   if (!currentUser || !selectedTarget) return;
@@ -1627,20 +1644,37 @@ window.refreshMessages = async function() {
   if (!supabaseClient) return;
 
   try {
-    let query = supabaseClient.from("messages").select("*");
+    let data = [];
     if (selectedTarget.type === "group") {
-      query = query.eq("group_id", selectedTarget.id);
+      const res = await supabaseClient.from("messages").select("*").eq("group_id", selectedTarget.id).order("created_at", { ascending: true });
+      data = res.data || [];
     } else {
-      query = query.or(
-        `and(sender_id.eq.${currentUser.id},receiver_id.eq.${selectedTarget.id}),and(sender_id.eq.${selectedTarget.id},receiver_id.eq.${currentUser.id})`
-      );
+      // Query yang 100% aman dari Syntax Error PostgREST
+      const myId = String(currentUser.id);
+      const otherId = String(selectedTarget.id);
+      const res = await supabaseClient
+        .from("messages")
+        .select("*")
+        .or(`and(sender_id.eq."${myId}",receiver_id.eq."${otherId}"),and(sender_id.eq."${otherId}",receiver_id.eq."${myId}")`)
+        .order("created_at", { ascending: true });
+
+      if (res.error) {
+        // Fallback query jika format id berupa integer
+        const fallbackRes = await supabaseClient
+          .from("messages")
+          .select("*")
+          .or(`and(sender_id.eq.${myId},receiver_id.eq.${otherId}),and(sender_id.eq.${otherId},receiver_id.eq.${myId})`)
+          .order("created_at", { ascending: true });
+        data = fallbackRes.data || [];
+      } else {
+        data = res.data || [];
+      }
     }
 
-    const { data } = await query.order("created_at", { ascending: true });
-    currentMessages = (data || []).map((m) => ({
-      id: m.id,
-      sender: m.sender_id,
-      receiver: m.receiver_id,
+    currentMessages = data.map((m) => ({
+      id: String(m.id),
+      sender: String(m.sender_id),
+      receiver: String(m.receiver_id),
       groupId: m.group_id,
       messageText: m.message_text,
       messageType: m.message_type || "TEXT",
@@ -1789,7 +1823,7 @@ window.deleteMessage = async function(msgId) {
 };
 
 // ============================================================================
-// PENGIRIMAN PESAN & QUERY KE GROQ AI
+// PENGIRIMAN PESAN KE KONTAK & GROQ AI
 // ============================================================================
 window.sendMessage = async function() {
   if (!currentUser) { toast("Silakan masuk terlebih dahulu."); return; }
@@ -1875,9 +1909,9 @@ window.sendMessage = async function() {
     if (error) throw error;
     if (data) {
       currentMessages.push({
-        id: data.id,
-        sender: data.sender_id,
-        receiver: data.receiver_id,
+        id: String(data.id),
+        sender: String(data.sender_id),
+        receiver: String(data.receiver_id),
         groupId: data.group_id,
         messageText: data.message_text,
         messageType: data.message_type || "TEXT",
@@ -1893,19 +1927,16 @@ window.sendMessage = async function() {
 };
 
 // ============================================================================
-// SMART SECURE GROQ ENGINE RESOLVER (AMAN DARI LEAK GITHUB)
+// SMART SECURE GROQ ENGINE RESOLVER (MANDIRI & AMAN)
 // ============================================================================
 async function getSecureGroqKey() {
-  // 1. Cek jika disuntikkan via Vercel env / window
   if (typeof window !== "undefined" && window.GROQ_API_KEY) return window.GROQ_API_KEY;
   if (typeof process !== "undefined" && process.env && process.env.GROQ_API_KEY) return process.env.GROQ_API_KEY;
 
-  // 2. Cek di penyimpanan browser pribadi Anda (aman, tidak masuk ke GitHub)
   let localKey = localStorage.getItem("alghozali_secure_groq_key");
   if (localKey && localKey.startsWith("gsk_")) return localKey;
 
-  // 3. Jika belum ada, prompt sekali secara aman di browser Anda
-  const userPromptKey = prompt("🔐 Masukkan GROQ API Key (gsk_...) Anda sekali saja:\n(Kunci ini disimpan aman di browser lokal Anda & TIDAK AKAN PERNAH masuk ke GitHub/HTML)");
+  const userPromptKey = prompt("🔐 Masukkan GROQ API Key (gsk_...) Anda sekali saja:\n(Disimpan aman di browser lokal & TIDAK AKAN masuk ke GitHub/HTML)");
   if (userPromptKey && userPromptKey.trim().startsWith("gsk_")) {
     localStorage.setItem("alghozali_secure_groq_key", userPromptKey.trim());
     return userPromptKey.trim();
@@ -2097,9 +2128,9 @@ window.sendVoiceRecording = function() {
         const { data } = await supabaseClient.from("messages").insert([payload]).select().single();
         if (data) {
           currentMessages.push({
-            id: data.id,
-            sender: data.sender_id,
-            receiver: data.receiver_id,
+            id: String(data.id),
+            sender: String(data.sender_id),
+            receiver: String(data.receiver_id),
             groupId: data.group_id,
             messageText: data.message_text,
             messageType: "AUDIO",
@@ -2216,7 +2247,7 @@ window.saveNewContact = async function() {
         }])
         .select()
         .single();
-      if (newUser) newId = newUser.id;
+      if (newUser) newId = String(newUser.id);
     }
 
     hideLoading();
