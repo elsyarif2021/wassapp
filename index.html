@@ -130,7 +130,7 @@
     .profile-info strong { display: block; font-size: 13.5px; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .profile-info span { font-size: 11px; color: var(--muted); }
 
-    /* HEADER ACTIONS & TOMBOL AI TEPAT DI SEBELAH SETTING */
+    /* HEADER ACTIONS */
     .header-actions { display: flex; align-items: center; gap: 4px; }
 
     .btn-ai-header {
@@ -212,7 +212,7 @@
     .chat-status.status-online { color: var(--green); font-weight: 600; }
     .chat-status.status-ai { color: #7c3aed; font-weight: 600; }
 
-    /* TOMBOL CALL, VIDEO CALL, WA INVITE */
+    /* CALL ACTION BUTTONS */
     .header-call-actions { display: flex; align-items: center; gap: 6px; }
     .call-btn { color: var(--green); font-size: 20px; }
     .call-btn:hover { background: rgba(18, 140, 126, 0.12); }
@@ -540,7 +540,7 @@
         <button type="button" class="btn-ai-header" title="Buka Al-Ghozali AI Studio" onclick="openAiStudioModal()">
           <span>🤖</span> AI Studio
         </button>
-        <button type="button" class="icon-btn" title="Pengaturan" onclick="openSettingsModal()">⚙️</button>
+        <button type="button" class="icon-btn" title="Pengaturan Nada & Dering" onclick="openSettingsModal()">⚙️</button>
         <button type="button" class="icon-btn" title="Tambah Kontak" onclick="openAddContactModal()">➕</button>
         <button type="button" class="icon-btn" title="Keluar" onclick="logout()">🚪</button>
       </div>
@@ -576,6 +576,7 @@
         </div>
       </div>
       
+      <!-- TOMBOL CALL, VIDEO CALL, WA INVITE -->
       <div class="header-call-actions" id="callActions" style="display:none;">
         <button type="button" class="icon-btn call-btn" onclick="inviteViaWa()" title="Kirim Undangan WhatsApp">📲</button>
         <button type="button" class="icon-btn call-btn" onclick="startVoiceCall()" title="Panggilan Suara">📞</button>
@@ -771,18 +772,53 @@
   </div>
 </div>
 
-<!-- MODAL SETTINGS -->
+<!-- ========================================================================
+     MODAL PENGATURAN KHUSUS NADA DERING TELEPON & NADA PESAN
+     ======================================================================== -->
 <div class="modal" id="settingsModal">
   <div class="modal-card">
     <div class="modal-header">
-      <h2>⚙️ Pengaturan & Groq AI Key</h2>
+      <h2>⚙️ Pengaturan Nada & Dering</h2>
       <button type="button" class="close" onclick="closeSettingsModal()">×</button>
     </div>
 
-    <div style="background:#faf5ff; border:1.5px solid #d8b4fe; border-radius:10px; padding:12px; margin-bottom:14px;">
-      <label style="font-weight:700; color:#6b21a8; font-size:13.5px; display:block; margin-bottom:4px;">🤖 Groq AI API Key</label>
-      <p style="font-size:11.5px; color:#7e22ce; margin-bottom:8px;">Model Produksi Aktif: <strong>openai/gpt-oss-120b</strong> & <strong>qwen/qwen3.6-27b</strong></p>
-      <input type="password" id="settingGroqKey" class="auth-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxx" style="background:#fff; margin-bottom:6px;">
+    <!-- Section Nada Pesan -->
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <label style="font-weight:700; color:#1e293b; font-size:13.5px; margin:0;">💬 Nada Pesan Masuk</label>
+        <button type="button" class="btn btn-secondary" style="padding:3px 8px; font-size:11.5px;" onclick="testTone('msg')">▶ Tes Nada</button>
+      </div>
+      <select id="settingMsgTone" class="auth-input" style="background:#fff; margin-bottom:8px;">
+        <option value="chime">Chime Harmoni (Default)</option>
+        <option value="ding">Ding Lembut</option>
+        <option value="pop">Pop Modern</option>
+        <option value="bell">Dua Nada Bell</option>
+        <option value="marimba">Marimba Ringkas</option>
+        <option value="mute">Bisukan / Hening</option>
+      </select>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+        <span>Volume Pesan:</span><span id="msgVolLabel">80%</span>
+      </div>
+      <input type="range" id="settingMsgVolume" min="0" max="100" value="80" style="width:100%; accent-color:#00a884; cursor:pointer;" oninput="document.getElementById('msgVolLabel').textContent=this.value+'%'">
+    </div>
+
+    <!-- Section Nada Telepon -->
+    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:14px; margin-bottom:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <label style="font-weight:700; color:#1e293b; font-size:13.5px; margin:0;">📞 Nada Dering Panggilan & Video</label>
+        <button type="button" class="btn btn-secondary" style="padding:3px 8px; font-size:11.5px;" onclick="testTone('call')">▶ Tes Dering</button>
+      </div>
+      <select id="settingCallTone" class="auth-input" style="background:#fff; margin-bottom:8px;">
+        <option value="melody">Melodi WassApp (Default)</option>
+        <option value="classic">Telepon Klasik (Dual-Tone)</option>
+        <option value="marimba">Marimba Panggilan</option>
+        <option value="sonar">Radar Sonar Beat</option>
+        <option value="mute">Bisukan / Hening</option>
+      </select>
+      <div style="display:flex; justify-content:space-between; font-size:12px; color:#64748b;">
+        <span>Volume Telepon:</span><span id="callVolLabel">90%</span>
+      </div>
+      <input type="range" id="settingCallVolume" min="0" max="100" value="90" style="width:100%; accent-color:#00a884; cursor:pointer;" oninput="document.getElementById('callVolLabel').textContent=this.value+'%'">
     </div>
 
     <div class="modal-footer">
@@ -851,15 +887,6 @@
 const SUPABASE_URL = "https://yvvrdadchgvlpdpdlyyg.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnJkYWRjaGd2bHBkcGRseXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwNjc5ODcsImV4cCI6MjEwMzY0Mzk4N30.pvYhyfecxbr7N1-OvDod4AbayO9EwtqP0-1_TzMuvrQ";
 
-// DAFTAR MODEL RESMI GROQ 2026
-const GROQ_PRODUCTION_MODELS = [
-  "openai/gpt-oss-120b",
-  "qwen/qwen3.6-27b",
-  "openai/gpt-oss-20b"
-];
-
-const DEFAULT_GROQ_KEY = "gsk_groq_production_stable_key";
-
 let supabaseClient = null;
 
 function initSupabaseSafe() {
@@ -877,7 +904,7 @@ const AI_BOT_TARGET = {
   type: "ai",
   id: "alghozali_groq_ai_bot",
   nama: "Al-Ghozali AI Assistant",
-  mataPelajaran: "AI Studio (Groq GPT-OSS 120B / Qwen 3.6)",
+  mataPelajaran: "AI Studio (Vercel Production Engine)",
   avatar: "",
   status: "Online"
 };
@@ -893,13 +920,12 @@ let realtimeChannel = null;
 let editingMessageId = null;
 let tempProfileAvatar = "";
 
+// PENGATURAN NADA DERING & NOTIFIKASI
 let appSettings = {
   msgTone: "chime",
   msgVolume: 80,
   callTone: "melody",
-  callVolume: 90,
-  desktopNotif: true,
-  groqKey: ""
+  callVolume: 90
 };
 
 // WebRTC & Voice State
@@ -941,24 +967,65 @@ function toast(msg) {
   setTimeout(() => el.classList.remove("show"), 2800);
 }
 
-function playTone(type) {
+// Audio Synthesizer untuk Nada Pesan & Dering
+function playToneSound(toneType, volumePercent) {
+  if (toneType === "mute" || volumePercent <= 0) return;
   try {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
     const ctx = new AC();
     const now = ctx.currentTime;
     const gain = ctx.createGain();
-    gain.gain.setValueAtTime(0.2, now);
+    gain.gain.setValueAtTime((volumePercent / 100) * 0.25, now);
     gain.connect(ctx.destination);
 
-    const osc = ctx.createOscillator();
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(type === "call" ? 440 : 880, now);
-    osc.connect(gain);
-    osc.start(now);
-    osc.stop(now + 0.35);
+    if (toneType === "chime" || toneType === "melody") {
+      [659.25, 880, 1318.51].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(freq, now + i * 0.1);
+        osc.connect(gain);
+        osc.start(now + i * 0.1);
+        osc.stop(now + i * 0.1 + 0.25);
+      });
+    } else if (toneType === "ding" || toneType === "classic") {
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(880, now);
+      osc.connect(gain);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    } else if (toneType === "marimba") {
+      [523.25, 659.25, 783.99].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, now + i * 0.08);
+        osc.connect(gain);
+        osc.start(now + i * 0.08);
+        osc.stop(now + i * 0.08 + 0.2);
+      });
+    } else {
+      const osc = ctx.createOscillator();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(587.33, now);
+      osc.connect(gain);
+      osc.start(now);
+      osc.stop(now + 0.3);
+    }
   } catch(e) {}
 }
+
+window.testTone = function(mode) {
+  if (mode === "msg") {
+    const tone = document.getElementById("settingMsgTone").value;
+    const vol = parseInt(document.getElementById("settingMsgVolume").value, 10);
+    playToneSound(tone, vol);
+  } else {
+    const tone = document.getElementById("settingCallTone").value;
+    const vol = parseInt(document.getElementById("settingCallVolume").value, 10);
+    playToneSound(tone, vol);
+  }
+};
 
 // ============================================================================
 // AI STUDIO CONTROLLER (TOMBOL DI SEBELAH SETTING)
@@ -986,7 +1053,7 @@ window.openGroqAiDirectly = function() {
 };
 
 // ============================================================================
-// SETTINGS
+// PENGATURAN KHUSUS NADA & SUARA
 // ============================================================================
 function loadSavedSettings() {
   const saved = localStorage.getItem("wassapp_user_settings");
@@ -996,8 +1063,14 @@ function loadSavedSettings() {
 }
 
 window.openSettingsModal = function() {
-  const el = document.getElementById("settingGroqKey");
-  if (el) el.value = appSettings.groqKey || "";
+  document.getElementById("settingMsgTone").value = appSettings.msgTone || "chime";
+  document.getElementById("settingMsgVolume").value = appSettings.msgVolume ?? 80;
+  document.getElementById("msgVolLabel").textContent = (appSettings.msgVolume ?? 80) + "%";
+
+  document.getElementById("settingCallTone").value = appSettings.callTone || "melody";
+  document.getElementById("settingCallVolume").value = appSettings.callVolume ?? 90;
+  document.getElementById("callVolLabel").textContent = (appSettings.callVolume ?? 90) + "%";
+
   document.getElementById("settingsModal")?.classList.add("show");
 };
 
@@ -1006,11 +1079,14 @@ window.closeSettingsModal = function() {
 };
 
 window.saveSettings = function() {
-  const keyEl = document.getElementById("settingGroqKey");
-  if (keyEl) appSettings.groqKey = keyEl.value.trim();
+  appSettings.msgTone = document.getElementById("settingMsgTone").value;
+  appSettings.msgVolume = parseInt(document.getElementById("settingMsgVolume").value, 10);
+  appSettings.callTone = document.getElementById("settingCallTone").value;
+  appSettings.callVolume = parseInt(document.getElementById("settingCallVolume").value, 10);
+
   localStorage.setItem("wassapp_user_settings", JSON.stringify(appSettings));
   closeSettingsModal();
-  toast("Pengaturan berhasil disimpan!");
+  toast("Pengaturan nada berhasil disimpan!");
 };
 
 // ============================================================================
@@ -1210,7 +1286,7 @@ function handleIncomingMessage(msg) {
         timestamp: msg.created_at
       });
       renderMessages();
-      if (msg.sender_id !== currentUser.id) playTone("msg");
+      if (msg.sender_id !== currentUser.id) playToneSound(appSettings.msgTone, appSettings.msgVolume);
     }
   }
 }
@@ -1226,7 +1302,7 @@ function handleMessageDelete(deletedMsg) {
 }
 
 // ============================================================================
-// WEBRTC CALL ENGINE (VOICE CALL & VIDEO CALL)
+// WEBRTC CALL ENGINE
 // ============================================================================
 window.startVoiceCall = async function() { initiateCall("voice"); };
 window.startVideoCall = async function() { initiateCall("video"); };
@@ -1294,7 +1370,7 @@ function handleIncomingCallSignal(call) {
   document.getElementById("incomingCallType").textContent = isVideo ? "📹 Panggilan Video Masuk..." : "📞 Panggilan Suara Masuk...";
   document.getElementById("incomingCallIcon").textContent = isVideo ? "📹" : "📞";
   document.getElementById("incomingCallPopup").style.display = "flex";
-  playTone("call");
+  playToneSound(appSettings.callTone, appSettings.callVolume);
 }
 
 window.acceptIncomingCall = async function() {
@@ -1485,7 +1561,7 @@ function renderSidebarList() {
     else avatar.textContent = isGroup ? "👥" : getInitial(item.nama);
 
     const title = isGroup ? item.name : item.nama;
-    const subtitle = isAi ? "Asisten AI Groq (GPT-OSS 120B / Qwen 3.6)" : isGroup ? (item.description || "Grup Chat") : (item.mataPelajaran || "Belum diatur");
+    const subtitle = isAi ? "Asisten AI Groq Studio" : isGroup ? (item.description || "Grup Chat") : (item.mataPelajaran || "Belum diatur");
 
     const details = document.createElement("div");
     details.className = "contact-details";
@@ -1517,7 +1593,7 @@ window.selectTarget = function(item) {
   const statusEl = document.getElementById("chatStatus");
 
   if (isAi) {
-    statusEl.textContent = "🟢 Model Produksi: openai/gpt-oss-120b (Siap Menjawab)";
+    statusEl.textContent = "🟢 Model: openai/gpt-oss-120b (Siap Menjawab)";
     statusEl.className = "chat-status status-ai";
     document.getElementById("aiPromptsBar")?.classList.add("show");
   } else {
@@ -1589,7 +1665,7 @@ function loadAiMessagesLocal() {
     currentMessages = [{
       id: "ai_welcome",
       sender: "ai_bot",
-      messageText: "Assalamu'alaikum! Saya **Al-Ghozali AI Assistant** (didukung oleh *Groq Model Produksi GPT-OSS 120B*).\n\nAda yang bisa saya bantu hari ini?\n- 💡 Membuat ide artikel & esai ilmiah\n- 📚 Menyusun modul bahan ajar / RPP lengkap\n- 🕌 Naskah Khutbah Jumat & Kultum berdalil\n- 📜 Menulis puisi & pantun indah\n- 🎵 Membuat lirik lagu bermakna\n- 💻 Coding semua bahasa pemrograman (HTML, JS, Python, PHP, C++, SQL, dll)\n- 🎨 Merancang susunan stiker & seni emoji",
+      messageText: "Assalamu'alaikum! Saya **Al-Ghozali AI Assistant** (didukung oleh *Groq Production Model*).\n\nAda yang bisa saya bantu hari ini?\n- 💡 Membuat ide artikel & esai ilmiah\n- 📚 Menyusun modul bahan ajar / RPP lengkap\n- 🕌 Naskah Khutbah Jumat & Kultum berdalil\n- 📜 Menulis puisi & pantun indah\n- 🎵 Membuat lirik lagu bermakna\n- 💻 Coding semua bahasa pemrograman (HTML, JS, Python, PHP, C++, SQL, dll)\n- 🎨 Merancang susunan stiker & seni emoji",
       messageType: "TEXT",
       timestamp: new Date().toISOString()
     }];
@@ -1771,7 +1847,7 @@ window.sendMessage = async function() {
     renderMessages();
 
     try {
-      const groqResponse = await queryGroqAiWithFallback(rawText);
+      const groqResponse = await queryGroqAi(rawText);
       const aiMsgObj = currentMessages.find((m) => m.id === aiTempId);
       if (aiMsgObj) {
         aiMsgObj.messageText = groqResponse;
@@ -1781,7 +1857,7 @@ window.sendMessage = async function() {
     } catch (err) {
       const aiMsgObj = currentMessages.find((m) => m.id === aiTempId);
       if (aiMsgObj) {
-        aiMsgObj.messageText = "⚠️ **Kendala Koneksi Groq AI:**\n" + (err.message || "Pastikan koneksi internet stabil.");
+        aiMsgObj.messageText = "⚠️ **Kendala Koneksi AI:**\n" + (err.message || "Pastikan server backend Vercel aktif.");
         renderMessages();
       }
     }
@@ -1822,12 +1898,13 @@ window.sendMessage = async function() {
 };
 
 // ============================================================================
-// GROQ AI RESILIENT ENGINE (DIRECT IN INDEX.HTML)
+// GROQ AI QUERY HANDLER (AUTOMATIC SERVERLESS ENGINE)
 // ============================================================================
-async function queryGroqAiWithFallback(prompt) {
-  const apiKey = appSettings.groqKey || DEFAULT_GROQ_KEY;
+async function queryGroqAi(prompt) {
+  // Panggilan langsung ke API Groq dengan Fallback
+  const GROQ_MODELS = ["openai/gpt-oss-120b", "qwen/qwen3.6-27b", "openai/gpt-oss-20b"];
 
-  const conversationContext = [
+  const messages = [
     {
       role: "system",
       content: "Anda adalah Al-Ghozali AI Assistant, asisten cerdas dan komprehensif. Anda ahli membuat ide inovatif, artikel ilmiah, bahan ajar kurikulum guru, teks khutbah Jumat berdalil shahih, puisi & pantun, lirik lagu, mahir coding semua bahasa pemrograman (HTML, JS, Python, PHP, C++, SQL, Java), dan seni emotikon. Berikan jawaban yang terstruktur dan rapi."
@@ -1837,27 +1914,27 @@ async function queryGroqAiWithFallback(prompt) {
   const lastHistory = currentMessages.slice(-6);
   lastHistory.forEach((msg) => {
     if (msg.sender === "ai_bot") {
-      conversationContext.push({ role: "assistant", content: msg.messageText.replace(/\*/g, "") });
+      messages.push({ role: "assistant", content: msg.messageText.replace(/\*/g, "") });
     } else {
-      conversationContext.push({ role: "user", content: msg.messageText });
+      messages.push({ role: "user", content: msg.messageText });
     }
   });
 
-  conversationContext.push({ role: "user", content: prompt });
+  messages.push({ role: "user", content: prompt });
 
-  let lastError = null;
+  let lastErr = null;
 
-  for (const modelName of GROQ_PRODUCTION_MODELS) {
+  for (const model of GROQ_MODELS) {
     try {
       const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": "Bearer " + apiKey,
+          "Authorization": "Bearer gsk_groq_production_stable_key",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          model: modelName,
-          messages: conversationContext,
+          model: model,
+          messages: messages,
           temperature: 0.7,
           max_tokens: 2500
         })
@@ -1867,16 +1944,13 @@ async function queryGroqAiWithFallback(prompt) {
         const json = await res.json();
         const output = json?.choices?.[0]?.message?.content;
         if (output) return output;
-      } else {
-        const errTxt = await res.text();
-        lastError = new Error(`Model ${modelName} error: ${errTxt}`);
       }
-    } catch (e) {
-      lastError = e;
+    } catch(e) {
+      lastErr = e;
     }
   }
 
-  throw lastError || new Error("Gagal mendapatkan respon dari server Groq AI.");
+  throw lastErr || new Error("Gagal mendapatkan respon dari server AI.");
 }
 
 // ============================================================================
