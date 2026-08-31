@@ -429,7 +429,7 @@
     .ai-menu-card strong { display: block; font-size: 13.5px; color: #6b21a8; margin-bottom: 2px; }
     .ai-menu-card span { font-size: 11px; color: #7e22ce; display: block; }
 
-    /* MODALS UMUM */
+    /* MODAL SETTINGS (NADA DERING & NOTIFIKASI) */
     .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(2px); }
     .modal.show { display: flex; }
     .modal-card { width: calc(100% - 32px); max-width: 460px; background: white; border-radius: 18px; padding: 22px; max-height: 90vh; overflow-y: auto; }
@@ -576,7 +576,6 @@
         </div>
       </div>
       
-      <!-- TOMBOL CALL, VIDEO CALL, WA INVITE -->
       <div class="header-call-actions" id="callActions" style="display:none;">
         <button type="button" class="icon-btn call-btn" onclick="inviteViaWa()" title="Kirim Undangan WhatsApp">📲</button>
         <button type="button" class="icon-btn call-btn" onclick="startVoiceCall()" title="Panggilan Suara">📞</button>
@@ -772,9 +771,7 @@
   </div>
 </div>
 
-<!-- ========================================================================
-     MODAL PENGATURAN KHUSUS NADA DERING TELEPON & NADA PESAN
-     ======================================================================== -->
+<!-- MODAL SETTINGS (NADA DERING & NOTIFIKASI) -->
 <div class="modal" id="settingsModal">
   <div class="modal-card">
     <div class="modal-header">
@@ -920,7 +917,6 @@ let realtimeChannel = null;
 let editingMessageId = null;
 let tempProfileAvatar = "";
 
-// PENGATURAN NADA DERING & NOTIFIKASI
 let appSettings = {
   msgTone: "chime",
   msgVolume: 80,
@@ -967,7 +963,6 @@ function toast(msg) {
   setTimeout(() => el.classList.remove("show"), 2800);
 }
 
-// Audio Synthesizer untuk Nada Pesan & Dering
 function playToneSound(toneType, volumePercent) {
   if (toneType === "mute" || volumePercent <= 0) return;
   try {
@@ -1028,7 +1023,7 @@ window.testTone = function(mode) {
 };
 
 // ============================================================================
-// AI STUDIO CONTROLLER (TOMBOL DI SEBELAH SETTING)
+// AI STUDIO CONTROLLER
 // ============================================================================
 window.openAiStudioModal = function() {
   document.getElementById("aiStudioModal")?.classList.add("show");
@@ -1665,7 +1660,7 @@ function loadAiMessagesLocal() {
     currentMessages = [{
       id: "ai_welcome",
       sender: "ai_bot",
-      messageText: "Assalamu'alaikum! Saya **Al-Ghozali AI Assistant** (didukung oleh *Groq Production Model*).\n\nAda yang bisa saya bantu hari ini?\n- 💡 Membuat ide artikel & esai ilmiah\n- 📚 Menyusun modul bahan ajar / RPP lengkap\n- 🕌 Naskah Khutbah Jumat & Kultum berdalil\n- 📜 Menulis puisi & pantun indah\n- 🎵 Membuat lirik lagu bermakna\n- 💻 Coding semua bahasa pemrograman (HTML, JS, Python, PHP, C++, SQL, dll)\n- 🎨 Merancang susunan stiker & seni emoji",
+      messageText: "Assalamu'alaikum! Saya **Al-Ghozali AI Assistant** (didukung oleh *Groq Production Engine*).\n\nAda yang bisa saya bantu hari ini?\n- 💡 Membuat ide artikel & esai ilmiah\n- 📚 Menyusun modul bahan ajar / RPP lengkap\n- 🕌 Naskah Khutbah Jumat & Kultum berdalil\n- 📜 Menulis puisi & pantun indah\n- 🎵 Membuat lirik lagu bermakna\n- 💻 Coding semua bahasa pemrograman (HTML, JS, Python, PHP, C++, SQL, dll)\n- 🎨 Merancang susunan stiker & seni emoji",
       messageType: "TEXT",
       timestamp: new Date().toISOString()
     }];
@@ -1857,7 +1852,7 @@ window.sendMessage = async function() {
     } catch (err) {
       const aiMsgObj = currentMessages.find((m) => m.id === aiTempId);
       if (aiMsgObj) {
-        aiMsgObj.messageText = "⚠️ **Kendala Koneksi AI:**\n" + (err.message || "Pastikan server backend Vercel aktif.");
+        aiMsgObj.messageText = "⚠️ **Kendala Koneksi AI:**\n" + (err.message || "Gagal menghubungi AI.");
         renderMessages();
       }
     }
@@ -1898,11 +1893,35 @@ window.sendMessage = async function() {
 };
 
 // ============================================================================
-// GROQ AI QUERY HANDLER (AUTOMATIC SERVERLESS ENGINE)
+// SMART SECURE GROQ ENGINE RESOLVER (AMAN DARI LEAK GITHUB)
 // ============================================================================
+async function getSecureGroqKey() {
+  // 1. Cek jika disuntikkan via Vercel env / window
+  if (typeof window !== "undefined" && window.GROQ_API_KEY) return window.GROQ_API_KEY;
+  if (typeof process !== "undefined" && process.env && process.env.GROQ_API_KEY) return process.env.GROQ_API_KEY;
+
+  // 2. Cek di penyimpanan browser pribadi Anda (aman, tidak masuk ke GitHub)
+  let localKey = localStorage.getItem("alghozali_secure_groq_key");
+  if (localKey && localKey.startsWith("gsk_")) return localKey;
+
+  // 3. Jika belum ada, prompt sekali secara aman di browser Anda
+  const userPromptKey = prompt("🔐 Masukkan GROQ API Key (gsk_...) Anda sekali saja:\n(Kunci ini disimpan aman di browser lokal Anda & TIDAK AKAN PERNAH masuk ke GitHub/HTML)");
+  if (userPromptKey && userPromptKey.trim().startsWith("gsk_")) {
+    localStorage.setItem("alghozali_secure_groq_key", userPromptKey.trim());
+    return userPromptKey.trim();
+  }
+
+  throw new Error("GROQ API Key belum dimasukkan.");
+}
+
 async function queryGroqAi(prompt) {
-  // Panggilan langsung ke API Groq dengan Fallback
-  const GROQ_MODELS = ["openai/gpt-oss-120b", "qwen/qwen3.6-27b", "openai/gpt-oss-20b"];
+  const apiKey = await getSecureGroqKey();
+
+  const GROQ_MODELS = [
+    "openai/gpt-oss-120b",
+    "qwen/qwen3.6-27b",
+    "openai/gpt-oss-20b"
+  ];
 
   const messages = [
     {
@@ -1929,7 +1948,7 @@ async function queryGroqAi(prompt) {
       const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": "Bearer gsk_groq_production_stable_key",
+          "Authorization": "Bearer " + apiKey,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -1944,6 +1963,9 @@ async function queryGroqAi(prompt) {
         const json = await res.json();
         const output = json?.choices?.[0]?.message?.content;
         if (output) return output;
+      } else {
+        const errTxt = await res.text();
+        lastErr = new Error(`Groq API Error: ${errTxt}`);
       }
     } catch(e) {
       lastErr = e;
