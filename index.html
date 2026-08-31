@@ -10,7 +10,7 @@
 
   <style>
     /* ==========================================================================
-       WASSAPP MASTER STYLES - FULL COMPLETE FEATURES
+       WASSAPP MASTER STYLES - TIDY CHAT & BEAUTIFUL AI MARKDOWN
        ========================================================================== */
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -44,7 +44,6 @@
       background: #dfe5e7; color: var(--text);
     }
 
-    /* AUTH LOGIN */
     #loginScreen {
       position: fixed; inset: 0;
       background: linear-gradient(135deg, #075e54, #128c7e);
@@ -92,14 +91,12 @@
 
     .toggle-auth { margin-top: 18px; font-size: 13.5px; color: var(--green); cursor: pointer; font-weight: 600; }
 
-    /* MAIN APP */
     #app {
       display: none; position: fixed; inset: 0;
       width: 100%; height: 100%; max-width: 1680px;
       margin: auto; background: white; overflow: hidden; z-index: 10;
     }
 
-    /* SIDEBAR */
     .sidebar {
       width: 380px; height: 100%;
       border-right: 1px solid var(--border);
@@ -176,12 +173,6 @@
     .contact-name { font-size: 14.5px; font-weight: 600; color: var(--text); display: flex; justify-content: space-between; }
     .contact-sub { font-size: 12.5px; color: var(--muted); margin-top: 3px; }
 
-    .online-dot { width: 8px; height: 8px; display: inline-block; border-radius: 50%; background: #bbb; margin-right: 5px; }
-    .online-dot.online { background: var(--green-light); }
-    .ai-badge { background: #ede9fe; color: #6d28d9; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
-    .group-badge { background: #e2f7f4; color: #075e54; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
-
-    /* CHAT PANEL */
     .chat {
       flex: 1; height: 100%; display: flex; flex-direction: column;
       background: var(--bg); position: relative;
@@ -198,12 +189,10 @@
     .chat-status.status-online { color: var(--green); font-weight: 600; }
     .chat-status.status-ai { color: #7c3aed; font-weight: 600; }
 
-    /* CALL ACTION BUTTONS */
     .header-call-actions { display: flex; align-items: center; gap: 6px; }
     .call-btn { color: var(--green); font-size: 20px; }
     .call-btn:hover { background: rgba(18, 140, 126, 0.12); }
 
-    /* PROMPTS BAR */
     .ai-prompts-bar {
       display: none; background: #faf5ff; border-bottom: 1px solid #e9d5ff;
       padding: 8px 12px; gap: 8px; overflow-x: auto; white-space: nowrap; flex-shrink: 0;
@@ -216,8 +205,8 @@
     }
 
     .messages {
-      flex: 1; overflow-y: auto; padding: 16px 8%;
-      display: flex; flex-direction: column; gap: 8px;
+      flex: 1; overflow-y: auto; padding: 16px 6%;
+      display: flex; flex-direction: column; gap: 10px;
       background-color: var(--bg);
       background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
       background-size: 22px 22px;
@@ -227,13 +216,29 @@
     .empty-chat .big { font-size: 52px; margin-bottom: 12px; }
 
     .message {
-      max-width: 75%; padding: 8px 12px 6px; border-radius: 8px;
-      box-shadow: 0 1px 1.5px rgba(0, 0, 0, 0.12); position: relative;
-      word-break: break-word; font-size: 14.5px; line-height: 1.45;
+      max-width: 82%; padding: 10px 14px 8px; border-radius: 10px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12); position: relative;
+      word-break: break-word; font-size: 14.5px; line-height: 1.55;
     }
     .message.me { align-self: flex-end; background: var(--bubble-me); border-top-right-radius: 2px; }
     .message.other { align-self: flex-start; background: var(--bubble-other); border-top-left-radius: 2px; }
-    .message.ai { align-self: flex-start; background: var(--bubble-ai); border-top-left-radius: 2px; border-left: 3.5px solid #8b5cf6; }
+    .message.ai { align-self: flex-start; background: var(--bubble-ai); border-top-left-radius: 2px; border-left: 4px solid #8b5cf6; }
+
+    /* FORMAT TABEL MARKDOWN AI AGAR RAPI */
+    .ai-content { overflow-x: auto; }
+    .ai-content table {
+      width: 100%; border-collapse: collapse; margin: 10px 0;
+      font-size: 13px; background: white; border-radius: 8px; overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .ai-content th, .ai-content td {
+      border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left;
+    }
+    .ai-content th { background: #ede9fe; color: #5b21b6; font-weight: 700; }
+    .ai-content tr:nth-child(even) { background: #f8fafc; }
+    .ai-content ul, .ai-content ol { margin: 6px 0 6px 20px; }
+    .ai-content li { margin-bottom: 4px; }
+    .ai-content h1, .ai-content h2, .ai-content h3 { margin: 10px 0 6px; color: #4c1d95; font-size: 15.5px; }
 
     .message pre {
       background: #1e1e1e; color: #d4d4d4; padding: 10px; border-radius: 6px;
@@ -241,7 +246,7 @@
     }
     .message code { background: rgba(0,0,0,0.06); padding: 2px 4px; border-radius: 4px; font-size: 13px; font-family: Consolas, monospace; }
     .message img { max-width: 280px; max-height: 320px; border-radius: 6px; display: block; margin-bottom: 6px; cursor: pointer; }
-    .message-meta { float: right; margin-left: 10px; margin-top: 4px; font-size: 10.5px; color: #667781; display: inline-flex; align-items: center; gap: 4px; }
+    .message-meta { float: right; margin-left: 10px; margin-top: 6px; font-size: 10.5px; color: #667781; display: inline-flex; align-items: center; gap: 4px; }
     .message-status { font-size: 11.5px; font-weight: 700; color: #25d366; }
 
     /* VOICE NOTE PLAYER */
@@ -296,27 +301,19 @@
     .arabic-text { font-size: 17px; font-weight: 700; color: var(--green-dark); font-family: "Traditional Arabic", "Amiri", Tahoma, sans-serif; display: block; }
     .arabic-sub { font-size: 11.5px; color: #667781; display: block; text-align: left; margin-top: 2px; }
 
-    .emoji { display: inline-flex; width: 36px; height: 36px; align-items: center; justify-content: center; font-size: 22px; cursor: pointer; border-radius: 6px; }
-    .emoji:hover { background: #f0f2f5; transform: scale(1.15); }
-    .text-chip { background: #f8fafb; border: 1px solid #e1e6e8; border-radius: 8px; padding: 8px 12px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--green-dark); }
-    .text-chip:hover { background: #e7f8f5; border-color: var(--green); }
-
     .attachment-preview { position: absolute; left: 12px; bottom: 68px; background: white; padding: 8px; border-radius: 12px; box-shadow: var(--shadow-lg); display: none; border: 1px solid var(--border); z-index: 45; }
     .attachment-preview.show { display: block; }
     .attachment-preview img { max-width: 140px; max-height: 100px; border-radius: 6px; display: block; }
     .remove-attachment { position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border: none; border-radius: 50%; background: #333; color: white; cursor: pointer; }
 
-    /* CALL OVERLAY & POPUP PANGGILAN MASUK (WEBRTC) */
+    /* CALL OVERLAY */
     .call-overlay {
       position: fixed; inset: 0; background: #111b21;
       z-index: 9999998; display: none; flex-direction: column;
       align-items: center; justify-content: space-between;
       color: white; overflow: hidden;
     }
-    .video-viewport {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      background: #000; display: none; z-index: 1;
-    }
+    .video-viewport { position: absolute; inset: 0; width: 100%; height: 100%; background: #000; display: none; z-index: 1; }
     .video-viewport.show { display: block; }
     .remote-video { width: 100%; height: 100%; object-fit: cover; }
     .local-video-pip {
@@ -326,37 +323,15 @@
     }
     .local-video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
-    .call-info-area {
-      position: relative; z-index: 5; display: flex;
-      flex-direction: column; align-items: center; margin-top: 40px; text-align: center;
-    }
-    .call-avatar {
-      width: 100px; height: 100px; border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2); display: flex; align-items: center;
-      justify-content: center; font-size: 44px; margin-bottom: 14px;
-      border: 3px solid rgba(255, 255, 255, 0.4); overflow: hidden;
-    }
-    .call-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .call-name { font-size: 22px; font-weight: 700; text-shadow: 0 2px 4px rgba(0,0,0,0.6); }
-    .call-status { font-size: 14px; opacity: 0.9; margin-top: 4px; text-shadow: 0 1px 3px rgba(0,0,0,0.6); }
-    .call-timer {
-      font-size: 16px; font-weight: 600; margin-top: 6px;
-      background: rgba(0,0,0,0.4); padding: 2px 10px; border-radius: 10px; display: none;
-    }
+    .call-info-area { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; margin-top: 40px; text-align: center; }
+    .call-avatar { width: 100px; height: 100px; border-radius: 50%; background: rgba(255, 255, 255, 0.2); display: flex; align-items: center; justify-content: center; font-size: 44px; margin-bottom: 14px; }
+    .call-name { font-size: 22px; font-weight: 700; }
+    .call-status { font-size: 14px; opacity: 0.9; margin-top: 4px; }
 
-    .call-controls {
-      position: relative; z-index: 5; display: flex; gap: 20px;
-      margin-bottom: 40px; background: rgba(0, 0, 0, 0.4);
-      padding: 12px 24px; border-radius: 30px; backdrop-filter: blur(10px);
-    }
-    .call-btn-circle {
-      width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; font-size: 22px;
-      color: white; background: rgba(255, 255, 255, 0.25);
-    }
+    .call-controls { position: relative; z-index: 5; display: flex; gap: 20px; margin-bottom: 40px; }
+    .call-btn-circle { width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 22px; color: white; background: rgba(255, 255, 255, 0.25); }
     .call-btn-circle.muted { background: rgba(234, 67, 53, 0.8); }
     .call-btn-circle.end { background: #ea4335; transform: rotate(135deg); }
-    .call-btn-circle.end:hover { background: #c5221f; }
 
     .incoming-call-popup {
       position: fixed; top: 20px; right: 20px; z-index: 9999999;
@@ -370,15 +345,10 @@
     .incoming-name { font-weight: 700; font-size: 15px; color: var(--text); }
     .incoming-type { font-size: 12px; color: var(--muted); }
     .incoming-actions { display: flex; gap: 10px; }
-    .incoming-btn {
-      width: 44px; height: 44px; border-radius: 50%; border: none;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      font-size: 20px; color: white;
-    }
+    .incoming-btn { width: 44px; height: 44px; border-radius: 50%; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; }
     .incoming-btn.accept { background: #25d366; }
     .incoming-btn.reject { background: #ea4335; transform: rotate(135deg); }
 
-    /* MODALS */
     .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; align-items: center; justify-content: center; z-index: 500; backdrop-filter: blur(2px); }
     .modal.show { display: flex; }
     .modal-card { width: calc(100% - 32px); max-width: 460px; background: white; border-radius: 18px; padding: 22px; max-height: 90vh; overflow-y: auto; }
@@ -408,7 +378,7 @@
 
 <!-- POPUP PANGGILAN MASUK -->
 <div class="incoming-call-popup" id="incomingCallPopup">
-  <div style="font-size:32px;" id="incomingCallIcon">📞</div>
+  <div style="font-size:32px;">📞</div>
   <div class="incoming-info">
     <div class="incoming-name" id="incomingCallerName">Guru</div>
     <div class="incoming-type" id="incomingCallType">Panggilan Masuk...</div>
@@ -419,25 +389,22 @@
   </div>
 </div>
 
-<!-- ACTIVE CALL OVERLAY (WEBRTC VIDEO & AUDIO) -->
+<!-- ACTIVE CALL OVERLAY -->
 <div class="call-overlay" id="callOverlay">
   <div class="video-viewport" id="videoViewport">
     <video id="remoteVideo" class="remote-video" autoplay playsinline></video>
-    <div class="local-video-pip" id="localVideoPip">
+    <div class="local-video-pip">
       <video id="localVideo" class="local-video" autoplay playsinline muted></video>
     </div>
   </div>
-
   <div class="call-info-area">
     <div class="call-avatar" id="callAvatar">👤</div>
     <div class="call-name" id="callName">Kontak</div>
     <div class="call-status" id="callStatusText">Menghubungi...</div>
-    <div class="call-timer" id="callTimer">00:00</div>
   </div>
-
   <div class="call-controls">
     <button type="button" class="call-btn-circle" id="muteMicBtn" onclick="toggleMuteMic()" title="Mute Mic">🎤</button>
-    <button type="button" class="call-btn-circle end" onclick="endCall()" title="Akhiri Panggilan">📞</button>
+    <button type="button" class="call-btn-circle end" onclick="endCall()" title="Akhiri">📞</button>
   </div>
 </div>
 
@@ -518,7 +485,6 @@
         </div>
       </div>
 
-      <!-- TOMBOL CALL, VIDEO CALL, WA INVITE -->
       <div class="header-call-actions" id="callActions" style="display:none;">
         <button type="button" class="icon-btn call-btn" onclick="inviteViaWa()" title="Kirim Undangan WhatsApp">📲</button>
         <button type="button" class="icon-btn call-btn" onclick="startVoiceCall()" title="Panggilan Suara">📞</button>
@@ -530,12 +496,12 @@
 
     <!-- PROMPTS BAR -->
     <div class="ai-prompts-bar" id="aiPromptsBar">
-      <span class="ai-chip" onclick="applyAiPrompt('Buatkan ide artikel menarik tentang: ')">💡 Ide Artikel</span>
-      <span class="ai-chip" onclick="applyAiPrompt('Tolong buatkan modul bahan ajar / RPP lengkap untuk pelajaran: ')">📚 Bahan Ajar / RPP</span>
-      <span class="ai-chip" onclick="applyAiPrompt('Tuliskan naskah teks Khutbah Jumat yang menyentuh hati bertema: ')">🕌 Teks Khutbah Jumat</span>
+      <span class="ai-chip" onclick="applyAiPrompt('Tolong buatkan Modul Ajar / RPP lengkap Kurikulum Merdeka untuk mata pelajaran: ')">📚 Modul Ajar / RPP</span>
+      <span class="ai-chip" onclick="applyAiPrompt('Buatkan naskah teks Khutbah Jumat berdalil shahih tentang: ')">🕌 Khutbah Jumat</span>
+      <span class="ai-chip" onclick="applyAiPrompt('Tuliskan 5 ide judul artikel menarik dan konsepnya tentang: ')">💡 Ide Artikel</span>
       <span class="ai-chip" onclick="applyAiPrompt('Buatkan puisi indah dan penuh makna tentang: ')">📜 Tulis Puisi</span>
-      <span class="ai-chip" onclick="applyAiPrompt('Tuliskan lirik lagu bermakna dengan tema: ')">🎵 Lirik Lagu</span>
-      <span class="ai-chip" onclick="applyAiPrompt('Tolong tuliskan kode program lengkap menggunakan bahasa: ')">💻 Coding & Script</span>
+      <span class="ai-chip" onclick="applyAiPrompt('Tuliskan lirik lagu lengkap (Verse, Chorus, Bridge) tentang: ')">🎵 Lirik Lagu</span>
+      <span class="ai-chip" onclick="applyAiPrompt('Tuliskan script kode program lengkap dan bersih menggunakan bahasa: ')">💻 Coding</span>
     </div>
 
     <div class="messages" id="messages">
@@ -546,9 +512,8 @@
       </div>
     </div>
 
-    <!-- COMPOSER DENGAN ATTACHMENT, EMOJI, VN -->
+    <!-- COMPOSER -->
     <div class="composer">
-      <!-- Recording Voice Note Bar -->
       <div class="recording-bar" id="recordingBar">
         <div class="recording-left">
           <div class="recording-dot"></div>
@@ -571,7 +536,6 @@
           <button type="button" class="emoji-tab-item active" onclick="switchEmojiTab(event, 'arabic')">Stiker Arab</button>
           <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'islamic')">Islami</button>
           <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'faces')">Wajah</button>
-          <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'gestures')">Gestur</button>
           <button type="button" class="emoji-tab-item" onclick="switchEmojiTab(event, 'school')">Sekolah</button>
         </div>
 
@@ -601,46 +565,37 @@
               <span class="arabic-text">بَارَكَ اللَّهُ فِيكَ</span>
               <span class="arabic-sub">Barakallahu Feek</span>
             </div>
-            <div class="arabic-chip" onclick="addText('مَا شَاءَ اللَّهُ تَبَارَكَ اللَّهُ')">
-              <span class="arabic-text">مَا شَاءَ اللَّهُ تَبَارَكَ اللَّهُ</span>
-              <span class="arabic-sub">Masya Allah Tabarakallah</span>
-            </div>
-            <div class="arabic-chip" onclick="addText('إِنْ شَاءَ اللَّهُ')">
-              <span class="arabic-text">إِنْ شَاءَ اللَّهُ</span>
-              <span class="arabic-sub">Insya Allah</span>
-            </div>
           </div>
         </div>
 
         <div class="emoji-tab-content" id="tabContent_islamic" style="display:none;">
           <div class="emoji-chip-grid">
-            <div class="text-chip" onclick="addText('Assalamu\'alaikum')">Assalamu'alaikum</div>
-            <div class="text-chip" onclick="addText('Wa\'alaikumussalam')">Wa'alaikumussalam</div>
-            <div class="text-chip" onclick="addText('Bismillah')">Bismillah</div>
-            <div class="text-chip" onclick="addText('Alhamdulillah')">Alhamdulillah</div>
-            <div class="text-chip" onclick="addText('Allahu Akbar')">Allahu Akbar</div>
-            <div class="text-chip" onclick="addText('Subhanallah')">Subhanallah</div>
-          </div>
-          <div class="emoji-grid" style="margin-top:10px;">
-            <span class="emoji" onclick="addEmoji('🕌')">🕌</span><span class="emoji" onclick="addEmoji('🕋')">🕋</span><span class="emoji" onclick="addEmoji('📿')">📿</span><span class="emoji" onclick="addEmoji('🤲')">🤲</span>
+            <div class="arabic-chip" onclick="addText('Assalamu\'alaikum')"><span class="arabic-sub">Assalamu'alaikum</span></div>
+            <div class="arabic-chip" onclick="addText('Bismillah')"><span class="arabic-sub">Bismillah</span></div>
+            <div class="arabic-chip" onclick="addText('Alhamdulillah')"><span class="arabic-sub">Alhamdulillah</span></div>
+            <div class="arabic-chip" onclick="addText('Subhanallah')"><span class="arabic-sub">Subhanallah</span></div>
           </div>
         </div>
 
         <div class="emoji-tab-content" id="tabContent_faces" style="display:none;">
           <div class="emoji-grid">
-            <span class="emoji" onclick="addEmoji('😀')">😀</span><span class="emoji" onclick="addEmoji('😂')">😂</span><span class="emoji" onclick="addEmoji('😊')">😊</span><span class="emoji" onclick="addEmoji('🥰')">🥰</span><span class="emoji" onclick="addEmoji('😎')">😎</span><span class="emoji" onclick="addEmoji('😭')">😭</span><span class="emoji" onclick="addEmoji('😡')">😡</span>
-          </div>
-        </div>
-
-        <div class="emoji-tab-content" id="tabContent_gestures" style="display:none;">
-          <div class="emoji-grid">
-            <span class="emoji" onclick="addEmoji('👍')">👍</span><span class="emoji" onclick="addEmoji('👎')">👎</span><span class="emoji" onclick="addEmoji('👌')">👌</span><span class="emoji" onclick="addEmoji('✌️')">✌️</span><span class="emoji" onclick="addEmoji('🤝')">🤝</span><span class="emoji" onclick="addEmoji('👏')">👏</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('😀')">😀</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('😂')">😂</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('😊')">😊</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('🥰')">🥰</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('😎')">😎</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('🤲')">🤲</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('👍')">👍</span>
           </div>
         </div>
 
         <div class="emoji-tab-content" id="tabContent_school" style="display:none;">
           <div class="emoji-grid">
-            <span class="emoji" onclick="addEmoji('📚')">📚</span><span class="emoji" onclick="addEmoji('📖')">📖</span><span class="emoji" onclick="addEmoji('📝')">📝</span><span class="emoji" onclick="addEmoji('🎓')">🎓</span><span class="emoji" onclick="addEmoji('🏫')">🏫</span><span class="emoji" onclick="addEmoji('🎒')">🎒</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('📚')">📚</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('📖')">📖</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('📝')">📝</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('🎓')">🎓</span>
+            <span style="font-size:24px; cursor:pointer;" onclick="addEmoji('🏫')">🏫</span>
           </div>
         </div>
       </div>
@@ -650,14 +605,14 @@
         <img id="previewImage" alt="Preview">
       </div>
 
-      <div id="messageInput" class="message-input" contenteditable="true" placeholder="Ketik pesan atau tanya AI..." onkeydown="handleMessageKey(event)"></div>
+      <div id="messageInput" class="message-input" contenteditable="true" placeholder="Ketik pesan atau minta bantuan AI..." onkeydown="handleMessageKey(event)"></div>
       <button type="button" class="icon-btn" onclick="toggleVoiceRecording()" title="Rekam Voice Note">🎙️</button>
       <button type="button" class="send-btn" id="sendBtn" onclick="sendMessage()" title="Kirim Pesan">➤</button>
     </div>
   </main>
 </div>
 
-<!-- MODAL SETTINGS (NADA DERING & NOTIFIKASI) -->
+<!-- MODAL SETTINGS -->
 <div class="modal" id="settingsModal">
   <div class="modal-card">
     <div class="modal-header">
@@ -739,7 +694,7 @@ let selectedImage = null;
 let activeSidebarTab = "all";
 let realtimeChannel = null;
 
-// Audio & WebRTC State
+// Voice & WebRTC State
 let voiceMediaRecorder = null;
 let voiceAudioChunks = [];
 let voiceTimerInterval = null;
@@ -749,8 +704,6 @@ let localStream = null;
 let peerConnection = null;
 let activeCallId = null;
 let activeCallType = "voice";
-let callTimerInterval = null;
-let callTimerSeconds = 0;
 let isMuted = false;
 let incomingCallData = null;
 
@@ -774,6 +727,62 @@ function toast(msg) {
   el.textContent = msg;
   el.classList.add("show");
   setTimeout(() => el.classList.remove("show"), 2800);
+}
+
+// ============================================================================
+// FORMATTER MARKDOWN & TABEL AI AGAR RAPI & INDAH
+// ============================================================================
+function formatAiContent(text) {
+  if (!text) return "";
+  let s = escapeHtml(text);
+
+  // 1. Format Code Blocks ```code```
+  s = s.replace(/```([\w]*)\n([\s\S]*?)```/g, "<pre><code>$2</code></pre>");
+  s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+
+  // 2. Format Tabel Markdown (| Header 1 | Header 2 | ...)
+  s = s.replace(/((?:\|[^\n]+\|\r?\n)+)/g, function(tableBlock) {
+    const lines = tableBlock.trim().split("\n");
+    if (lines.length < 2) return tableBlock;
+
+    let html = "<table>";
+    let isHeader = true;
+
+    lines.forEach((line) => {
+      // Abaikan separator |---|---|
+      if (line.includes("---") || line.includes("===")) {
+        isHeader = false;
+        return;
+      }
+      const cells = line.split("|").filter((c, i, a) => i > 0 && i < a.length - 1);
+      if (cells.length > 0) {
+        html += "<tr>";
+        cells.forEach((cell) => {
+          const tag = isHeader ? "th" : "td";
+          html += `<${tag}>${cell.trim()}</${tag}>`;
+        });
+        html += "</tr>";
+      }
+    });
+
+    html += "</table>";
+    return html;
+  });
+
+  // 3. Format Headings & Bold/Italic
+  s = s.replace(/^### (.*$)/gim, "<h3>$1</h3>");
+  s = s.replace(/^## (.*$)/gim, "<h2>$1</h2>");
+  s = s.replace(/^# (.*$)/gim, "<h1>$1</h1>");
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  s = s.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+  // 4. Format Bullet List (- item atau * item)
+  s = s.replace(/^\s*[-•]\s+(.*)$/gim, "<li>$1</li>");
+  s = s.replace(/(<li>.*<\/li>)/gims, "<ul>$1</ul>");
+
+  // 5. Ganti baris baru
+  s = s.replace(/\n/g, "<br>");
+  return `<div class="ai-content">${s}</div>`;
 }
 
 // ============================================================================
@@ -889,7 +898,7 @@ async function loadAllData() {
 }
 
 // ============================================================================
-// REALTIME LISTENER (PESAN & PANGGILAN WEBRTC)
+// REALTIME LISTENER (PESAN & WEBRTC CALLS)
 // ============================================================================
 function setupRealtime() {
   if (!supabaseClient) return;
@@ -1142,9 +1151,7 @@ window.selectTarget = function(item) {
   document.getElementById("chatStatus").textContent = isAi ? "🟢 Model: openai/gpt-oss-120b" : (item.mataPelajaran || "Online");
   document.getElementById("chatAvatar").innerHTML = isAi ? "🤖" : isGroup ? "👥" : "👤";
   
-  // Tampilkan Prompts Bar jika AI
   document.getElementById("aiPromptsBar").classList.toggle("show", isAi);
-  // Tampilkan Tombol Telepon jika bukan AI & bukan Group
   document.getElementById("callActions").style.display = (!isAi && !isGroup) ? "flex" : "none";
 
   renderSidebarList();
@@ -1201,7 +1208,7 @@ function loadAiMessages() {
     currentMessages = [{
       id: "ai_welcome",
       sender: "ai_bot",
-      messageText: "Assalamu'alaikum! Saya **Al-Ghozali AI Assistant**. Ada yang bisa saya bantu?",
+      messageText: "Assalamu'alaikum! Saya **Al-Ghozali AI Assistant**.\n\nSaya siap membantu Anda menyusun **Modul Ajar / RPP lengkap**, **Naskah Khutbah Jumat**, **Ide Artikel**, **Puisi & Pantun**, **Lirik Lagu**, dan **Coding Program**. Silakan ketik permintaan Anda!",
       messageType: "TEXT",
       timestamp: new Date().toISOString()
     }];
@@ -1241,7 +1248,7 @@ function renderMessages() {
         </div>
       `;
     } else if (msg.messageText) {
-      innerHtml += `<span>${escapeHtml(msg.messageText)}</span>`;
+      innerHtml += isAi ? formatAiContent(msg.messageText) : `<span>${escapeHtml(msg.messageText)}</span>`;
     }
 
     innerHtml += `<span class="message-meta">${formatTime(msg.timestamp)} ${mine ? '<span class="message-status">✓✓</span>' : ''}</span>`;
@@ -1270,7 +1277,7 @@ window.sendMessage = async function() {
     renderMessages();
 
     const tempId = "ai_" + Date.now();
-    currentMessages.push({ id: tempId, sender: "ai_bot", messageText: "✍️ Sedang menyusun jawaban...", messageType: "TEXT", timestamp: new Date().toISOString() });
+    currentMessages.push({ id: tempId, sender: "ai_bot", messageText: "✍️ Sedang menyusun dokumen lengkap...", messageType: "TEXT", timestamp: new Date().toISOString() });
     renderMessages();
 
     try {
@@ -1418,7 +1425,6 @@ window.switchEmojiTab = function(e, tabKey) {
   document.getElementById("tabContent_arabic").style.display = tabKey === "arabic" ? "block" : "none";
   document.getElementById("tabContent_islamic").style.display = tabKey === "islamic" ? "block" : "none";
   document.getElementById("tabContent_faces").style.display = tabKey === "faces" ? "block" : "none";
-  document.getElementById("tabContent_gestures").style.display = tabKey === "gestures" ? "block" : "none";
   document.getElementById("tabContent_school").style.display = tabKey === "school" ? "block" : "none";
 };
 
@@ -1464,14 +1470,24 @@ window.inviteViaWa = function() {
   window.open(`https://api.whatsapp.com/send?phone=${waPhone}&text=${text}`, "_blank");
 };
 
-// Groq AI Handler
+// ============================================================================
+// GROQ AI HANDLER DENGAN SYSTEM PROMPT CERDAS & LENGKAP
+// ============================================================================
 async function queryGroqAi(promptText) {
   let key = localStorage.getItem("alghozali_groq_key");
   if (!key) {
-    key = prompt("🔐 Masukkan GROQ API Key Anda (gsk_...):\n(Disimpan aman di browser Anda)");
+    key = prompt("🔐 Masukkan GROQ API Key Anda (gsk_...):\n(Disimpan aman di browser lokal Anda)");
     if (key && key.trim().startsWith("gsk_")) localStorage.setItem("alghozali_groq_key", key.trim());
     else throw new Error("GROQ API Key tidak valid.");
   }
+
+  const systemInstruction = `Anda adalah Al-Ghozali AI Assistant, asisten cerdas untuk guru dan profesional.
+ATURAN MUTLAK JAWABAN:
+1. JANGAN PERNAH balik bertanya atau meminta klarifikasi dengan tabel kosong. Jika topik kurang detail, asumsikan standar terbaik kurikulum guru (Kurikulum Merdeka / Nasional) dan langsung buatkan secara LENGKAP.
+2. Jika diminta MODUL AJAR / RPP: Langsung buatkan dokumen lengkap berisi: Identitas Modul, Tujuan Pembelajaran, Profil Pelajar Pancasila, Materi Pokok, Model Pembelajaran, Langkah-Langkah Kegiatan (Pendahuluan, Inti, Penutup), dan Asesmen/Penilaian.
+3. Jika diminta KHUTBAH JUMAT: Buatkan teks lengkap Khutbah Pertama (pembukaan bahasa Arab, wasiat taqwa, materi berdalil Quran/Hadits, penutup), Khutbah Kedua, dan Doa.
+4. Gunakan format tabel yang rapi jika menyajikan data berkolom.
+5. Berikan jawaban dalam bahasa Indonesia yang sangat rapi, santun, dan siap pakai.`;
 
   const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
@@ -1479,11 +1495,11 @@ async function queryGroqAi(promptText) {
     body: JSON.stringify({
       model: "openai/gpt-oss-120b",
       messages: [
-        { role: "system", content: "Anda adalah Al-Ghozali AI Assistant, asisten cerdas yang ramah, sopan, dan berpengetahuan luas." },
+        { role: "system", content: systemInstruction },
         { role: "user", content: promptText }
       ],
-      temperature: 0.7,
-      max_tokens: 2000
+      temperature: 0.6,
+      max_tokens: 3000
     })
   });
 
