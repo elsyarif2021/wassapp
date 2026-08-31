@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>WassApp - Messenger, Calls & Groq AI Studio</title>
+  <title>WassApp - Messenger & Al-Ghozali AI Studio</title>
 
   <!-- Supabase CDN Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     /* ==========================================================================
-       WASSAPP STYLES LENGKAP - CHAT, CALLS, WEBRTC & AI STUDIO
+       WASSAPP STYLES LENGKAP - SINGLE FILE PRODUCTION
        ========================================================================== */
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -130,7 +130,7 @@
     .profile-info strong { display: block; font-size: 13.5px; color: var(--text); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
     .profile-info span { font-size: 11px; color: var(--muted); }
 
-    /* HEADER ACTIONS & TOMBOL AI PERSIS DI SAMPING SETTING */
+    /* HEADER ACTIONS & TOMBOL AI TEPAT DI SEBELAH SETTING */
     .header-actions { display: flex; align-items: center; gap: 4px; }
 
     .btn-ai-header {
@@ -212,7 +212,7 @@
     .chat-status.status-online { color: var(--green); font-weight: 600; }
     .chat-status.status-ai { color: #7c3aed; font-weight: 600; }
 
-    /* CALL ACTION BUTTONS */
+    /* TOMBOL CALL, VIDEO CALL, WA INVITE */
     .header-call-actions { display: flex; align-items: center; gap: 6px; }
     .call-btn { color: var(--green); font-size: 20px; }
     .call-btn:hover { background: rgba(18, 140, 126, 0.12); }
@@ -347,9 +347,7 @@
     .attachment-preview img { max-width: 140px; max-height: 100px; border-radius: 6px; display: block; }
     .remove-attachment { position: absolute; top: -8px; right: -8px; width: 24px; height: 24px; border: none; border-radius: 50%; background: #333; color: white; cursor: pointer; }
 
-    /* ==========================================================================
-       CALL OVERLAY & POPUP PANGGILAN MASUK (WEBRTC)
-       ========================================================================== */
+    /* CALL OVERLAY & POPUP PANGGILAN MASUK (WEBRTC) */
     .call-overlay {
       position: fixed; inset: 0; background: #111b21;
       z-index: 9999998; display: none; flex-direction: column;
@@ -578,7 +576,6 @@
         </div>
       </div>
       
-      <!-- TOMBOL CALL, VIDEO CALL, WA INVITE -->
       <div class="header-call-actions" id="callActions" style="display:none;">
         <button type="button" class="icon-btn call-btn" onclick="inviteViaWa()" title="Kirim Undangan WhatsApp">📲</button>
         <button type="button" class="icon-btn call-btn" onclick="startVoiceCall()" title="Panggilan Suara">📞</button>
@@ -778,13 +775,13 @@
 <div class="modal" id="settingsModal">
   <div class="modal-card">
     <div class="modal-header">
-      <h2>⚙️ Pengaturan & Groq AI</h2>
+      <h2>⚙️ Pengaturan & Groq AI Key</h2>
       <button type="button" class="close" onclick="closeSettingsModal()">×</button>
     </div>
 
     <div style="background:#faf5ff; border:1.5px solid #d8b4fe; border-radius:10px; padding:12px; margin-bottom:14px;">
-      <label style="font-weight:700; color:#6b21a8; font-size:13.5px; display:block; margin-bottom:4px;">🤖 Groq AI API Key (Opsional)</label>
-      <p style="font-size:11.5px; color:#7e22ce; margin-bottom:8px;">Model Produksi Aktif 2026: <strong>openai/gpt-oss-120b</strong>, <strong>qwen/qwen3.6-27b</strong></p>
+      <label style="font-weight:700; color:#6b21a8; font-size:13.5px; display:block; margin-bottom:4px;">🤖 Groq AI API Key</label>
+      <p style="font-size:11.5px; color:#7e22ce; margin-bottom:8px;">Model Produksi Aktif: <strong>openai/gpt-oss-120b</strong> & <strong>qwen/qwen3.6-27b</strong></p>
       <input type="password" id="settingGroqKey" class="auth-input" placeholder="gsk_xxxxxxxxxxxxxxxxxxxx" style="background:#fff; margin-bottom:6px;">
     </div>
 
@@ -847,14 +844,14 @@
 <div id="toast"></div>
 
 <!-- ========================================================================
-     JAVASCRIPT LOGIKA LENGKAP - CHAT, CALLS, WEBRTC & AI ENGINE
+     JAVASCRIPT LOGIKA LENGKAP MANDIRI
      ======================================================================== -->
 <script>
-// KREDENSIAL SUPABASE RESMI
+// KREDENSIAL SUPABASE
 const SUPABASE_URL = "https://yvvrdadchgvlpdpdlyyg.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnJkYWRjaGd2bHBkcGRseXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwNjc5ODcsImV4cCI6MjEwMzY0Mzk4N30.pvYhyfecxbr7N1-OvDod4AbayO9EwtqP0-1_TzMuvrQ";
 
-// MODEL RESMI GROQ 2026
+// DAFTAR MODEL RESMI GROQ 2026
 const GROQ_PRODUCTION_MODELS = [
   "openai/gpt-oss-120b",
   "qwen/qwen3.6-27b",
@@ -905,7 +902,7 @@ let appSettings = {
   groqKey: ""
 };
 
-// State WebRTC & Voice Recording
+// WebRTC & Voice State
 let voiceMediaRecorder = null;
 let voiceAudioChunks = [];
 let voiceTimerInterval = null;
@@ -944,7 +941,6 @@ function toast(msg) {
   setTimeout(() => el.classList.remove("show"), 2800);
 }
 
-// Tone Generator Sederhana
 function playTone(type) {
   try {
     const AC = window.AudioContext || window.webkitAudioContext;
@@ -1163,7 +1159,7 @@ async function loadAllData() {
 }
 
 // ============================================================================
-// REALTIME LISTENER (PESAN & SINYAL TELEPON WEBRTC)
+// REALTIME LISTENER
 // ============================================================================
 function setupRealtime() {
   if (!supabaseClient) return;
@@ -1230,7 +1226,7 @@ function handleMessageDelete(deletedMsg) {
 }
 
 // ============================================================================
-// WEBRTC CALL ENGINE (VOICE CALL & VIDEO CALL BERFUNGSI PENUH)
+// WEBRTC CALL ENGINE (VOICE CALL & VIDEO CALL)
 // ============================================================================
 window.startVoiceCall = async function() { initiateCall("voice"); };
 window.startVideoCall = async function() { initiateCall("video"); };
@@ -1265,10 +1261,6 @@ async function initiateCall(type) {
       if (event.streams && event.streams[0]) {
         document.getElementById("remoteVideo").srcObject = event.streams[0];
       }
-    };
-
-    peerConnection.onicecandidate = (event) => {
-      // ICE candidate handling
     };
 
     const offer = await peerConnection.createOffer();
@@ -1536,7 +1528,6 @@ window.selectTarget = function(item) {
 
   setAvatar("chatAvatar", item.avatar, isGroup, isAi);
   
-  // TAMPILKAN TOMBOL CALL JIKA BUKAN GRUP & BUKAN BOT AI
   const callActions = document.getElementById("callActions");
   if (callActions) callActions.style.display = (!isGroup && !isAi) ? "flex" : "none";
 
@@ -1831,7 +1822,7 @@ window.sendMessage = async function() {
 };
 
 // ============================================================================
-// GROQ AI ENGINE (AUTO-FALLBACK MODEL RESMI 2026)
+// GROQ AI RESILIENT ENGINE (DIRECT IN INDEX.HTML)
 // ============================================================================
 async function queryGroqAiWithFallback(prompt) {
   const apiKey = appSettings.groqKey || DEFAULT_GROQ_KEY;
@@ -1889,7 +1880,7 @@ async function queryGroqAiWithFallback(prompt) {
 }
 
 // ============================================================================
-// PROFILE & UTILITIES
+// PROFILE
 // ============================================================================
 window.openProfile = function() {
   document.getElementById("profileModal")?.classList.add("show");
