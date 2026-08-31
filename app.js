@@ -1,6 +1,10 @@
 // ============================================================================
-// WASSAPP - COMPLETE APP.JS (DENGAN GROQ AI STUDIO 2026 & PRODUCTION ENGINE)
+// WASSAPP - COMPLETE APP.JS (DENGAN FIX LOGIN SUPABASE & GROQ AI STUDIO 2026)
 // ============================================================================
+
+// Kredensial Supabase Project Anda
+const SUPABASE_URL = "https://yvvrdadchgvlpdpdlyyg.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl2dnJkYWRjaGd2bHBkcGRseXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwNjc5ODcsImV4cCI6MjEwMzY0Mzk4N30.pvYhyfecxbr7N1-OvDod4AbayO9EwtqP0-1_TzMuvrQ";
 
 // Model Produksi Groq Resmi 2026 (Pengganti resmi model deprecated)
 const GROQ_PRODUCTION_MODELS = [
@@ -10,6 +14,18 @@ const GROQ_PRODUCTION_MODELS = [
 ];
 
 const DEFAULT_GROQ_KEY = "gsk_groq_production_stable_key";
+
+let supabaseClient = null;
+
+function initSupabaseDirectly() {
+  if (typeof window.supabase !== "undefined") {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    window.supabaseClient = supabaseClient;
+  }
+}
+
+// Inisialisasi awal Supabase
+initSupabaseDirectly();
 
 // Entity Bot Al-Ghozali AI
 const AI_BOT_TARGET = {
@@ -48,6 +64,7 @@ let voiceTimerInterval = null;
 let voiceDuration = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
+  initSupabaseDirectly();
   loadSavedSettings();
   restoreSession();
   setupOutsideClick();
@@ -128,7 +145,10 @@ window.toggleAuthView = function(view) {
 };
 
 window.submitLogin = async function() {
-  if (!ensureSupabaseReady()) return;
+  if (!ensureSupabaseReady()) {
+    toast("Menghubungkan ke server...");
+    initSupabaseDirectly();
+  }
 
   const email = (document.getElementById("loginEmail")?.value || "").trim().toLowerCase();
   const pass = document.getElementById("loginPassword")?.value || "";
@@ -141,6 +161,12 @@ window.submitLogin = async function() {
     if (!users || users.length === 0) throw new Error("Email tidak terdaftar.");
 
     const dbUser = users[0];
+    
+    // Verifikasi password sederhana jika ada
+    if (dbUser.password && dbUser.password !== pass) {
+      throw new Error("Password yang Anda masukkan salah.");
+    }
+
     await supabaseClient.from("users").update({ status: "Online", last_seen: new Date().toISOString() }).eq("id", dbUser.id);
 
     currentUser = {
@@ -161,7 +187,9 @@ window.submitLogin = async function() {
 };
 
 window.submitRegister = async function() {
-  if (!ensureSupabaseReady()) return;
+  if (!ensureSupabaseReady()) {
+    initSupabaseDirectly();
+  }
 
   const name = (document.getElementById("regName")?.value || "").trim();
   const phone = (document.getElementById("regSubject")?.value || "").trim();
@@ -1036,7 +1064,7 @@ function getInitial(name) {
 }
 
 function ensureSupabaseReady() {
-  if (!supabaseClient && typeof initSupabaseClient === "function") initSupabaseClient();
+  if (!supabaseClient) initSupabaseDirectly();
   return Boolean(supabaseClient);
 }
 
@@ -1046,4 +1074,3 @@ function formatTime(timestamp) {
   const date = new Date(timestamp);
   return date.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
 }
-```
