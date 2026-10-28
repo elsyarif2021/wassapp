@@ -1,0 +1,24 @@
+{
+  "name": "wassapp",
+  "version": "0.2.0",
+  "private": true,
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/api.test.mjs",
+    "test:browser": "node tests/browser.cjs",
+    "build:web": "node scripts/build-web.mjs",
+    "android:sync": "npm run build:web && cap sync android",
+    "android:open": "cap open android",
+    "test:database": "bash scripts/test-database.sh"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "8.1.2",
+    "@capacitor/core": "8.5.3",
+    "@supabase/supabase-js": "2.118.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.3"
+  },
+  "type": "module"
+}

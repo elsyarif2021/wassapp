@@ -1,0 +1,8 @@
+{
+  "appId": "id.alghozali.wassapp",
+  "appName": "WassApp",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}

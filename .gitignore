@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.gradle/
+local.properties
+*.jks
+*.keystore
+.env
+.env.*
+!.env.example
